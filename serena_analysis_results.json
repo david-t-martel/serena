@@ -1,0 +1,1842 @@
+{
+  "serena_agent": [
+    {
+      "name_path": "SerenaAgent",
+      "kind": "Class",
+      "body_location": {
+        "start_line": 112,
+        "end_line": 628
+      },
+      "children": [
+        {
+          "name": "__init__",
+          "name_path": "SerenaAgent/__init__",
+          "kind": "Method",
+          "location": {
+            "line": 113,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 113,
+            "end_line": 245
+          }
+        },
+        {
+          "name": "get_context",
+          "name_path": "SerenaAgent/get_context",
+          "kind": "Method",
+          "location": {
+            "line": 247,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 247,
+            "end_line": 248
+          }
+        },
+        {
+          "name": "get_tool_description_override",
+          "name_path": "SerenaAgent/get_tool_description_override",
+          "kind": "Method",
+          "location": {
+            "line": 250,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 250,
+            "end_line": 251
+          }
+        },
+        {
+          "name": "_check_shell_settings",
+          "name_path": "SerenaAgent/_check_shell_settings",
+          "kind": "Method",
+          "location": {
+            "line": 253,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 253,
+            "end_line": 261
+          }
+        },
+        {
+          "name": "_ide_assistant_context_tool_inclusion_definitions",
+          "name_path": "SerenaAgent/_ide_assistant_context_tool_inclusion_definitions",
+          "kind": "Method",
+          "location": {
+            "line": 263,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 263,
+            "end_line": 287
+          }
+        },
+        {
+          "name": "record_tool_usage_if_enabled",
+          "name_path": "SerenaAgent/record_tool_usage_if_enabled",
+          "kind": "Method",
+          "location": {
+            "line": 289,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 289,
+            "end_line": 300
+          }
+        },
+        {
+          "name": "_open_dashboard",
+          "name_path": "SerenaAgent/_open_dashboard",
+          "kind": "Method",
+          "location": {
+            "line": 303,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 302,
+            "end_line": 312
+          }
+        },
+        {
+          "name": "get_project_root",
+          "name_path": "SerenaAgent/get_project_root",
+          "kind": "Method",
+          "location": {
+            "line": 314,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 314,
+            "end_line": 321
+          }
+        },
+        {
+          "name": "get_exposed_tool_instances",
+          "name_path": "SerenaAgent/get_exposed_tool_instances",
+          "kind": "Method",
+          "location": {
+            "line": 323,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 323,
+            "end_line": 332
+          }
+        },
+        {
+          "name": "get_active_project",
+          "name_path": "SerenaAgent/get_active_project",
+          "kind": "Method",
+          "location": {
+            "line": 334,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 334,
+            "end_line": 338
+          }
+        },
+        {
+          "name": "get_active_project_or_raise",
+          "name_path": "SerenaAgent/get_active_project_or_raise",
+          "kind": "Method",
+          "location": {
+            "line": 340,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 340,
+            "end_line": 347
+          }
+        },
+        {
+          "name": "set_modes",
+          "name_path": "SerenaAgent/set_modes",
+          "kind": "Method",
+          "location": {
+            "line": 349,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 349,
+            "end_line": 358
+          }
+        },
+        {
+          "name": "get_active_modes",
+          "name_path": "SerenaAgent/get_active_modes",
+          "kind": "Method",
+          "location": {
+            "line": 360,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 360,
+            "end_line": 364
+          }
+        },
+        {
+          "name": "_format_prompt",
+          "name_path": "SerenaAgent/_format_prompt",
+          "kind": "Method",
+          "location": {
+            "line": 366,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 366,
+            "end_line": 368
+          }
+        },
+        {
+          "name": "create_system_prompt",
+          "name_path": "SerenaAgent/create_system_prompt",
+          "kind": "Method",
+          "location": {
+            "line": 370,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 370,
+            "end_line": 380
+          }
+        },
+        {
+          "name": "_update_active_tools",
+          "name_path": "SerenaAgent/_update_active_tools",
+          "kind": "Method",
+          "location": {
+            "line": 382,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 382,
+            "end_line": 400
+          }
+        },
+        {
+          "name": "issue_task",
+          "name_path": "SerenaAgent/issue_task",
+          "kind": "Method",
+          "location": {
+            "line": 402,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 402,
+            "end_line": 420
+          }
+        },
+        {
+          "name": "execute_task",
+          "name_path": "SerenaAgent/execute_task",
+          "kind": "Method",
+          "location": {
+            "line": 422,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 422,
+            "end_line": 431
+          }
+        },
+        {
+          "name": "is_using_language_server",
+          "name_path": "SerenaAgent/is_using_language_server",
+          "kind": "Method",
+          "location": {
+            "line": 433,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 433,
+            "end_line": 437
+          }
+        },
+        {
+          "name": "_activate_project",
+          "name_path": "SerenaAgent/_activate_project",
+          "kind": "Method",
+          "location": {
+            "line": 439,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 439,
+            "end_line": 459
+          }
+        },
+        {
+          "name": "load_project_from_path_or_name",
+          "name_path": "SerenaAgent/load_project_from_path_or_name",
+          "kind": "Method",
+          "location": {
+            "line": 461,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 461,
+            "end_line": 476
+          }
+        },
+        {
+          "name": "activate_project_from_path_or_name",
+          "name_path": "SerenaAgent/activate_project_from_path_or_name",
+          "kind": "Method",
+          "location": {
+            "line": 478,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 478,
+            "end_line": 495
+          }
+        },
+        {
+          "name": "get_active_tool_classes",
+          "name_path": "SerenaAgent/get_active_tool_classes",
+          "kind": "Method",
+          "location": {
+            "line": 497,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 497,
+            "end_line": 501
+          }
+        },
+        {
+          "name": "get_active_tool_names",
+          "name_path": "SerenaAgent/get_active_tool_names",
+          "kind": "Method",
+          "location": {
+            "line": 503,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 503,
+            "end_line": 507
+          }
+        },
+        {
+          "name": "tool_is_active",
+          "name_path": "SerenaAgent/tool_is_active",
+          "kind": "Method",
+          "location": {
+            "line": 509,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 509,
+            "end_line": 517
+          }
+        },
+        {
+          "name": "get_current_config_overview",
+          "name_path": "SerenaAgent/get_current_config_overview",
+          "kind": "Method",
+          "location": {
+            "line": 519,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 519,
+            "end_line": 561
+          }
+        },
+        {
+          "name": "is_language_server_running",
+          "name_path": "SerenaAgent/is_language_server_running",
+          "kind": "Method",
+          "location": {
+            "line": 563,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 563,
+            "end_line": 564
+          }
+        },
+        {
+          "name": "reset_language_server",
+          "name_path": "SerenaAgent/reset_language_server",
+          "kind": "Method",
+          "location": {
+            "line": 566,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 566,
+            "end_line": 598
+          }
+        },
+        {
+          "name": "get_tool",
+          "name_path": "SerenaAgent/get_tool",
+          "kind": "Method",
+          "location": {
+            "line": 600,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 600,
+            "end_line": 601
+          }
+        },
+        {
+          "name": "print_tool_overview",
+          "name_path": "SerenaAgent/print_tool_overview",
+          "kind": "Method",
+          "location": {
+            "line": 603,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 603,
+            "end_line": 604
+          }
+        },
+        {
+          "name": "mark_file_modified",
+          "name_path": "SerenaAgent/mark_file_modified",
+          "kind": "Method",
+          "location": {
+            "line": 606,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 606,
+            "end_line": 608
+          }
+        },
+        {
+          "name": "__del__",
+          "name_path": "SerenaAgent/__del__",
+          "kind": "Method",
+          "location": {
+            "line": 610,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 610,
+            "end_line": 624
+          }
+        },
+        {
+          "name": "get_tool_by_name",
+          "name_path": "SerenaAgent/get_tool_by_name",
+          "kind": "Method",
+          "location": {
+            "line": 626,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 626,
+            "end_line": 628
+          }
+        },
+        {
+          "name": "serena_config",
+          "name_path": "SerenaAgent/serena_config",
+          "kind": "Variable",
+          "location": {
+            "line": 135,
+            "column": 13
+          },
+          "body_location": {
+            "start_line": 135,
+            "end_line": 135
+          }
+        },
+        {
+          "name": "_active_project",
+          "name_path": "SerenaAgent/_active_project",
+          "kind": "Variable",
+          "location": {
+            "line": 138,
+            "column": 13
+          },
+          "body_location": {
+            "start_line": 138,
+            "end_line": 138
+          }
+        },
+        {
+          "name": "language_server",
+          "name_path": "SerenaAgent/language_server",
+          "kind": "Variable",
+          "location": {
+            "line": 139,
+            "column": 13
+          },
+          "body_location": {
+            "start_line": 139,
+            "end_line": 139
+          }
+        },
+        {
+          "name": "memories_manager",
+          "name_path": "SerenaAgent/memories_manager",
+          "kind": "Variable",
+          "location": {
+            "line": 140,
+            "column": 13
+          },
+          "body_location": {
+            "start_line": 140,
+            "end_line": 140
+          }
+        },
+        {
+          "name": "lines_read",
+          "name_path": "SerenaAgent/lines_read",
+          "kind": "Variable",
+          "location": {
+            "line": 141,
+            "column": 13
+          },
+          "body_location": {
+            "start_line": 141,
+            "end_line": 141
+          }
+        },
+        {
+          "name": "_gui_log_viewer",
+          "name_path": "SerenaAgent/_gui_log_viewer",
+          "kind": "Variable",
+          "location": {
+            "line": 157,
+            "column": 13
+          },
+          "body_location": {
+            "start_line": 157,
+            "end_line": 157
+          }
+        },
+        {
+          "name": "_context",
+          "name_path": "SerenaAgent/_context",
+          "kind": "Variable",
+          "location": {
+            "line": 172,
+            "column": 13
+          },
+          "body_location": {
+            "start_line": 172,
+            "end_line": 172
+          }
+        },
+        {
+          "name": "_all_tools",
+          "name_path": "SerenaAgent/_all_tools",
+          "kind": "Variable",
+          "location": {
+            "line": 175,
+            "column": 13
+          },
+          "body_location": {
+            "start_line": 175,
+            "end_line": 175
+          }
+        },
+        {
+          "name": "_tool_usage_stats",
+          "name_path": "SerenaAgent/_tool_usage_stats",
+          "kind": "Variable",
+          "location": {
+            "line": 182,
+            "column": 13
+          },
+          "body_location": {
+            "start_line": 182,
+            "end_line": 182
+          }
+        },
+        {
+          "name": "_dashboard_thread",
+          "name_path": "SerenaAgent/_dashboard_thread",
+          "kind": "Variable",
+          "location": {
+            "line": 190,
+            "column": 17
+          },
+          "body_location": {
+            "start_line": 190,
+            "end_line": 190
+          }
+        },
+        {
+          "name": "_base_tool_set",
+          "name_path": "SerenaAgent/_base_tool_set",
+          "kind": "Variable",
+          "location": {
+            "line": 218,
+            "column": 13
+          },
+          "body_location": {
+            "start_line": 218,
+            "end_line": 218
+          }
+        },
+        {
+          "name": "_exposed_tools",
+          "name_path": "SerenaAgent/_exposed_tools",
+          "kind": "Variable",
+          "location": {
+            "line": 219,
+            "column": 13
+          },
+          "body_location": {
+            "start_line": 219,
+            "end_line": 219
+          }
+        },
+        {
+          "name": "_task_executor",
+          "name_path": "SerenaAgent/_task_executor",
+          "kind": "Variable",
+          "location": {
+            "line": 224,
+            "column": 13
+          },
+          "body_location": {
+            "start_line": 224,
+            "end_line": 224
+          }
+        },
+        {
+          "name": "_task_executor_lock",
+          "name_path": "SerenaAgent/_task_executor_lock",
+          "kind": "Variable",
+          "location": {
+            "line": 225,
+            "column": 13
+          },
+          "body_location": {
+            "start_line": 225,
+            "end_line": 225
+          }
+        },
+        {
+          "name": "_task_executor_task_index",
+          "name_path": "SerenaAgent/_task_executor_task_index",
+          "kind": "Variable",
+          "location": {
+            "line": 226,
+            "column": 13
+          },
+          "body_location": {
+            "start_line": 226,
+            "end_line": 226
+          }
+        },
+        {
+          "name": "prompt_factory",
+          "name_path": "SerenaAgent/prompt_factory",
+          "kind": "Variable",
+          "location": {
+            "line": 229,
+            "column": 13
+          },
+          "body_location": {
+            "start_line": 229,
+            "end_line": 229
+          }
+        },
+        {
+          "name": "_project_activation_callback",
+          "name_path": "SerenaAgent/_project_activation_callback",
+          "kind": "Variable",
+          "location": {
+            "line": 230,
+            "column": 13
+          },
+          "body_location": {
+            "start_line": 230,
+            "end_line": 230
+          }
+        },
+        {
+          "name": "_modes",
+          "name_path": "SerenaAgent/_modes",
+          "kind": "Variable",
+          "location": {
+            "line": 235,
+            "column": 13
+          },
+          "body_location": {
+            "start_line": 235,
+            "end_line": 235
+          }
+        },
+        {
+          "name": "_active_tools",
+          "name_path": "SerenaAgent/_active_tools",
+          "kind": "Variable",
+          "location": {
+            "line": 237,
+            "column": 13
+          },
+          "body_location": {
+            "start_line": 237,
+            "end_line": 237
+          }
+        }
+      ],
+      "relative_path": "src\\serena\\agent.py"
+    }
+  ],
+  "tool_base": [
+    {
+      "name_path": "Tool",
+      "kind": "Class",
+      "body_location": {
+        "start_line": 113,
+        "end_line": 289
+      },
+      "children": [
+        {
+          "name": "get_name_from_cls",
+          "name_path": "Tool/get_name_from_cls",
+          "kind": "Method",
+          "location": {
+            "line": 125,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 124,
+            "end_line": 131
+          }
+        },
+        {
+          "name": "get_name",
+          "name_path": "Tool/get_name",
+          "kind": "Method",
+          "location": {
+            "line": 133,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 133,
+            "end_line": 134
+          }
+        },
+        {
+          "name": "get_apply_fn",
+          "name_path": "Tool/get_apply_fn",
+          "kind": "Method",
+          "location": {
+            "line": 136,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 136,
+            "end_line": 140
+          }
+        },
+        {
+          "name": "can_edit",
+          "name_path": "Tool/can_edit",
+          "kind": "Method",
+          "location": {
+            "line": 143,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 142,
+            "end_line": 149
+          }
+        },
+        {
+          "name": "get_tool_description",
+          "name_path": "Tool/get_tool_description",
+          "kind": "Method",
+          "location": {
+            "line": 152,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 151,
+            "end_line": 156
+          }
+        },
+        {
+          "name": "get_apply_docstring_from_cls",
+          "name_path": "Tool/get_apply_docstring_from_cls",
+          "kind": "Method",
+          "location": {
+            "line": 159,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 158,
+            "end_line": 175
+          }
+        },
+        {
+          "name": "get_apply_docstring",
+          "name_path": "Tool/get_apply_docstring",
+          "kind": "Method",
+          "location": {
+            "line": 177,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 177,
+            "end_line": 179
+          }
+        },
+        {
+          "name": "get_apply_fn_metadata",
+          "name_path": "Tool/get_apply_fn_metadata",
+          "kind": "Method",
+          "location": {
+            "line": 181,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 181,
+            "end_line": 183
+          }
+        },
+        {
+          "name": "get_apply_fn_metadata_from_cls",
+          "name_path": "Tool/get_apply_fn_metadata_from_cls",
+          "kind": "Method",
+          "location": {
+            "line": 186,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 185,
+            "end_line": 199
+          }
+        },
+        {
+          "name": "_log_tool_application",
+          "name_path": "Tool/_log_tool_application",
+          "kind": "Method",
+          "location": {
+            "line": 201,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 201,
+            "end_line": 211
+          }
+        },
+        {
+          "name": "_limit_length",
+          "name_path": "Tool/_limit_length",
+          "kind": "Method",
+          "location": {
+            "line": 213,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 213,
+            "end_line": 223
+          }
+        },
+        {
+          "name": "is_active",
+          "name_path": "Tool/is_active",
+          "kind": "Method",
+          "location": {
+            "line": 225,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 225,
+            "end_line": 226
+          }
+        },
+        {
+          "name": "apply_ex",
+          "name_path": "Tool/apply_ex",
+          "kind": "Method",
+          "location": {
+            "line": 228,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 228,
+            "end_line": 289
+          }
+        }
+      ],
+      "relative_path": "src\\serena\\tools\\tools_base.py"
+    }
+  ],
+  "tool_implementations": {
+    "src\\serena\\tools\\cmd_tools.py": [
+      "  >  11:class ExecuteShellCommandTool(Tool, ToolMarkerCanEdit):"
+    ],
+    "src\\serena\\tools\\config_tools.py": [
+      "  >   7:class ActivateProjectTool(Tool, ToolMarkerDoesNotRequireActiveProject):\n  >   8:    \"\"\"\n  >   9:    Activates a project by name.\n  >  10:    \"\"\"\n  >  11:\n  >  12:    def apply(self, project: str) -> str:\n  >  13:        \"\"\"\n  >  14:        Activates the project with the given name.\n  >  15:\n  >  16:        :param project: the name of a registered project to activate or a path to a project directory\n  >  17:        \"\"\"\n  >  18:        active_project = self.agent.activate_project_from_path_or_name(project)\n  >  19:        if active_project.is_newly_created:\n  >  20:            result_str = (\n  >  21:                f\"Created and activated a new project with name '{active_project.project_name}' at {active_project.project_root}, language: {active_project.project_config.language.value}. \"\n  >  22:                \"You can activate this project later by name.\\n\"\n  >  23:                f\"The project's Serena configuration is in {active_project.path_to_project_yml()}. In particular, you may want to edit the project name and the initial prompt.\"\n  >  24:            )\n  >  25:        else:\n  >  26:            result_str = f\"Activated existing project with name '{active_project.project_name}' at {active_project.project_root}, language: {active_project.project_config.language.value}\"\n  >  27:\n  >  28:        if active_project.project_config.initial_prompt:\n  >  29:            result_str += f\"\\nAdditional project information:\\n {active_project.project_config.initial_prompt}\"\n  >  30:        result_str += (\n  >  31:            f\"\\nAvailable memories:\\n {json.dumps(list(self.memories_manager.list_memories()))}\"\n  >  32:            + \"You should not read these memories directly, but rather use the `read_memory` tool to read them later if needed for the task.\"\n  >  33:        )\n  >  34:        result_str += f\"\\nAvailable tools:\\n {json.dumps(self.agent.get_active_tool_names())}\"\n  >  35:        return result_str\n  >  36:\n  >  37:\n  >  38:class RemoveProjectTool(Tool, ToolMarkerDoesNotRequireActiveProject, ToolMarkerOptional):\n  >  39:    \"\"\"\n  >  40:    Removes a project from the Serena configuration.\n  >  41:    \"\"\"\n  >  42:\n  >  43:    def apply(self, project_name: str) -> str:\n  >  44:        \"\"\"\n  >  45:        Removes a project from the Serena configuration.\n  >  46:\n  >  47:        :param project_name: Name of the project to remove\n  >  48:        \"\"\"\n  >  49:        self.agent.serena_config.remove_project(project_name)\n  >  50:        return f\"Successfully removed project '{project_name}' from configuration.\"\n  >  51:\n  >  52:\n  >  53:class SwitchModesTool(Tool, ToolMarkerOptional):\n  >  54:    \"\"\"\n  >  55:    Activates modes by providing a list of their names\n  >  56:    \"\"\"\n  >  57:\n  >  58:    def apply(self, modes: list[str]) -> str:\n  >  59:        \"\"\"\n  >  60:        Activates the desired modes, like [\"editing\", \"interactive\"] or [\"planning\", \"one-shot\"]\n  >  61:\n  >  62:        :param modes: the names of the modes to activate\n  >  63:        \"\"\"\n  >  64:        mode_instances = [SerenaAgentMode.load(mode) for mode in modes]\n  >  65:        self.agent.set_modes(mode_instances)\n  >  66:\n  >  67:        # Inform the Agent about the activated modes and the currently active tools\n  >  68:        result_str = f\"Successfully activated modes: {', '.join([mode.name for mode in mode_instances])}\" + \"\\n\"\n  >  69:        result_str += \"\\n\".join([mode_instance.prompt for mode_instance in mode_instances]) + \"\\n\"\n  >  70:        result_str += f\"Currently active tools: {', '.join(self.agent.get_active_tool_names())}\"\n  >  71:        return result_str\n  >  72:\n  >  73:\n  >  74:class GetCurrentConfigTool(Tool):"
+    ],
+    "src\\serena\\tools\\file_tools.py": [
+      "  >  21:class ReadFileTool(Tool):\n  >  22:    \"\"\"\n  >  23:    Reads a file within the project directory.\n  >  24:    \"\"\"\n  >  25:\n  >  26:    def apply(self, relative_path: str, start_line: int = 0, end_line: int | None = None, max_answer_chars: int = -1) -> str:\n  >  27:        \"\"\"\n  >  28:        Reads the given file or a chunk of it. Generally, symbolic operations\n  >  29:        like find_symbol or find_referencing_symbols should be preferred if you know which symbols you are looking for.\n  >  30:\n  >  31:        :param relative_path: the relative path to the file to read\n  >  32:        :param start_line: the 0-based index of the first line to be retrieved.\n  >  33:        :param end_line: the 0-based index of the last line to be retrieved (inclusive). If None, read until the end of the file.\n  >  34:        :param max_answer_chars: if the file (chunk) is longer than this number of characters,\n  >  35:            no content will be returned. Don't adjust unless there is really no other way to get the content\n  >  36:            required for the task.\n  >  37:        :return: the full text of the file at the given relative path\n  >  38:        \"\"\"\n  >  39:        self.project.validate_relative_path(relative_path)\n  >  40:\n  >  41:        result = self.project.read_file(relative_path)\n  >  42:        result_lines = result.splitlines()\n  >  43:        if end_line is None:\n  >  44:            result_lines = result_lines[start_line:]\n  >  45:        else:\n  >  46:            self.lines_read.add_lines_read(relative_path, (start_line, end_line))\n  >  47:            result_lines = result_lines[start_line : end_line + 1]\n  >  48:        result = \"\\n\".join(result_lines)\n  >  49:\n  >  50:        return self._limit_length(result, max_answer_chars)\n  >  51:\n  >  52:\n  >  53:class CreateTextFileTool(Tool, ToolMarkerCanEdit):\n  >  54:    \"\"\"\n  >  55:    Creates/overwrites a file in the project directory.\n  >  56:    \"\"\"\n  >  57:\n  >  58:    def apply(self, relative_path: str, content: str) -> str:\n  >  59:        \"\"\"\n  >  60:        Write a new file or overwrite an existing file.\n  >  61:\n  >  62:        :param relative_path: the relative path to the file to create\n  >  63:        :param content: the (utf-8-encoded) content to write to the file\n  >  64:        :return: a message indicating success or failure\n  >  65:        \"\"\"\n  >  66:        project_root = self.get_project_root()\n  >  67:        abs_path = (Path(project_root) / relative_path).resolve()\n  >  68:        will_overwrite_existing = abs_path.exists()\n  >  69:\n  >  70:        if will_overwrite_existing:\n  >  71:            self.project.validate_relative_path(relative_path)\n  >  72:        else:\n  >  73:            assert abs_path.is_relative_to(\n  >  74:                self.get_project_root()\n  >  75:            ), f\"Cannot create file outside of the project directory, got {relative_path=}\"\n  >  76:\n  >  77:        abs_path.parent.mkdir(parents=True, exist_ok=True)\n  >  78:        abs_path.write_text(content, encoding=\"utf-8\")\n  >  79:        answer = f\"File created: {relative_path}.\"\n  >  80:        if will_overwrite_existing:\n  >  81:            answer += \" Overwrote existing file.\"\n  >  82:        return json.dumps(answer)\n  >  83:\n  >  84:\n  >  85:class ListDirTool(Tool):\n  >  86:    \"\"\"\n  >  87:    Lists files and directories in the given directory (optionally with recursion).\n  >  88:    \"\"\"\n  >  89:\n  >  90:    def apply(self, relative_path: str, recursive: bool, skip_ignored_files: bool = False, max_answer_chars: int = -1) -> str:\n  >  91:        \"\"\"\n  >  92:        Lists all non-gitignored files and directories in the given directory (optionally with recursion).\n  >  93:\n  >  94:        :param relative_path: the relative path to the directory to list; pass \".\" to scan the project root\n  >  95:        :param recursive: whether to scan subdirectories recursively\n  >  96:        :param skip_ignored_files: whether to skip files and directories that are ignored\n  >  97:        :param max_answer_chars: if the output is longer than this number of characters,\n  >  98:            no content will be returned. -1 means the default value from the config will be used.\n  >  99:            Don't adjust unless there is really no other way to get the content required for the task.\n  > 100:        :return: a JSON object with the names of directories and files within the given directory\n  > 101:        \"\"\"\n  > 102:        # Check if the directory exists before validation\n  > 103:        if not self.project.relative_path_exists(relative_path):\n  > 104:            error_info = {\n  > 105:                \"error\": f\"Directory not found: {relative_path}\",\n  > 106:                \"project_root\": self.get_project_root(),\n  > 107:                \"hint\": \"Check if the path is correct relative to the project root\",\n  > 108:            }\n  > 109:            return json.dumps(error_info)\n  > 110:\n  > 111:        self.project.validate_relative_path(relative_path)\n  > 112:\n  > 113:        dirs, files = scan_directory(\n  > 114:            os.path.join(self.get_project_root(), relative_path),\n  > 115:            relative_to=self.get_project_root(),\n  > 116:            recursive=recursive,\n  > 117:            is_ignored_dir=self.project.is_ignored_path if skip_ignored_files else None,\n  > 118:            is_ignored_file=self.project.is_ignored_path if skip_ignored_files else None,\n  > 119:        )\n  > 120:\n  > 121:        result = json.dumps({\"dirs\": dirs, \"files\": files})\n  > 122:        return self._limit_length(result, max_answer_chars)\n  > 123:\n  > 124:\n  > 125:class FindFileTool(Tool):\n  > 126:    \"\"\"\n  > 127:    Finds files in the given relative paths\n  > 128:    \"\"\"\n  > 129:\n  > 130:    def apply(self, file_mask: str, relative_path: str) -> str:\n  > 131:        \"\"\"\n  > 132:        Finds non-gitignored files matching the given file mask within the given relative path\n  > 133:\n  > 134:        :param file_mask: the filename or file mask (using the wildcards * or ?) to search for\n  > 135:        :param relative_path: the relative path to the directory to search in; pass \".\" to scan the project root\n  > 136:        :return: a JSON object with the list of matching files\n  > 137:        \"\"\"\n  > 138:        self.project.validate_relative_path(relative_path)\n  > 139:\n  > 140:        dir_to_scan = os.path.join(self.get_project_root(), relative_path)\n  > 141:\n  > 142:        # find the files by ignoring everything that doesn't match\n  > 143:        def is_ignored_file(abs_path: str) -> bool:\n  > 144:            if self.project.is_ignored_path(abs_path):\n  > 145:                return True\n  > 146:            filename = os.path.basename(abs_path)\n  > 147:            return not fnmatch(filename, file_mask)\n  > 148:\n  > 149:        _dirs, files = scan_directory(\n  > 150:            path=dir_to_scan,\n  > 151:            recursive=True,\n  > 152:            is_ignored_dir=self.project.is_ignored_path,\n  > 153:            is_ignored_file=is_ignored_file,\n  > 154:            relative_to=self.get_project_root(),\n  > 155:        )\n  > 156:\n  > 157:        result = json.dumps({\"files\": files})\n  > 158:        return result\n  > 159:\n  > 160:\n  > 161:class ReplaceRegexTool(Tool, ToolMarkerCanEdit):\n  > 162:    \"\"\"\n  > 163:    Replaces content in a file by using regular expressions.\n  > 164:    \"\"\"\n  > 165:\n  > 166:    def apply(\n  > 167:        self,\n  > 168:        relative_path: str,\n  > 169:        regex: str,\n  > 170:        repl: str,\n  > 171:        allow_multiple_occurrences: bool = False,\n  > 172:    ) -> str:\n  > 173:        r\"\"\"\n  > 174:        Replaces one or more occurrences of the given regular expression.\n  > 175:        This is the preferred way to replace content in a file whenever the symbol-level\n  > 176:        tools are not appropriate.\n  > 177:        Even large sections of code can be replaced by providing a concise regular expression of\n  > 178:        the form \"beginning.*?end-of-text-to-be-replaced\".\n  > 179:        Always try to use wildcards to avoid specifying the exact content of the code to be replaced,\n  > 180:        especially if it spans several lines.\n  > 181:\n  > 182:        IMPORTANT: REMEMBER TO USE WILDCARDS WHEN APPROPRIATE! I WILL BE VERY UNHAPPY IF YOU WRITE UNNECESSARILY LONG REGEXES WITHOUT USING WILDCARDS!\n  > 183:\n  > 184:        :param relative_path: the relative path to the file\n  > 185:        :param regex: a Python-style regular expression, matches of which will be replaced.\n  > 186:            Dot matches all characters, multi-line matching is enabled.\n  > 187:        :param repl: the string to replace the matched content with, which may contain\n  > 188:            backreferences like \\1, \\2, etc.\n  > 189:            IMPORTANT: Make sure to escape special characters appropriately!\n  > 190:                Use \"\\n\" to insert a newline, but use \"\\\\n\" to insert the string \"\\n\" within a string literal.\n  > 191:        :param allow_multiple_occurrences: if True, the regex may match multiple occurrences in the file\n  > 192:            and all of them will be replaced.\n  > 193:            If this is set to False and the regex matches multiple occurrences, an error will be returned\n  > 194:            (and you may retry with a revised, more specific regex).\n  > 195:        \"\"\"\n  > 196:        self.project.validate_relative_path(relative_path)\n  > 197:        with EditedFileContext(relative_path, self.agent) as context:\n  > 198:            original_content = context.get_original_content()\n  > 199:            updated_content, n = re.subn(regex, repl, original_content, flags=re.DOTALL | re.MULTILINE)\n  > 200:            if n == 0:\n  > 201:                return f\"Error: No matches found for regex '{regex}' in file '{relative_path}'.\"\n  > 202:            if not allow_multiple_occurrences and n > 1:\n  > 203:                return (\n  > 204:                    f\"Error: Regex '{regex}' matches {n} occurrences in file '{relative_path}'. \"\n  > 205:                    \"Please revise the regex to be more specific or enable allow_multiple_occurrences if this is expected.\"\n  > 206:                )\n  > 207:            context.set_updated_content(updated_content)\n  > 208:        return SUCCESS_RESULT\n  > 209:\n  > 210:\n  > 211:class DeleteLinesTool(Tool, ToolMarkerCanEdit, ToolMarkerOptional):\n  > 212:    \"\"\"\n  > 213:    Deletes a range of lines within a file.\n  > 214:    \"\"\"\n  > 215:\n  > 216:    def apply(\n  > 217:        self,\n  > 218:        relative_path: str,\n  > 219:        start_line: int,\n  > 220:        end_line: int,\n  > 221:    ) -> str:\n  > 222:        \"\"\"\n  > 223:        Deletes the given lines in the file.\n  > 224:        Requires that the same range of lines was previously read using the `read_file` tool to verify correctness\n  > 225:        of the operation.\n  > 226:\n  > 227:        :param relative_path: the relative path to the file\n  > 228:        :param start_line: the 0-based index of the first line to be deleted\n  > 229:        :param end_line: the 0-based index of the last line to be deleted\n  > 230:        \"\"\"\n  > 231:        if not self.lines_read.were_lines_read(relative_path, (start_line, end_line)):\n  > 232:            read_lines_tool = self.agent.get_tool(ReadFileTool)\n  > 233:            return f\"Error: Must call `{read_lines_tool.get_name_from_cls()}` first to read exactly the affected lines.\"\n  > 234:        code_editor = self.create_code_editor()\n  > 235:        code_editor.delete_lines(relative_path, start_line, end_line)\n  > 236:        return SUCCESS_RESULT\n  > 237:\n  > 238:\n  > 239:class ReplaceLinesTool(Tool, ToolMarkerCanEdit, ToolMarkerOptional):\n  > 240:    \"\"\"\n  > 241:    Replaces a range of lines within a file with new content.\n  > 242:    \"\"\"\n  > 243:\n  > 244:    def apply(\n  > 245:        self,\n  > 246:        relative_path: str,\n  > 247:        start_line: int,\n  > 248:        end_line: int,\n  > 249:        content: str,\n  > 250:    ) -> str:\n  > 251:        \"\"\"\n  > 252:        Replaces the given range of lines in the given file.\n  > 253:        Requires that the same range of lines was previously read using the `read_file` tool to verify correctness\n  > 254:        of the operation.\n  > 255:\n  > 256:        :param relative_path: the relative path to the file\n  > 257:        :param start_line: the 0-based index of the first line to be deleted\n  > 258:        :param end_line: the 0-based index of the last line to be deleted\n  > 259:        :param content: the content to insert\n  > 260:        \"\"\"\n  > 261:        if not content.endswith(\"\\n\"):\n  > 262:            content += \"\\n\"\n  > 263:        result = self.agent.get_tool(DeleteLinesTool).apply(relative_path, start_line, end_line)\n  > 264:        if result != SUCCESS_RESULT:\n  > 265:            return result\n  > 266:        self.agent.get_tool(InsertAtLineTool).apply(relative_path, start_line, content)\n  > 267:        return SUCCESS_RESULT\n  > 268:\n  > 269:\n  > 270:class InsertAtLineTool(Tool, ToolMarkerCanEdit, ToolMarkerOptional):\n  > 271:    \"\"\"\n  > 272:    Inserts content at a given line in a file.\n  > 273:    \"\"\"\n  > 274:\n  > 275:    def apply(\n  > 276:        self,\n  > 277:        relative_path: str,\n  > 278:        line: int,\n  > 279:        content: str,\n  > 280:    ) -> str:\n  > 281:        \"\"\"\n  > 282:        Inserts the given content at the given line in the file, pushing existing content of the line down.\n  > 283:        In general, symbolic insert operations like insert_after_symbol or insert_before_symbol should be preferred if you know which\n  > 284:        symbol you are looking for.\n  > 285:        However, this can also be useful for small targeted edits of the body of a longer symbol (without replacing the entire body).\n  > 286:\n  > 287:        :param relative_path: the relative path to the file\n  > 288:        :param line: the 0-based index of the line to insert content at\n  > 289:        :param content: the content to be inserted\n  > 290:        \"\"\"\n  > 291:        if not content.endswith(\"\\n\"):\n  > 292:            content += \"\\n\"\n  > 293:        code_editor = self.create_code_editor()\n  > 294:        code_editor.insert_at_line(relative_path, line, content)\n  > 295:        return SUCCESS_RESULT\n  > 296:\n  > 297:\n  > 298:class SearchForPatternTool(Tool):"
+    ],
+    "src\\serena\\tools\\jetbrains_tools.py": [
+      "  >   7:class JetBrainsFindSymbolTool(Tool, ToolMarkerSymbolicRead, ToolMarkerOptional):\n  >   8:    \"\"\"\n  >   9:    Performs a global (or local) search for symbols with/containing a given name/substring (optionally filtered by type).\n  >  10:    \"\"\"\n  >  11:\n  >  12:    def apply(\n  >  13:        self,\n  >  14:        name_path: str,\n  >  15:        depth: int = 0,\n  >  16:        relative_path: str | None = None,\n  >  17:        include_body: bool = False,\n  >  18:        max_answer_chars: int = -1,\n  >  19:    ) -> str:\n  >  20:        \"\"\"\n  >  21:        Retrieves information on all symbols/code entities (classes, methods, etc.) based on the given `name_path`,\n  >  22:        which represents a pattern for the symbol's path within the symbol tree of a single file.\n  >  23:        The returned symbol location can be used for edits or further queries.\n  >  24:        Specify `depth > 0` to retrieve children (e.g., methods of a class).\n  >  25:\n  >  26:        The matching behavior is determined by the structure of `name_path`, which can\n  >  27:        either be a simple name (e.g. \"method\") or a name path like \"class/method\" (relative name path)\n  >  28:        or \"/class/method\" (absolute name path).\n  >  29:        Note that the name path is not a path in the file system but rather a path in the symbol tree\n  >  30:        **within a single file**. Thus, file or directory names should never be included in the `name_path`.\n  >  31:        For restricting the search to a single file or directory, pass the `relative_path` parameter.\n  >  32:        The retrieved symbols' `name_path` attribute will always be composed of symbol names, never file\n  >  33:        or directory names.\n  >  34:\n  >  35:        Key aspects of the name path matching behavior:\n  >  36:        - The name of the retrieved symbols will match the last segment of `name_path`, while preceding segments\n  >  37:          will restrict the search to symbols that have a desired sequence of ancestors.\n  >  38:        - If there is no `/` in `name_path`, there is no restriction on the ancestor symbols.\n  >  39:          For example, passing `method` will match against all symbols with name paths like `method`,\n  >  40:          `class/method`, `class/nested_class/method`, etc.\n  >  41:        - If `name_path` contains at least one `/`, the matching is restricted to symbols\n  >  42:          with the respective ancestors. For example, passing `class/method` will match against\n  >  43:          `class/method` as well as `nested_class/class/method` but not `other_class/method`.\n  >  44:        - If `name_path` starts with a `/`, it will be treated as an absolute name path pattern, i.e.\n  >  45:          all ancestors are provided and must match.\n  >  46:          For example, passing `/class` will match only against top-level symbols named `class` but\n  >  47:          will not match `nested_class/class`. Passing `/class/method` will match `class/method` but\n  >  48:          not `outer_class/class/method`.\n  >  49:\n  >  50:        :param name_path: The name path pattern to search for, see above for details.\n  >  51:        :param depth: Depth to retrieve descendants (e.g., 1 for class methods/attributes).\n  >  52:        :param relative_path: Optional. Restrict search to this file or directory.\n  >  53:            If None, searches entire codebase.\n  >  54:            If a directory is passed, the search will be restricted to the files in that directory.\n  >  55:            If a file is passed, the search will be restricted to that file.\n  >  56:            If you have some knowledge about the codebase, you should use this parameter, as it will significantly\n  >  57:            speed up the search as well as reduce the number of results.\n  >  58:        :param include_body: If True, include the symbol's source code. Use judiciously.\n  >  59:        :param max_answer_chars: max characters for the JSON result. If exceeded, no content is returned.\n  >  60:            -1 means the default value from the config will be used.\n  >  61:        :return: JSON string: a list of symbols (with locations) matching the name.\n  >  62:        \"\"\"\n  >  63:        with JetBrainsPluginClient.from_project(self.project) as client:\n  >  64:            response_dict = client.find_symbol(\n  >  65:                name_path=name_path,\n  >  66:                relative_path=relative_path,\n  >  67:                depth=depth,\n  >  68:                include_body=include_body,\n  >  69:            )\n  >  70:            result = json.dumps(response_dict)\n  >  71:        return self._limit_length(result, max_answer_chars)\n  >  72:\n  >  73:\n  >  74:class JetBrainsFindReferencingSymbolsTool(Tool, ToolMarkerSymbolicRead, ToolMarkerOptional):\n  >  75:    \"\"\"\n  >  76:    Finds symbols that reference the given symbol\n  >  77:    \"\"\"\n  >  78:\n  >  79:    def apply(\n  >  80:        self,\n  >  81:        name_path: str,\n  >  82:        relative_path: str,\n  >  83:        max_answer_chars: int = -1,\n  >  84:    ) -> str:\n  >  85:        \"\"\"\n  >  86:        Finds symbols that reference the symbol at the given `name_path`.\n  >  87:        The result will contain metadata about the referencing symbols.\n  >  88:\n  >  89:        :param name_path: name path of the symbol for which to find references; matching logic as described in find symbol tool.\n  >  90:        :param relative_path: the relative path to the file containing the symbol for which to find references.\n  >  91:            Note that here you can't pass a directory but must pass a file.\n  >  92:        :param max_answer_chars: max characters for the JSON result. If exceeded, no content is returned. -1 means the\n  >  93:            default value from the config will be used.\n  >  94:        :return: a list of JSON objects with the symbols referencing the requested symbol\n  >  95:        \"\"\"\n  >  96:        with JetBrainsPluginClient.from_project(self.project) as client:\n  >  97:            response_dict = client.find_references(\n  >  98:                name_path=name_path,\n  >  99:                relative_path=relative_path,\n  > 100:            )\n  > 101:            result = json.dumps(response_dict)\n  > 102:        return self._limit_length(result, max_answer_chars)\n  > 103:\n  > 104:\n  > 105:class JetBrainsGetSymbolsOverviewTool(Tool, ToolMarkerSymbolicRead, ToolMarkerOptional):"
+    ],
+    "src\\serena\\tools\\memory_tools.py": [
+      "  >   6:class WriteMemoryTool(Tool):\n  >   7:    \"\"\"\n  >   8:    Writes a named memory (for future reference) to Serena's project-specific memory store.\n  >   9:    \"\"\"\n  >  10:\n  >  11:    def apply(self, memory_name: str, content: str, max_answer_chars: int = -1) -> str:\n  >  12:        \"\"\"\n  >  13:        Write some information about this project that can be useful for future tasks to a memory in md format.\n  >  14:        The memory name should be meaningful.\n  >  15:        \"\"\"\n  >  16:        if max_answer_chars == -1:\n  >  17:            max_answer_chars = self.agent.serena_config.default_max_tool_answer_chars\n  >  18:        if len(content) > max_answer_chars:\n  >  19:            raise ValueError(\n  >  20:                f\"Content for {memory_name} is too long. Max length is {max_answer_chars} characters. \" + \"Please make the content shorter.\"\n  >  21:            )\n  >  22:\n  >  23:        return self.memories_manager.save_memory(memory_name, content)\n  >  24:\n  >  25:\n  >  26:class ReadMemoryTool(Tool):\n  >  27:    \"\"\"\n  >  28:    Reads the memory with the given name from Serena's project-specific memory store.\n  >  29:    \"\"\"\n  >  30:\n  >  31:    def apply(self, memory_file_name: str, max_answer_chars: int = -1) -> str:\n  >  32:        \"\"\"\n  >  33:        Read the content of a memory file. This tool should only be used if the information\n  >  34:        is relevant to the current task. You can infer whether the information\n  >  35:        is relevant from the memory file name.\n  >  36:        You should not read the same memory file multiple times in the same conversation.\n  >  37:        \"\"\"\n  >  38:        return self.memories_manager.load_memory(memory_file_name)\n  >  39:\n  >  40:\n  >  41:class ListMemoriesTool(Tool):\n  >  42:    \"\"\"\n  >  43:    Lists memories in Serena's project-specific memory store.\n  >  44:    \"\"\"\n  >  45:\n  >  46:    def apply(self) -> str:\n  >  47:        \"\"\"\n  >  48:        List available memories. Any memory can be read using the `read_memory` tool.\n  >  49:        \"\"\"\n  >  50:        return json.dumps(self.memories_manager.list_memories())\n  >  51:\n  >  52:\n  >  53:class DeleteMemoryTool(Tool):"
+    ],
+    "src\\serena\\tools\\symbol_tools.py": [
+      "  >   5:import dataclasses\n  >   6:import json\n  >   7:import os\n  >   8:from collections.abc import Sequence\n  >   9:from copy import copy\n  >  10:from typing import Any\n  >  11:\n  >  12:from serena.tools import (\n  >  13:    SUCCESS_RESULT,\n  >  14:    Tool,\n  >  15:    ToolMarkerSymbolicEdit,\n  >  16:    ToolMarkerSymbolicRead,\n  >  17:)\n  >  18:from serena.tools.tools_base import ToolMarkerOptional\n  >  19:from solidlsp.ls_types import SymbolKind\n  >  20:\n  >  21:\n  >  22:def _sanitize_symbol_dict(symbol_dict: dict[str, Any]) -> dict[str, Any]:\n  >  23:    \"\"\"\n  >  24:    Sanitize a symbol dictionary inplace by removing unnecessary information.\n  >  25:    \"\"\"\n  >  26:    # We replace the location entry, which repeats line information already included in body_location\n  >  27:    # and has unnecessary information on column, by just the relative path.\n  >  28:    symbol_dict = copy(symbol_dict)\n  >  29:    s_relative_path = symbol_dict.get(\"location\", {}).get(\"relative_path\")\n  >  30:    if s_relative_path is not None:\n  >  31:        symbol_dict[\"relative_path\"] = s_relative_path\n  >  32:    symbol_dict.pop(\"location\", None)\n  >  33:    # also remove name, name_path should be enough\n  >  34:    symbol_dict.pop(\"name\")\n  >  35:    return symbol_dict\n  >  36:\n  >  37:\n  >  38:class RestartLanguageServerTool(Tool, ToolMarkerOptional):\n  >  39:    \"\"\"Restarts the language server, may be necessary when edits not through Serena happen.\"\"\"\n  >  40:\n  >  41:    def apply(self) -> str:\n  >  42:        \"\"\"Use this tool only on explicit user request or after confirmation.\n  >  43:        It may be necessary to restart the language server if it hangs.\n  >  44:        \"\"\"\n  >  45:        self.agent.reset_language_server()\n  >  46:        return SUCCESS_RESULT\n  >  47:\n  >  48:\n  >  49:class GetSymbolsOverviewTool(Tool, ToolMarkerSymbolicRead):\n  >  50:    \"\"\"\n  >  51:    Gets an overview of the top-level symbols defined in a given file.\n  >  52:    \"\"\"\n  >  53:\n  >  54:    def apply(self, relative_path: str, max_answer_chars: int = -1) -> str:\n  >  55:        \"\"\"\n  >  56:        Use this tool to get a high-level understanding of the code symbols in a file.\n  >  57:        This should be the first tool to call when you want to understand a new file, unless you already know\n  >  58:        what you are looking for.\n  >  59:\n  >  60:        :param relative_path: the relative path to the file to get the overview of\n  >  61:        :param max_answer_chars: if the overview is longer than this number of characters,\n  >  62:            no content will be returned. -1 means the default value from the config will be used.\n  >  63:            Don't adjust unless there is really no other way to get the content required for the task.\n  >  64:        :return: a JSON object containing info about top-level symbols in the file\n  >  65:        \"\"\"\n  >  66:        symbol_retriever = self.create_language_server_symbol_retriever()\n  >  67:        file_path = os.path.join(self.project.project_root, relative_path)\n  >  68:\n  >  69:        # The symbol overview is capable of working with both files and directories,\n  >  70:        # but we want to ensure that the user provides a file path.\n  >  71:        if not os.path.exists(file_path):\n  >  72:            raise FileNotFoundError(f\"File or directory {relative_path} does not exist in the project.\")\n  >  73:        if os.path.isdir(file_path):\n  >  74:            raise ValueError(f\"Expected a file path, but got a directory path: {relative_path}. \")\n  >  75:        result = symbol_retriever.get_symbol_overview(relative_path)[relative_path]\n  >  76:        result_json_str = json.dumps([dataclasses.asdict(i) for i in result])\n  >  77:        return self._limit_length(result_json_str, max_answer_chars)\n  >  78:\n  >  79:\n  >  80:class FindSymbolTool(Tool, ToolMarkerSymbolicRead):\n  >  81:    \"\"\"\n  >  82:    Performs a global (or local) search for symbols with/containing a given name/substring (optionally filtered by type).\n  >  83:    \"\"\"\n  >  84:\n  >  85:    def apply(\n  >  86:        self,\n  >  87:        name_path: str,\n  >  88:        depth: int = 0,\n  >  89:        relative_path: str = \"\",\n  >  90:        include_body: bool = False,\n  >  91:        include_kinds: list[int] = [],  # noqa: B006\n  >  92:        exclude_kinds: list[int] = [],  # noqa: B006\n  >  93:        substring_matching: bool = False,\n  >  94:        max_answer_chars: int = -1,\n  >  95:    ) -> str:\n  >  96:        \"\"\"\n  >  97:        Retrieves information on all symbols/code entities (classes, methods, etc.) based on the given `name_path`,\n  >  98:        which represents a pattern for the symbol's path within the symbol tree of a single file.\n  >  99:        The returned symbol location can be used for edits or further queries.\n  > 100:        Specify `depth > 0` to retrieve children (e.g., methods of a class).\n  > 101:\n  > 102:        The matching behavior is determined by the structure of `name_path`, which can\n  > 103:        either be a simple name (e.g. \"method\") or a name path like \"class/method\" (relative name path)\n  > 104:        or \"/class/method\" (absolute name path). Note that the name path is not a path in the file system\n  > 105:        but rather a path in the symbol tree **within a single file**. Thus, file or directory names should never\n  > 106:        be included in the `name_path`. For restricting the search to a single file or directory,\n  > 107:        the `within_relative_path` parameter should be used instead. The retrieved symbols' `name_path` attribute\n  > 108:        will always be composed of symbol names, never file or directory names.\n  > 109:\n  > 110:        Key aspects of the name path matching behavior:\n  > 111:        - Trailing slashes in `name_path` play no role and are ignored.\n  > 112:        - The name of the retrieved symbols will match (either exactly or as a substring)\n  > 113:          the last segment of `name_path`, while other segments will restrict the search to symbols that\n  > 114:          have a desired sequence of ancestors.\n  > 115:        - If there is no starting or intermediate slash in `name_path`, there is no\n  > 116:          restriction on the ancestor symbols. For example, passing `method` will match\n  > 117:          against symbols with name paths like `method`, `class/method`, `class/nested_class/method`, etc.\n  > 118:        - If `name_path` contains a `/` but doesn't start with a `/`, the matching is restricted to symbols\n  > 119:          with the same ancestors as the last segment of `name_path`. For example, passing `class/method` will match against\n  > 120:          `class/method` as well as `nested_class/class/method` but not `method`.\n  > 121:        - If `name_path` starts with a `/`, it will be treated as an absolute name path pattern, meaning\n  > 122:          that the first segment of it must match the first segment of the symbol's name path.\n  > 123:          For example, passing `/class` will match only against top-level symbols like `class` but not against `nested_class/class`.\n  > 124:          Passing `/class/method` will match against `class/method` but not `nested_class/class/method` or `method`.\n  > 125:\n  > 126:\n  > 127:        :param name_path: The name path pattern to search for, see above for details.\n  > 128:        :param depth: Depth to retrieve descendants (e.g., 1 for class methods/attributes).\n  > 129:        :param relative_path: Optional. Restrict search to this file or directory. If None, searches entire codebase.\n  > 130:            If a directory is passed, the search will be restricted to the files in that directory.\n  > 131:            If a file is passed, the search will be restricted to that file.\n  > 132:            If you have some knowledge about the codebase, you should use this parameter, as it will significantly\n  > 133:            speed up the search as well as reduce the number of results.\n  > 134:        :param include_body: If True, include the symbol's source code. Use judiciously.\n  > 135:        :param include_kinds: Optional. List of LSP symbol kind integers to include. (e.g., 5 for Class, 12 for Function).\n  > 136:            Valid kinds: 1=file, 2=module, 3=namespace, 4=package, 5=class, 6=method, 7=property, 8=field, 9=constructor, 10=enum,\n  > 137:            11=interface, 12=function, 13=variable, 14=constant, 15=string, 16=number, 17=boolean, 18=array, 19=object,\n  > 138:            20=key, 21=null, 22=enum member, 23=struct, 24=event, 25=operator, 26=type parameter.\n  > 139:            If not provided, all kinds are included.\n  > 140:        :param exclude_kinds: Optional. List of LSP symbol kind integers to exclude. Takes precedence over `include_kinds`.\n  > 141:            If not provided, no kinds are excluded.\n  > 142:        :param substring_matching: If True, use substring matching for the last segment of `name`.\n  > 143:        :param max_answer_chars: Max characters for the JSON result. If exceeded, no content is returned.\n  > 144:            -1 means the default value from the config will be used.\n  > 145:        :return: a list of symbols (with locations) matching the name.\n  > 146:        \"\"\"\n  > 147:        parsed_include_kinds: Sequence[SymbolKind] | None = [SymbolKind(k) for k in include_kinds] if include_kinds else None\n  > 148:        parsed_exclude_kinds: Sequence[SymbolKind] | None = [SymbolKind(k) for k in exclude_kinds] if exclude_kinds else None\n  > 149:        symbol_retriever = self.create_language_server_symbol_retriever()\n  > 150:        symbols = symbol_retriever.find_by_name(\n  > 151:            name_path,\n  > 152:            include_body=include_body,\n  > 153:            include_kinds=parsed_include_kinds,\n  > 154:            exclude_kinds=parsed_exclude_kinds,\n  > 155:            substring_matching=substring_matching,\n  > 156:            within_relative_path=relative_path,\n  > 157:        )\n  > 158:        symbol_dicts = [_sanitize_symbol_dict(s.to_dict(kind=True, location=True, depth=depth, include_body=include_body)) for s in symbols]\n  > 159:        result = json.dumps(symbol_dicts)\n  > 160:        return self._limit_length(result, max_answer_chars)\n  > 161:\n  > 162:\n  > 163:class FindReferencingSymbolsTool(Tool, ToolMarkerSymbolicRead):\n  > 164:    \"\"\"\n  > 165:    Finds symbols that reference the symbol at the given location (optionally filtered by type).\n  > 166:    \"\"\"\n  > 167:\n  > 168:    def apply(\n  > 169:        self,\n  > 170:        name_path: str,\n  > 171:        relative_path: str,\n  > 172:        include_kinds: list[int] = [],  # noqa: B006\n  > 173:        exclude_kinds: list[int] = [],  # noqa: B006\n  > 174:        max_answer_chars: int = -1,\n  > 175:    ) -> str:\n  > 176:        \"\"\"\n  > 177:        Finds references to the symbol at the given `name_path`. The result will contain metadata about the referencing symbols\n  > 178:        as well as a short code snippet around the reference.\n  > 179:\n  > 180:        :param name_path: for finding the symbol to find references for, same logic as in the `find_symbol` tool.\n  > 181:        :param relative_path: the relative path to the file containing the symbol for which to find references.\n  > 182:            Note that here you can't pass a directory but must pass a file.\n  > 183:        :param include_kinds: same as in the `find_symbol` tool.\n  > 184:        :param exclude_kinds: same as in the `find_symbol` tool.\n  > 185:        :param max_answer_chars: same as in the `find_symbol` tool.\n  > 186:        :return: a list of JSON objects with the symbols referencing the requested symbol\n  > 187:        \"\"\"\n  > 188:        include_body = False  # It is probably never a good idea to include the body of the referencing symbols\n  > 189:        parsed_include_kinds: Sequence[SymbolKind] | None = [SymbolKind(k) for k in include_kinds] if include_kinds else None\n  > 190:        parsed_exclude_kinds: Sequence[SymbolKind] | None = [SymbolKind(k) for k in exclude_kinds] if exclude_kinds else None\n  > 191:        symbol_retriever = self.create_language_server_symbol_retriever()\n  > 192:        references_in_symbols = symbol_retriever.find_referencing_symbols(\n  > 193:            name_path,\n  > 194:            relative_file_path=relative_path,\n  > 195:            include_body=include_body,\n  > 196:            include_kinds=parsed_include_kinds,\n  > 197:            exclude_kinds=parsed_exclude_kinds,\n  > 198:        )\n  > 199:        reference_dicts = []\n  > 200:        for ref in references_in_symbols:\n  > 201:            ref_dict = ref.symbol.to_dict(kind=True, location=True, depth=0, include_body=include_body)\n  > 202:            ref_dict = _sanitize_symbol_dict(ref_dict)\n  > 203:            if not include_body:\n  > 204:                ref_relative_path = ref.symbol.location.relative_path\n  > 205:                assert ref_relative_path is not None, f\"Referencing symbol {ref.symbol.name} has no relative path, this is likely a bug.\"\n  > 206:                content_around_ref = self.project.retrieve_content_around_line(\n  > 207:                    relative_file_path=ref_relative_path, line=ref.line, context_lines_before=1, context_lines_after=1\n  > 208:                )\n  > 209:                ref_dict[\"content_around_reference\"] = content_around_ref.to_display_string()\n  > 210:            reference_dicts.append(ref_dict)\n  > 211:        result = json.dumps(reference_dicts)\n  > 212:        return self._limit_length(result, max_answer_chars)\n  > 213:\n  > 214:\n  > 215:class ReplaceSymbolBodyTool(Tool, ToolMarkerSymbolicEdit):\n  > 216:    \"\"\"\n  > 217:    Replaces the full definition of a symbol.\n  > 218:    \"\"\"\n  > 219:\n  > 220:    def apply(\n  > 221:        self,\n  > 222:        name_path: str,\n  > 223:        relative_path: str,\n  > 224:        body: str,\n  > 225:    ) -> str:\n  > 226:        r\"\"\"\n  > 227:        Replaces the body of the symbol with the given `name_path`.\n  > 228:\n  > 229:        The tool shall be used to replace symbol bodies that have been previously retrieved\n  > 230:        (e.g. via `find_symbol`).\n  > 231:        IMPORTANT: Do not use this tool if you do not know what exactly constitutes the body of the symbol.\n  > 232:\n  > 233:        :param name_path: for finding the symbol to replace, same logic as in the `find_symbol` tool.\n  > 234:        :param relative_path: the relative path to the file containing the symbol\n  > 235:        :param body: the new symbol body. The symbol body is the definition of a symbol\n  > 236:            in the programming language, including e.g. the signature line for functions.\n  > 237:            IMPORTANT: The body does NOT include any preceding docstrings/comments or imports, in particular.\n  > 238:        \"\"\"\n  > 239:        code_editor = self.create_code_editor()\n  > 240:        code_editor.replace_body(\n  > 241:            name_path,\n  > 242:            relative_file_path=relative_path,\n  > 243:            body=body,\n  > 244:        )\n  > 245:        return SUCCESS_RESULT\n  > 246:\n  > 247:\n  > 248:class InsertAfterSymbolTool(Tool, ToolMarkerSymbolicEdit):\n  > 249:    \"\"\"\n  > 250:    Inserts content after the end of the definition of a given symbol.\n  > 251:    \"\"\"\n  > 252:\n  > 253:    def apply(\n  > 254:        self,\n  > 255:        name_path: str,\n  > 256:        relative_path: str,\n  > 257:        body: str,\n  > 258:    ) -> str:\n  > 259:        \"\"\"\n  > 260:        Inserts the given body/content after the end of the definition of the given symbol (via the symbol's location).\n  > 261:        A typical use case is to insert a new class, function, method, field or variable assignment.\n  > 262:\n  > 263:        :param name_path: name path of the symbol after which to insert content (definitions in the `find_symbol` tool apply)\n  > 264:        :param relative_path: the relative path to the file containing the symbol\n  > 265:        :param body: the body/content to be inserted. The inserted code shall begin with the next line after\n  > 266:            the symbol.\n  > 267:        \"\"\"\n  > 268:        code_editor = self.create_code_editor()\n  > 269:        code_editor.insert_after_symbol(name_path, relative_file_path=relative_path, body=body)\n  > 270:        return SUCCESS_RESULT\n  > 271:\n  > 272:\n  > 273:class InsertBeforeSymbolTool(Tool, ToolMarkerSymbolicEdit):"
+    ],
+    "src\\serena\\tools\\tools_base.py": [
+      "  >   5:from dataclasses import dataclass\n  >   6:from types import TracebackType\n  >   7:from typing import TYPE_CHECKING, Any, Protocol, Self, TypeVar\n  >   8:\n  >   9:from mcp.server.fastmcp.utilities.func_metadata import FuncMetadata, func_metadata\n  >  10:from sensai.util import logging\n  >  11:from sensai.util.string import dict_string\n  >  12:\n  >  13:from serena.project import Project\n  >  14:from serena.prompt_factory import PromptFactory\n  >  15:from serena.symbol import LanguageServerSymbolRetriever\n  >  16:from serena.util.class_decorators import singleton\n  >  17:from serena.util.inspection import iter_subclasses\n  >  18:from solidlsp.ls_exceptions import SolidLSPException\n  >  19:\n  >  20:if TYPE_CHECKING:\n  >  21:    from serena.agent import LinesRead, MemoriesManager, SerenaAgent\n  >  22:    from serena.code_editor import CodeEditor\n  >  23:\n  >  24:log = logging.getLogger(__name__)\n  >  25:T = TypeVar(\"T\")\n  >  26:SUCCESS_RESULT = \"OK\"\n  >  27:\n  >  28:\n  >  29:class Component(ABC):\n  >  30:    def __init__(self, agent: \"SerenaAgent\"):\n  >  31:        self.agent = agent\n  >  32:\n  >  33:    def get_project_root(self) -> str:\n  >  34:        \"\"\"\n  >  35:        :return: the root directory of the active project, raises a ValueError if no active project configuration is set\n  >  36:        \"\"\"\n  >  37:        return self.agent.get_project_root()\n  >  38:\n  >  39:    @property\n  >  40:    def prompt_factory(self) -> PromptFactory:\n  >  41:        return self.agent.prompt_factory\n  >  42:\n  >  43:    @property\n  >  44:    def memories_manager(self) -> \"MemoriesManager\":\n  >  45:        assert self.agent.memories_manager is not None\n  >  46:        return self.agent.memories_manager\n  >  47:\n  >  48:    def create_language_server_symbol_retriever(self) -> LanguageServerSymbolRetriever:\n  >  49:        if not self.agent.is_using_language_server():\n  >  50:            raise Exception(\"Cannot create LanguageServerSymbolRetriever; agent is not in language server mode.\")\n  >  51:        language_server = self.agent.language_server\n  >  52:        assert language_server is not None\n  >  53:        return LanguageServerSymbolRetriever(language_server, agent=self.agent)\n  >  54:\n  >  55:    @property\n  >  56:    def project(self) -> Project:\n  >  57:        return self.agent.get_active_project_or_raise()\n  >  58:\n  >  59:    def create_code_editor(self) -> \"CodeEditor\":\n  >  60:        from ..code_editor import JetBrainsCodeEditor, LanguageServerCodeEditor\n  >  61:\n  >  62:        if self.agent.is_using_language_server():\n  >  63:            return LanguageServerCodeEditor(self.create_language_server_symbol_retriever(), agent=self.agent)\n  >  64:        else:\n  >  65:            return JetBrainsCodeEditor(project=self.project, agent=self.agent)\n  >  66:\n  >  67:    @property\n  >  68:    def lines_read(self) -> \"LinesRead\":\n  >  69:        assert self.agent.lines_read is not None\n  >  70:        return self.agent.lines_read\n  >  71:\n  >  72:\n  >  73:class ToolMarker:\n  >  74:    \"\"\"\n  >  75:    Base class for tool markers.\n  >  76:    \"\"\"\n  >  77:\n  >  78:\n  >  79:class ToolMarkerCanEdit(ToolMarker):\n  >  80:    \"\"\"\n  >  81:    Marker class for all tools that can perform editing operations on files.\n  >  82:    \"\"\"\n  >  83:\n  >  84:\n  >  85:class ToolMarkerDoesNotRequireActiveProject(ToolMarker):\n  >  86:    pass\n  >  87:\n  >  88:\n  >  89:class ToolMarkerOptional(ToolMarker):\n  >  90:    \"\"\"\n  >  91:    Marker class for optional tools that are disabled by default.\n  >  92:    \"\"\"\n  >  93:\n  >  94:\n  >  95:class ToolMarkerSymbolicRead(ToolMarker):\n  >  96:    \"\"\"\n  >  97:    Marker class for tools that perform symbol read operations.\n  >  98:    \"\"\"\n  >  99:\n  > 100:\n  > 101:class ToolMarkerSymbolicEdit(ToolMarkerCanEdit):\n  > 102:    \"\"\"\n  > 103:    Marker class for tools that perform symbolic edit operations.\n  > 104:    \"\"\"\n  > 105:\n  > 106:\n  > 107:class ApplyMethodProtocol(Protocol):\n  > 108:    \"\"\"Callable protocol for the apply method of a tool.\"\"\"\n  > 109:\n  > 110:    def __call__(self, *args: Any, **kwargs: Any) -> str:\n  > 111:        pass\n  > 112:\n  > 113:\n  > 114:class Tool(Component):\n  > 115:    # NOTE: each tool should implement the apply method, which is then used in\n  > 116:    # the central method of the Tool class `apply_ex`.\n  > 117:    # Failure to do so will result in a RuntimeError at tool execution time.\n  > 118:    # The apply method is not declared as part of the base Tool interface since we cannot\n  > 119:    # know the signature of the (input parameters of the) method in advance.\n  > 120:    #\n  > 121:    # The docstring and types of the apply method are used to generate the tool description\n  > 122:    # (which is use by the LLM, so a good description is important)\n  > 123:    # and to validate the tool call arguments.\n  > 124:\n  > 125:    @classmethod\n  > 126:    def get_name_from_cls(cls) -> str:\n  > 127:        name = cls.__name__\n  > 128:        if name.endswith(\"Tool\"):\n  > 129:            name = name[:-4]\n  > 130:        # convert to snake_case\n  > 131:        name = \"\".join([\"_\" + c.lower() if c.isupper() else c for c in name]).lstrip(\"_\")\n  > 132:        return name\n  > 133:\n  > 134:    def get_name(self) -> str:\n  > 135:        return self.get_name_from_cls()\n  > 136:\n  > 137:    def get_apply_fn(self) -> ApplyMethodProtocol:\n  > 138:        apply_fn = getattr(self, \"apply\")\n  > 139:        if apply_fn is None:\n  > 140:            raise RuntimeError(f\"apply not defined in {self}. Did you forget to implement it?\")\n  > 141:        return apply_fn\n  > 142:\n  > 143:    @classmethod\n  > 144:    def can_edit(cls) -> bool:\n  > 145:        \"\"\"\n  > 146:        Returns whether this tool can perform editing operations on code.\n  > 147:\n  > 148:        :return: True if the tool can edit code, False otherwise\n  > 149:        \"\"\"\n  > 150:        return issubclass(cls, ToolMarkerCanEdit)\n  > 151:\n  > 152:    @classmethod\n  > 153:    def get_tool_description(cls) -> str:\n  > 154:        docstring = cls.__doc__\n  > 155:        if docstring is None:\n  > 156:            return \"\"\n  > 157:        return docstring.strip()\n  > 158:\n  > 159:    @classmethod\n  > 160:    def get_apply_docstring_from_cls(cls) -> str:\n  > 161:        \"\"\"Get the docstring for the apply method from the class (static metadata).\n  > 162:        Needed for creating MCP tools in a separate process without running into serialization issues.\n  > 163:        \"\"\"\n  > 164:        # First try to get from __dict__ to handle dynamic docstring changes\n  > 165:        if \"apply\" in cls.__dict__:\n  > 166:            apply_fn = cls.__dict__[\"apply\"]\n  > 167:        else:\n  > 168:            # Fall back to getattr for inherited methods\n  > 169:            apply_fn = getattr(cls, \"apply\", None)\n  > 170:            if apply_fn is None:\n  > 171:                raise AttributeError(f\"apply method not defined in {cls}. Did you forget to implement it?\")\n  > 172:\n  > 173:        docstring = apply_fn.__doc__\n  > 174:        if not docstring:\n  > 175:            raise AttributeError(f\"apply method has no (or empty) docstring in {cls}. Did you forget to implement it?\")\n  > 176:        return docstring.strip()\n  > 177:\n  > 178:    def get_apply_docstring(self) -> str:\n  > 179:        \"\"\"Gets the docstring for the tool application, used by the MCP server.\"\"\"\n  > 180:        return self.get_apply_docstring_from_cls()\n  > 181:\n  > 182:    def get_apply_fn_metadata(self) -> FuncMetadata:\n  > 183:        \"\"\"Gets the metadata for the tool application function, used by the MCP server.\"\"\"\n  > 184:        return self.get_apply_fn_metadata_from_cls()\n  > 185:\n  > 186:    @classmethod\n  > 187:    def get_apply_fn_metadata_from_cls(cls) -> FuncMetadata:\n  > 188:        \"\"\"Get the metadata for the apply method from the class (static metadata).\n  > 189:        Needed for creating MCP tools in a separate process without running into serialization issues.\n  > 190:        \"\"\"\n  > 191:        # First try to get from __dict__ to handle dynamic docstring changes\n  > 192:        if \"apply\" in cls.__dict__:\n  > 193:            apply_fn = cls.__dict__[\"apply\"]\n  > 194:        else:\n  > 195:            # Fall back to getattr for inherited methods\n  > 196:            apply_fn = getattr(cls, \"apply\", None)\n  > 197:            if apply_fn is None:\n  > 198:                raise AttributeError(f\"apply method not defined in {cls}. Did you forget to implement it?\")\n  > 199:\n  > 200:        return func_metadata(apply_fn, skip_names=[\"self\", \"cls\"])\n  > 201:\n  > 202:    def _log_tool_application(self, frame: Any) -> None:\n  > 203:        params = {}\n  > 204:        ignored_params = {\"self\", \"log_call\", \"catch_exceptions\", \"args\", \"apply_fn\"}\n  > 205:        for param, value in frame.f_locals.items():\n  > 206:            if param in ignored_params:\n  > 207:                continue\n  > 208:            if param == \"kwargs\":\n  > 209:                params.update(value)\n  > 210:            else:\n  > 211:                params[param] = value\n  > 212:        log.info(f\"{self.get_name_from_cls()}: {dict_string(params)}\")\n  > 213:\n  > 214:    def _limit_length(self, result: str, max_answer_chars: int) -> str:\n  > 215:        if max_answer_chars == -1:\n  > 216:            max_answer_chars = self.agent.serena_config.default_max_tool_answer_chars\n  > 217:        if max_answer_chars <= 0:\n  > 218:            raise ValueError(f\"Must be positive or the default (-1), got: {max_answer_chars=}\")\n  > 219:        if (n_chars := len(result)) > max_answer_chars:\n  > 220:            result = (\n  > 221:                f\"The answer is too long ({n_chars} characters). \"\n  > 222:                + \"Please try a more specific tool query or raise the max_answer_chars parameter.\"\n  > 223:            )\n  > 224:        return result\n  > 225:\n  > 226:    def is_active(self) -> bool:\n  > 227:        return self.agent.tool_is_active(self.__class__)\n  > 228:\n  > 229:    def apply_ex(self, log_call: bool = True, catch_exceptions: bool = True, **kwargs) -> str:  # type: ignore\n  > 230:        \"\"\"\n  > 231:        Applies the tool with logging and exception handling, using the given keyword arguments\n  > 232:        \"\"\"\n  > 233:\n  > 234:        def task() -> str:\n  > 235:            apply_fn = self.get_apply_fn()\n  > 236:\n  > 237:            try:\n  > 238:                if not self.is_active():\n  > 239:                    return f\"Error: Tool '{self.get_name_from_cls()}' is not active. Active tools: {self.agent.get_active_tool_names()}\"\n  > 240:            except Exception as e:\n  > 241:                return f\"RuntimeError while checking if tool {self.get_name_from_cls()} is active: {e}\"\n  > 242:\n  > 243:            if log_call:\n  > 244:                self._log_tool_application(inspect.currentframe())\n  > 245:            try:\n  > 246:                # check whether the tool requires an active project and language server\n  > 247:                if not isinstance(self, ToolMarkerDoesNotRequireActiveProject):\n  > 248:                    if self.agent._active_project is None:\n  > 249:                        return (\n  > 250:                            \"Error: No active project. Ask the user to provide the project path or to select a project from this list of known projects: \"\n  > 251:                            + f\"{self.agent.serena_config.project_names}\"\n  > 252:                        )\n  > 253:                    if self.agent.is_using_language_server() and not self.agent.is_language_server_running():\n  > 254:                        log.info(\"Language server is not running. Starting it ...\")\n  > 255:                        self.agent.reset_language_server()\n  > 256:\n  > 257:                # apply the actual tool\n  > 258:                try:\n  > 259:                    result = apply_fn(**kwargs)\n  > 260:                except SolidLSPException as e:\n  > 261:                    if e.is_language_server_terminated():\n  > 262:                        log.error(f\"Language server terminated while executing tool ({e}). Restarting the language server and retrying ...\")\n  > 263:                        self.agent.reset_language_server()\n  > 264:                        result = apply_fn(**kwargs)\n  > 265:                    else:\n  > 266:                        raise\n  > 267:\n  > 268:                # record tool usage\n  > 269:                self.agent.record_tool_usage_if_enabled(kwargs, result, self)\n  > 270:\n  > 271:            except Exception as e:\n  > 272:                if not catch_exceptions:\n  > 273:                    raise\n  > 274:                msg = f\"Error executing tool: {e}\"\n  > 275:                log.error(f\"Error executing tool: {e}\", exc_info=e)\n  > 276:                result = msg\n  > 277:\n  > 278:            if log_call:\n  > 279:                log.info(f\"Result: {result}\")\n  > 280:\n  > 281:            try:\n  > 282:                if self.agent.language_server is not None:\n  > 283:                    self.agent.language_server.save_cache()\n  > 284:            except Exception as e:\n  > 285:                log.error(f\"Error saving language server cache: {e}\")\n  > 286:\n  > 287:            return result\n  > 288:\n  > 289:        future = self.agent.issue_task(task, name=self.__class__.__name__)\n  > 290:        return future.result(timeout=self.agent.serena_config.tool_timeout)\n  > 291:\n  > 292:\n  > 293:class EditedFileContext:\n  > 294:    \"\"\"\n  > 295:    Context manager for file editing.\n  > 296:\n  > 297:    Create the context, then use `set_updated_content` to set the new content, the original content\n  > 298:    being provided in `original_content`.\n  > 299:    When exiting the context without an exception, the updated content will be written back to the file.\n  > 300:    \"\"\"\n  > 301:\n  > 302:    def __init__(self, relative_path: str, agent: \"SerenaAgent\"):\n  > 303:        self._project = agent.get_active_project()\n  > 304:        assert self._project is not None\n  > 305:        self._abs_path = os.path.join(self._project.project_root, relative_path)\n  > 306:        if not os.path.isfile(self._abs_path):\n  > 307:            raise FileNotFoundError(f\"File {self._abs_path} does not exist.\")\n  > 308:        with open(self._abs_path, encoding=self._project.project_config.encoding) as f:\n  > 309:            self._original_content = f.read()\n  > 310:        self._updated_content: str | None = None\n  > 311:\n  > 312:    def __enter__(self) -> Self:\n  > 313:        return self\n  > 314:\n  > 315:    def get_original_content(self) -> str:\n  > 316:        \"\"\"\n  > 317:        :return: the original content of the file before any modifications.\n  > 318:        \"\"\"\n  > 319:        return self._original_content\n  > 320:\n  > 321:    def set_updated_content(self, content: str) -> None:\n  > 322:        \"\"\"\n  > 323:        Sets the updated content of the file, which will be written back to the file\n  > 324:        when the context is exited without an exception.\n  > 325:\n  > 326:        :param content: the updated content of the file\n  > 327:        \"\"\"\n  > 328:        self._updated_content = content\n  > 329:\n  > 330:    def __exit__(self, exc_type: type[BaseException] | None, exc_value: BaseException | None, traceback: TracebackType | None) -> None:\n  > 331:        if self._updated_content is not None and exc_type is None:\n  > 332:            assert self._project is not None\n  > 333:            with open(self._abs_path, \"w\", encoding=self._project.project_config.encoding) as f:\n  > 334:                f.write(self._updated_content)\n  > 335:            log.info(f\"Updated content written to {self._abs_path}\")\n  > 336:            # Language servers should automatically detect the change and update its state accordingly.\n  > 337:            # If they do not, we may have to add a call to notify it.\n  > 338:\n  > 339:\n  > 340:@dataclass(kw_only=True)\n  > 341:class RegisteredTool:\n  > 342:    tool_class: type[Tool]\n  > 343:    is_optional: bool\n  > 344:    tool_name: str\n  > 345:\n  > 346:\n  > 347:@singleton\n  > 348:class ToolRegistry:\n  > 349:    def __init__(self) -> None:\n  > 350:        self._tool_dict: dict[str, RegisteredTool] = {}\n  > 351:        for cls in iter_subclasses(Tool):\n  > 352:            if not cls.__module__.startswith(\"serena.tools\"):\n  > 353:                continue\n  > 354:            is_optional = issubclass(cls, ToolMarkerOptional)\n  > 355:            name = cls.get_name_from_cls()\n  > 356:            if name in self._tool_dict:\n  > 357:                raise ValueError(f\"Duplicate tool name found: {name}. Tool classes must have unique names.\")\n  > 358:            self._tool_dict[name] = RegisteredTool(tool_class=cls, is_optional=is_optional, tool_name=name)"
+    ],
+    "src\\serena\\tools\\workflow_tools.py": [
+      "  >  11:class CheckOnboardingPerformedTool(Tool):\n  >  12:    \"\"\"\n  >  13:    Checks whether project onboarding was already performed.\n  >  14:    \"\"\"\n  >  15:\n  >  16:    def apply(self) -> str:\n  >  17:        \"\"\"\n  >  18:        Checks whether project onboarding was already performed.\n  >  19:        You should always call this tool before beginning to actually work on the project/after activating a project,\n  >  20:        but after calling the initial instructions tool.\n  >  21:        \"\"\"\n  >  22:        from .memory_tools import ListMemoriesTool\n  >  23:\n  >  24:        list_memories_tool = self.agent.get_tool(ListMemoriesTool)\n  >  25:        memories = json.loads(list_memories_tool.apply())\n  >  26:        if len(memories) == 0:\n  >  27:            return (\n  >  28:                \"Onboarding not performed yet (no memories available). \"\n  >  29:                + \"You should perform onboarding by calling the `onboarding` tool before proceeding with the task.\"\n  >  30:            )\n  >  31:        else:\n  >  32:            return f\"\"\"The onboarding was already performed, below is the list of available memories.\n  >  33:            Do not read them immediately, just remember that they exist and that you can read them later, if it is necessary\n  >  34:            for the current task.\n  >  35:            Some memories may be based on previous conversations, others may be general for the current project.\n  >  36:            You should be able to tell which one you need based on the name of the memory.\n  >  37:            \n  >  38:            {memories}\"\"\"\n  >  39:\n  >  40:\n  >  41:class OnboardingTool(Tool):\n  >  42:    \"\"\"\n  >  43:    Performs onboarding (identifying the project structure and essential tasks, e.g. for testing or building).\n  >  44:    \"\"\"\n  >  45:\n  >  46:    def apply(self) -> str:\n  >  47:        \"\"\"\n  >  48:        Call this tool if onboarding was not performed yet.\n  >  49:        You will call this tool at most once per conversation.\n  >  50:\n  >  51:        :return: instructions on how to create the onboarding information\n  >  52:        \"\"\"\n  >  53:        system = platform.system()\n  >  54:        return self.prompt_factory.create_onboarding_prompt(system=system)\n  >  55:\n  >  56:\n  >  57:class ThinkAboutCollectedInformationTool(Tool):\n  >  58:    \"\"\"\n  >  59:    Thinking tool for pondering the completeness of collected information.\n  >  60:    \"\"\"\n  >  61:\n  >  62:    def apply(self) -> str:\n  >  63:        \"\"\"\n  >  64:        Think about the collected information and whether it is sufficient and relevant.\n  >  65:        This tool should ALWAYS be called after you have completed a non-trivial sequence of searching steps like\n  >  66:        find_symbol, find_referencing_symbols, search_files_for_pattern, read_file, etc.\n  >  67:        \"\"\"\n  >  68:        return self.prompt_factory.create_think_about_collected_information()\n  >  69:\n  >  70:\n  >  71:class ThinkAboutTaskAdherenceTool(Tool):\n  >  72:    \"\"\"\n  >  73:    Thinking tool for determining whether the agent is still on track with the current task.\n  >  74:    \"\"\"\n  >  75:\n  >  76:    def apply(self) -> str:\n  >  77:        \"\"\"\n  >  78:        Think about the task at hand and whether you are still on track.\n  >  79:        Especially important if the conversation has been going on for a while and there\n  >  80:        has been a lot of back and forth.\n  >  81:\n  >  82:        This tool should ALWAYS be called before you insert, replace, or delete code.\n  >  83:        \"\"\"\n  >  84:        return self.prompt_factory.create_think_about_task_adherence()\n  >  85:\n  >  86:\n  >  87:class ThinkAboutWhetherYouAreDoneTool(Tool):\n  >  88:    \"\"\"\n  >  89:    Thinking tool for determining whether the task is truly completed.\n  >  90:    \"\"\"\n  >  91:\n  >  92:    def apply(self) -> str:\n  >  93:        \"\"\"\n  >  94:        Whenever you feel that you are done with what the user has asked for, it is important to call this tool.\n  >  95:        \"\"\"\n  >  96:        return self.prompt_factory.create_think_about_whether_you_are_done()\n  >  97:\n  >  98:\n  >  99:class SummarizeChangesTool(Tool, ToolMarkerOptional):\n  > 100:    \"\"\"\n  > 101:    Provides instructions for summarizing the changes made to the codebase.\n  > 102:    \"\"\"\n  > 103:\n  > 104:    def apply(self) -> str:\n  > 105:        \"\"\"\n  > 106:        Summarize the changes you have made to the codebase.\n  > 107:        This tool should always be called after you have fully completed any non-trivial coding task,\n  > 108:        but only after the think_about_whether_you_are_done call.\n  > 109:        \"\"\"\n  > 110:        return self.prompt_factory.create_summarize_changes()\n  > 111:\n  > 112:\n  > 113:class PrepareForNewConversationTool(Tool):\n  > 114:    \"\"\"\n  > 115:    Provides instructions for preparing for a new conversation (in order to continue with the necessary context).\n  > 116:    \"\"\"\n  > 117:\n  > 118:    def apply(self) -> str:\n  > 119:        \"\"\"\n  > 120:        Instructions for preparing for a new conversation. This tool should only be called on explicit user request.\n  > 121:        \"\"\"\n  > 122:        return self.prompt_factory.create_prepare_for_new_conversation()\n  > 123:\n  > 124:\n  > 125:class InitialInstructionsTool(Tool, ToolMarkerDoesNotRequireActiveProject, ToolMarkerOptional):"
+    ]
+  },
+  "solid_language_server": [
+    {
+      "name_path": "SolidLanguageServer",
+      "kind": "Class",
+      "body_location": {
+        "start_line": 80,
+        "end_line": 1649
+      },
+      "children": [
+        {
+          "name": "CACHE_FOLDER_NAME",
+          "name_path": "SolidLanguageServer/CACHE_FOLDER_NAME",
+          "kind": "Constant",
+          "location": {
+            "line": 86,
+            "column": 4
+          },
+          "body_location": {
+            "start_line": 86,
+            "end_line": 86
+          }
+        },
+        {
+          "name": "is_ignored_dirname",
+          "name_path": "SolidLanguageServer/is_ignored_dirname",
+          "kind": "Method",
+          "location": {
+            "line": 89,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 89,
+            "end_line": 94
+          }
+        },
+        {
+          "name": "get_language_enum_instance",
+          "name_path": "SolidLanguageServer/get_language_enum_instance",
+          "kind": "Method",
+          "location": {
+            "line": 97,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 96,
+            "end_line": 98
+          }
+        },
+        {
+          "name": "ls_resources_dir",
+          "name_path": "SolidLanguageServer/ls_resources_dir",
+          "kind": "Method",
+          "location": {
+            "line": 101,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 100,
+            "end_line": 119
+          }
+        },
+        {
+          "name": "create",
+          "name_path": "SolidLanguageServer/create",
+          "kind": "Method",
+          "location": {
+            "line": 122,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 121,
+            "end_line": 153
+          }
+        },
+        {
+          "name": "__init__",
+          "name_path": "SolidLanguageServer/__init__",
+          "kind": "Method",
+          "location": {
+            "line": 155,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 155,
+            "end_line": 234
+          }
+        },
+        {
+          "name": "_get_wait_time_for_cross_file_referencing",
+          "name_path": "SolidLanguageServer/_get_wait_time_for_cross_file_referencing",
+          "kind": "Method",
+          "location": {
+            "line": 236,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 236,
+            "end_line": 242
+          }
+        },
+        {
+          "name": "set_request_timeout",
+          "name_path": "SolidLanguageServer/set_request_timeout",
+          "kind": "Method",
+          "location": {
+            "line": 244,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 244,
+            "end_line": 248
+          }
+        },
+        {
+          "name": "get_ignore_spec",
+          "name_path": "SolidLanguageServer/get_ignore_spec",
+          "kind": "Method",
+          "location": {
+            "line": 250,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 250,
+            "end_line": 260
+          }
+        },
+        {
+          "name": "is_ignored_path",
+          "name_path": "SolidLanguageServer/is_ignored_path",
+          "kind": "Method",
+          "location": {
+            "line": 262,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 262,
+            "end_line": 296
+          }
+        },
+        {
+          "name": "_shutdown",
+          "name_path": "SolidLanguageServer/_shutdown",
+          "kind": "Method",
+          "location": {
+            "line": 298,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 298,
+            "end_line": 352
+          }
+        },
+        {
+          "name": "start_server",
+          "name_path": "SolidLanguageServer/start_server",
+          "kind": "Method",
+          "location": {
+            "line": 355,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 354,
+            "end_line": 358
+          }
+        },
+        {
+          "name": "_start_server_process",
+          "name_path": "SolidLanguageServer/_start_server_process",
+          "kind": "Method",
+          "location": {
+            "line": 360,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 360,
+            "end_line": 362
+          }
+        },
+        {
+          "name": "_start_server",
+          "name_path": "SolidLanguageServer/_start_server",
+          "kind": "Method",
+          "location": {
+            "line": 365,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 364,
+            "end_line": 366
+          }
+        },
+        {
+          "name": "open_file",
+          "name_path": "SolidLanguageServer/open_file",
+          "kind": "Method",
+          "location": {
+            "line": 369,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 368,
+            "end_line": 419
+          }
+        },
+        {
+          "name": "insert_text_at_position",
+          "name_path": "SolidLanguageServer/insert_text_at_position",
+          "kind": "Method",
+          "location": {
+            "line": 421,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 421,
+            "end_line": 466
+          }
+        },
+        {
+          "name": "delete_text_between_positions",
+          "name_path": "SolidLanguageServer/delete_text_between_positions",
+          "kind": "Method",
+          "location": {
+            "line": 468,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 468,
+            "end_line": 505
+          }
+        },
+        {
+          "name": "_send_definition_request",
+          "name_path": "SolidLanguageServer/_send_definition_request",
+          "kind": "Method",
+          "location": {
+            "line": 507,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 507,
+            "end_line": 508
+          }
+        },
+        {
+          "name": "request_definition",
+          "name_path": "SolidLanguageServer/request_definition",
+          "kind": "Method",
+          "location": {
+            "line": 510,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 510,
+            "end_line": 590
+          }
+        },
+        {
+          "name": "_send_references_request",
+          "name_path": "SolidLanguageServer/_send_references_request",
+          "kind": "Method",
+          "location": {
+            "line": 593,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 593,
+            "end_line": 600
+          }
+        },
+        {
+          "name": "request_references",
+          "name_path": "SolidLanguageServer/request_references",
+          "kind": "Method",
+          "location": {
+            "line": 602,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 602,
+            "end_line": 668
+          }
+        },
+        {
+          "name": "request_text_document_diagnostics",
+          "name_path": "SolidLanguageServer/request_text_document_diagnostics",
+          "kind": "Method",
+          "location": {
+            "line": 670,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 670,
+            "end_line": 710
+          }
+        },
+        {
+          "name": "retrieve_full_file_content",
+          "name_path": "SolidLanguageServer/retrieve_full_file_content",
+          "kind": "Method",
+          "location": {
+            "line": 712,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 712,
+            "end_line": 719
+          }
+        },
+        {
+          "name": "retrieve_content_around_line",
+          "name_path": "SolidLanguageServer/retrieve_content_around_line",
+          "kind": "Method",
+          "location": {
+            "line": 721,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 721,
+            "end_line": 742
+          }
+        },
+        {
+          "name": "request_completions",
+          "name_path": "SolidLanguageServer/request_completions",
+          "kind": "Method",
+          "location": {
+            "line": 744,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 744,
+            "end_line": 828
+          }
+        },
+        {
+          "name": "request_document_symbols",
+          "name_path": "SolidLanguageServer/request_document_symbols",
+          "kind": "Method",
+          "location": {
+            "line": 830,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 830,
+            "end_line": 955
+          }
+        },
+        {
+          "name": "request_full_symbol_tree",
+          "name_path": "SolidLanguageServer/request_full_symbol_tree",
+          "kind": "Method",
+          "location": {
+            "line": 957,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 957,
+            "end_line": 1095
+          }
+        },
+        {
+          "name": "_get_range_from_file_content",
+          "name_path": "SolidLanguageServer/_get_range_from_file_content",
+          "kind": "Method",
+          "location": {
+            "line": 1098,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 1097,
+            "end_line": 1105
+          }
+        },
+        {
+          "name": "request_dir_overview",
+          "name_path": "SolidLanguageServer/request_dir_overview",
+          "kind": "Method",
+          "location": {
+            "line": 1107,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 1107,
+            "end_line": 1152
+          }
+        },
+        {
+          "name": "request_document_overview",
+          "name_path": "SolidLanguageServer/request_document_overview",
+          "kind": "Method",
+          "location": {
+            "line": 1154,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 1154,
+            "end_line": 1159
+          }
+        },
+        {
+          "name": "request_overview",
+          "name_path": "SolidLanguageServer/request_overview",
+          "kind": "Method",
+          "location": {
+            "line": 1161,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 1161,
+            "end_line": 1176
+          }
+        },
+        {
+          "name": "request_hover",
+          "name_path": "SolidLanguageServer/request_hover",
+          "kind": "Method",
+          "location": {
+            "line": 1178,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 1178,
+            "end_line": 1205
+          }
+        },
+        {
+          "name": "retrieve_symbol_body",
+          "name_path": "SolidLanguageServer/retrieve_symbol_body",
+          "kind": "Method",
+          "location": {
+            "line": 1207,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 1207,
+            "end_line": 1226
+          }
+        },
+        {
+          "name": "request_referencing_symbols",
+          "name_path": "SolidLanguageServer/request_referencing_symbols",
+          "kind": "Method",
+          "location": {
+            "line": 1228,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 1228,
+            "end_line": 1371
+          }
+        },
+        {
+          "name": "request_containing_symbol",
+          "name_path": "SolidLanguageServer/request_containing_symbol",
+          "kind": "Method",
+          "location": {
+            "line": 1373,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 1373,
+            "end_line": 1485
+          }
+        },
+        {
+          "name": "request_container_of_symbol",
+          "name_path": "SolidLanguageServer/request_container_of_symbol",
+          "kind": "Method",
+          "location": {
+            "line": 1487,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 1487,
+            "end_line": 1507
+          }
+        },
+        {
+          "name": "request_defining_symbol",
+          "name_path": "SolidLanguageServer/request_defining_symbol",
+          "kind": "Method",
+          "location": {
+            "line": 1509,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 1509,
+            "end_line": 1549
+          }
+        },
+        {
+          "name": "cache_path",
+          "name_path": "SolidLanguageServer/cache_path",
+          "kind": "Method",
+          "location": {
+            "line": 1552,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 1551,
+            "end_line": 1562
+          }
+        },
+        {
+          "name": "save_cache",
+          "name_path": "SolidLanguageServer/save_cache",
+          "kind": "Method",
+          "location": {
+            "line": 1564,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 1564,
+            "end_line": 1581
+          }
+        },
+        {
+          "name": "load_cache",
+          "name_path": "SolidLanguageServer/load_cache",
+          "kind": "Method",
+          "location": {
+            "line": 1583,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 1583,
+            "end_line": 1599
+          }
+        },
+        {
+          "name": "request_workspace_symbol",
+          "name_path": "SolidLanguageServer/request_workspace_symbol",
+          "kind": "Method",
+          "location": {
+            "line": 1601,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 1601,
+            "end_line": 1626
+          }
+        },
+        {
+          "name": "start",
+          "name_path": "SolidLanguageServer/start",
+          "kind": "Method",
+          "location": {
+            "line": 1628,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 1628,
+            "end_line": 1639
+          }
+        },
+        {
+          "name": "stop",
+          "name_path": "SolidLanguageServer/stop",
+          "kind": "Method",
+          "location": {
+            "line": 1641,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 1641,
+            "end_line": 1642
+          }
+        },
+        {
+          "name": "language_server",
+          "name_path": "SolidLanguageServer/language_server",
+          "kind": "Method",
+          "location": {
+            "line": 1645,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 1644,
+            "end_line": 1646
+          }
+        },
+        {
+          "name": "is_running",
+          "name_path": "SolidLanguageServer/is_running",
+          "kind": "Method",
+          "location": {
+            "line": 1648,
+            "column": 8
+          },
+          "body_location": {
+            "start_line": 1648,
+            "end_line": 1649
+          }
+        },
+        {
+          "name": "_solidlsp_settings",
+          "name_path": "SolidLanguageServer/_solidlsp_settings",
+          "kind": "Variable",
+          "location": {
+            "line": 177,
+            "column": 13
+          },
+          "body_location": {
+            "start_line": 177,
+            "end_line": 177
+          }
+        },
+        {
+          "name": "logger",
+          "name_path": "SolidLanguageServer/logger",
+          "kind": "Variable",
+          "location": {
+            "line": 178,
+            "column": 13
+          },
+          "body_location": {
+            "start_line": 178,
+            "end_line": 178
+          }
+        },
+        {
+          "name": "repository_root_path",
+          "name_path": "SolidLanguageServer/repository_root_path",
+          "kind": "Variable",
+          "location": {
+            "line": 179,
+            "column": 13
+          },
+          "body_location": {
+            "start_line": 179,
+            "end_line": 179
+          }
+        },
+        {
+          "name": "language_id",
+          "name_path": "SolidLanguageServer/language_id",
+          "kind": "Variable",
+          "location": {
+            "line": 185,
+            "column": 13
+          },
+          "body_location": {
+            "start_line": 185,
+            "end_line": 185
+          }
+        },
+        {
+          "name": "open_file_buffers",
+          "name_path": "SolidLanguageServer/open_file_buffers",
+          "kind": "Variable",
+          "location": {
+            "line": 186,
+            "column": 13
+          },
+          "body_location": {
+            "start_line": 186,
+            "end_line": 186
+          }
+        },
+        {
+          "name": "language",
+          "name_path": "SolidLanguageServer/language",
+          "kind": "Variable",
+          "location": {
+            "line": 187,
+            "column": 13
+          },
+          "body_location": {
+            "start_line": 187,
+            "end_line": 187
+          }
+        },
+        {
+          "name": "_document_symbols_cache",
+          "name_path": "SolidLanguageServer/_document_symbols_cache",
+          "kind": "Variable",
+          "location": {
+            "line": 190,
+            "column": 13
+          },
+          "body_location": {
+            "start_line": 190,
+            "end_line": 190
+          }
+        },
+        {
+          "name": "_cache_lock",
+          "name_path": "SolidLanguageServer/_cache_lock",
+          "kind": "Variable",
+          "location": {
+            "line": 194,
+            "column": 13
+          },
+          "body_location": {
+            "start_line": 194,
+            "end_line": 194
+          }
+        },
+        {
+          "name": "_cache_has_changed",
+          "name_path": "SolidLanguageServer/_cache_has_changed",
+          "kind": "Variable",
+          "location": {
+            "line": 195,
+            "column": 13
+          },
+          "body_location": {
+            "start_line": 195,
+            "end_line": 195
+          }
+        },
+        {
+          "name": "server_started",
+          "name_path": "SolidLanguageServer/server_started",
+          "kind": "Variable",
+          "location": {
+            "line": 198,
+            "column": 13
+          },
+          "body_location": {
+            "start_line": 198,
+            "end_line": 198
+          }
+        },
+        {
+          "name": "completions_available",
+          "name_path": "SolidLanguageServer/completions_available",
+          "kind": "Variable",
+          "location": {
+            "line": 199,
+            "column": 13
+          },
+          "body_location": {
+            "start_line": 199,
+            "end_line": 199
+          }
+        },
+        {
+          "name": "server",
+          "name_path": "SolidLanguageServer/server",
+          "kind": "Variable",
+          "location": {
+            "line": 213,
+            "column": 13
+          },
+          "body_location": {
+            "start_line": 213,
+            "end_line": 213
+          }
+        },
+        {
+          "name": "_ignore_spec",
+          "name_path": "SolidLanguageServer/_ignore_spec",
+          "kind": "Variable",
+          "location": {
+            "line": 229,
+            "column": 13
+          },
+          "body_location": {
+            "start_line": 229,
+            "end_line": 229
+          }
+        },
+        {
+          "name": "_server_context",
+          "name_path": "SolidLanguageServer/_server_context",
+          "kind": "Variable",
+          "location": {
+            "line": 231,
+            "column": 13
+          },
+          "body_location": {
+            "start_line": 231,
+            "end_line": 231
+          }
+        },
+        {
+          "name": "_request_timeout",
+          "name_path": "SolidLanguageServer/_request_timeout",
+          "kind": "Variable",
+          "location": {
+            "line": 232,
+            "column": 13
+          },
+          "body_location": {
+            "start_line": 232,
+            "end_line": 232
+          }
+        },
+        {
+          "name": "_has_waited_for_cross_file_references",
+          "name_path": "SolidLanguageServer/_has_waited_for_cross_file_references",
+          "kind": "Variable",
+          "location": {
+            "line": 234,
+            "column": 13
+          },
+          "body_location": {
+            "start_line": 234,
+            "end_line": 234
+          }
+        }
+      ],
+      "relative_path": "src\\solidlsp\\ls.py"
+    }
+  ],
+  "language_servers": [
+    "src\\solidlsp\\language_servers\\al_language_server.py",
+    "src\\solidlsp\\language_servers\\bash_language_server.py",
+    "src\\solidlsp\\language_servers\\clangd_language_server.py",
+    "src\\solidlsp\\language_servers\\clojure_lsp.py",
+    "src\\solidlsp\\language_servers\\common.py",
+    "src\\solidlsp\\language_servers\\csharp_language_server.py",
+    "src\\solidlsp\\language_servers\\dart_language_server.py",
+    "src\\solidlsp\\language_servers\\eclipse_jdtls.py",
+    "src\\solidlsp\\language_servers\\erlang_language_server.py",
+    "src\\solidlsp\\language_servers\\gopls.py",
+    "src\\solidlsp\\language_servers\\intelephense.py",
+    "src\\solidlsp\\language_servers\\jedi_server.py",
+    "src\\solidlsp\\language_servers\\kotlin_language_server.py",
+    "src\\solidlsp\\language_servers\\lua_ls.py",
+    "src\\solidlsp\\language_servers\\nixd_ls.py",
+    "src\\solidlsp\\language_servers\\omnisharp.py",
+    "src\\solidlsp\\language_servers\\pyright_server.py",
+    "src\\solidlsp\\language_servers\\ruby_lsp.py",
+    "src\\solidlsp\\language_servers\\rust_analyzer.py",
+    "src\\solidlsp\\language_servers\\r_language_server.py",
+    "src\\solidlsp\\language_servers\\solargraph.py",
+    "src\\solidlsp\\language_servers\\sourcekit_lsp.py",
+    "src\\solidlsp\\language_servers\\terraform_ls.py",
+    "src\\solidlsp\\language_servers\\typescript_language_server.py",
+    "src\\solidlsp\\language_servers\\vts_language_server.py",
+    "src\\solidlsp\\language_servers\\zls.py"
+  ],
+  "config_classes": [
+    {
+      "name_path": "log",
+      "kind": 13
+    },
+    {
+      "name_path": "T",
+      "kind": 14
+    },
+    {
+      "name_path": "DEFAULT_TOOL_TIMEOUT",
+      "kind": 14
+    },
+    {
+      "name_path": "SerenaPaths",
+      "kind": 5
+    },
+    {
+      "name_path": "ToolSet",
+      "kind": 5
+    },
+    {
+      "name_path": "ToolInclusionDefinition",
+      "kind": 5
+    },
+    {
+      "name_path": "SerenaConfigError",
+      "kind": 5
+    },
+    {
+      "name_path": "get_serena_managed_in_project_dir",
+      "kind": 12
+    },
+    {
+      "name_path": "is_running_in_docker",
+      "kind": 12
+    },
+    {
+      "name_path": "ProjectConfig",
+      "kind": 5
+    },
+    {
+      "name_path": "RegisteredProject",
+      "kind": 5
+    },
+    {
+      "name_path": "SerenaConfig",
+      "kind": 5
+    }
+  ],
+  "mcp_factories": [
+    {
+      "name_path": "SerenaMCPRequestContext",
+      "kind": "Class",
+      "body_location": {
+        "start_line": 43,
+        "end_line": 45
+      },
+      "relative_path": "src\\serena\\mcp.py"
+    },
+    {
+      "name_path": "SerenaMCPFactory",
+      "kind": "Class",
+      "body_location": {
+        "start_line": 48,
+        "end_line": 309
+      },
+      "relative_path": "src\\serena\\mcp.py"
+    },
+    {
+      "name_path": "SerenaMCPFactorySingleProcess",
+      "kind": "Class",
+      "body_location": {
+        "start_line": 312,
+        "end_line": 347
+      },
+      "relative_path": "src\\serena\\mcp.py"
+    }
+  ],
+  "example_scripts": [
+    "scripts\\agno_agent.py",
+    "scripts\\demo_run_tools.py",
+    "scripts\\gen_prompt_factory.py",
+    "scripts\\mcp_server.py",
+    "scripts\\print_mode_context_options.py",
+    "scripts\\print_tool_overview.py"
+  ],
+  "agent_usage": {
+    "analyze_serena.py": [
+      "  >  33:    agent = SerenaAgent("
+    ],
+    "scripts\\demo_run_tools.py": [
+      "  >  15:    agent = SerenaAgent(project=REPO_ROOT, serena_config=SerenaConfig(gui_log_window_enabled=False, web_dashboard=False))"
+    ],
+    "src\\serena\\agno.py": [
+      "  > 108:                    serena_agent = SerenaAgent(project_file, context=SerenaAgentContext.load(\"agent\"))"
+    ],
+    "src\\serena\\cli.py": [
+      "  > 225:        agent = SerenaAgent(",
+      "  > 563:                agent = SerenaAgent(project=project_path, serena_config=config)",
+      "  > 723:        agent = SerenaAgent("
+    ],
+    "src\\serena\\mcp.py": [
+      "  > 330:        self.agent = SerenaAgent("
+    ],
+    "test\\serena\\test_serena_agent.py": [
+      "  >  61:    return SerenaAgent(project=project_name, serena_config=serena_config)"
+    ]
+  }
+}
