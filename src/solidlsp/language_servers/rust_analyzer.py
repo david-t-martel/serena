@@ -5,7 +5,6 @@ Provides Rust specific instantiation of the LanguageServer class. Contains vario
 import logging
 import os
 import pathlib
-import subprocess
 import threading
 from typing import cast
 
@@ -17,6 +16,7 @@ from solidlsp.ls_logger import LanguageServerLogger
 from solidlsp.lsp_protocol_handler.lsp_types import InitializeParams
 from solidlsp.lsp_protocol_handler.server import ProcessLaunchInfo
 from solidlsp.settings import SolidLSPSettings
+from solidlsp.util.subprocess_util import run_rustup_command
 
 
 class RustAnalyzer(SolidLanguageServer):
@@ -44,7 +44,7 @@ class RustAnalyzer(SolidLanguageServer):
     def _get_rustup_version() -> str | None:
         """Get installed rustup version or None if not found."""
         try:
-            result = subprocess.run(["rustup", "--version"], capture_output=True, text=True, check=False)
+            result = run_rustup_command(["rustup", "--version"])
             if result.returncode == 0:
                 return result.stdout.strip()
         except FileNotFoundError:
@@ -56,7 +56,7 @@ class RustAnalyzer(SolidLanguageServer):
         """Get rust-analyzer path via rustup. Returns None if not found."""
         try:
             # Note: we avoid using system PATH to avoid picking up incorrect aliases
-            result = subprocess.run(["rustup", "which", "rust-analyzer"], capture_output=True, text=True, check=False)
+            result = run_rustup_command(["rustup", "which", "rust-analyzer"])
             if result.returncode == 0:
                 return result.stdout.strip()
 
@@ -84,9 +84,14 @@ class RustAnalyzer(SolidLanguageServer):
             )
 
         # Try to install rust-analyzer component
-        result = subprocess.run(["rustup", "component", "add", "rust-analyzer"], check=False, capture_output=True, text=True)
+        result = run_rustup_command(["rustup", "component", "add", "rust-analyzer"])
         if result.returncode != 0:
-            raise RuntimeError(f"Failed to install rust-analyzer via rustup: {result.stderr}")
+            error_msg = (
+                f"Failed to install rust-analyzer via rustup: {result.stdout}\n{result.stderr}"
+                if result.stderr
+                else f"Failed to install rust-analyzer via rustup: {result.stdout}"
+            )
+            raise RuntimeError(error_msg)
 
         # Try again after installation
         path = RustAnalyzer._get_rust_analyzer_path()
