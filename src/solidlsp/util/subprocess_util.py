@@ -51,6 +51,45 @@ def run_rustup_command(args: list[str], **kwargs: Any) -> subprocess.CompletedPr
         return subprocess.run(args, shell=False, check=False, **kwargs)  # type: ignore
 
 
+def find_executable_in_path(exe_name: str) -> str | None:
+    """
+    Find an executable in PATH with proper resolution on Windows.
+
+    Uses both shutil.which() and shell-based lookup on Windows to ensure
+    the executable is found even when PATH inheritance is limited.
+
+    :param exe_name: Name of the executable (e.g., "node", "npm", "npx")
+    :return: Full path to executable or None if not found
+    """
+    import shutil
+
+    # First try shutil.which which should work in most cases
+    path = shutil.which(exe_name)
+    if path:
+        return path
+
+    # On Windows, try using shell command as fallback for better PATH resolution
+    if platform.system() == "Windows":
+        try:
+            result = subprocess.run(
+                f"where {exe_name}",
+                shell=True,
+                capture_output=True,
+                text=True,
+                check=False,
+                env=os.environ.copy(),
+            )
+            if result.returncode == 0:
+                # 'where' may return multiple results, take the first
+                lines = result.stdout.strip().split("\n")
+                if lines:
+                    return lines[0].strip()
+        except Exception:
+            pass
+
+    return None
+
+
 def quote_arg(arg: str) -> str:
     """
     Adds quotes around an argument if it contains spaces.

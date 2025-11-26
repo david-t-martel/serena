@@ -5,7 +5,6 @@ Provides Elm specific instantiation of the LanguageServer class. Contains variou
 import logging
 import os
 import pathlib
-import shutil
 import threading
 
 from overrides import override
@@ -17,6 +16,7 @@ from solidlsp.ls_logger import LanguageServerLogger
 from solidlsp.lsp_protocol_handler.lsp_types import InitializeParams
 from solidlsp.lsp_protocol_handler.server import ProcessLaunchInfo
 from solidlsp.settings import SolidLSPSettings
+from solidlsp.util.subprocess_util import find_executable_in_path
 
 from .common import RuntimeDependency, RuntimeDependencyCollection
 
@@ -60,16 +60,16 @@ class ElmLanguageServer(SolidLanguageServer):
         Setup runtime dependencies for Elm Language Server and return the command to start the server.
         """
         # Check if elm-language-server is already installed globally
-        system_elm_ls = shutil.which("elm-language-server")
+        system_elm_ls = find_executable_in_path("elm-language-server")
         if system_elm_ls:
             logger.log(f"Found system-installed elm-language-server at {system_elm_ls}", logging.INFO)
             return [system_elm_ls, "--stdio"]
 
-        # Verify node and npm are installed
-        is_node_installed = shutil.which("node") is not None
-        assert is_node_installed, "node is not installed or isn't in PATH. Please install NodeJS and try again."
-        is_npm_installed = shutil.which("npm") is not None
-        assert is_npm_installed, "npm is not installed or isn't in PATH. Please install npm and try again."
+        # Verify node and npm are installed with proper Windows PATH resolution
+        node_path = find_executable_in_path("node")
+        assert node_path is not None, "node is not installed or isn't in PATH. Please install NodeJS and try again."
+        npm_path = find_executable_in_path("npm")
+        assert npm_path is not None, "npm is not installed or isn't in PATH. Please install npm and try again."
 
         deps = RuntimeDependencyCollection(
             [

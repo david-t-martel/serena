@@ -5,7 +5,6 @@ Provides TypeScript specific instantiation of the LanguageServer class. Contains
 import logging
 import os
 import pathlib
-import shutil
 import threading
 from typing import Any, cast
 
@@ -19,6 +18,7 @@ from solidlsp.ls_utils import PlatformId, PlatformUtils
 from solidlsp.lsp_protocol_handler.lsp_types import InitializeParams
 from solidlsp.lsp_protocol_handler.server import ProcessLaunchInfo
 from solidlsp.settings import SolidLSPSettings
+from solidlsp.util.subprocess_util import find_executable_in_path
 
 from .common import RuntimeDependency, RuntimeDependencyCollection
 
@@ -112,17 +112,11 @@ class TypeScriptLanguageServer(SolidLanguageServer):
             ]
         )
 
-        # Verify both node and npm are installed
-        is_node_installed = shutil.which("node") is not None
-        assert is_node_installed, "node is not installed or isn't in PATH. Please install NodeJS and try again."
-        is_npm_installed = shutil.which("npm") is not None
-        assert is_npm_installed, "npm is not installed or isn't in PATH. Please install npm and try again."
-
-        # Verify both node and npm are installed
-        is_node_installed = shutil.which("node") is not None
-        assert is_node_installed, "node is not installed or isn't in PATH. Please install NodeJS and try again."
-        is_npm_installed = shutil.which("npm") is not None
-        assert is_npm_installed, "npm is not installed or isn't in PATH. Please install npm and try again."
+        # Verify both node and npm are installed with proper Windows PATH resolution
+        node_path = find_executable_in_path("node")
+        assert node_path is not None, "node is not installed or isn't in PATH. Please install NodeJS and try again."
+        npm_path = find_executable_in_path("npm")
+        assert npm_path is not None, "npm is not installed or isn't in PATH. Please install npm and try again."
 
         # Install typescript and typescript-language-server if not already installed
         tsserver_ls_dir = os.path.join(cls.ls_resources_dir(solidlsp_settings), "ts-lsp")
