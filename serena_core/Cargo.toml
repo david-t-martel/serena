@@ -1,0 +1,14 @@
+[package]
+name = "serena_core"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "serena_core"
+crate-type = ["cdylib"]
+
+[dependencies]
+pyo3 = { version = "0.21", features = ["extension-module"] }
+regex = "1.11"
+anyhow = "1.0"
+ignore = "0.4"

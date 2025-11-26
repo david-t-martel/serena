@@ -13,6 +13,7 @@ from solidlsp.ls_logger import LanguageServerLogger
 from solidlsp.lsp_protocol_handler.lsp_types import InitializeParams
 from solidlsp.lsp_protocol_handler.server import ProcessLaunchInfo
 from solidlsp.settings import SolidLSPSettings
+from solidlsp.util.subprocess_util import find_executable_in_path
 
 
 class RLanguageServer(SolidLanguageServer):
@@ -33,20 +34,44 @@ class RLanguageServer(SolidLanguageServer):
         ]
 
     @staticmethod
-    def _check_r_installation() -> None:
-        """Check if R and languageserver are available."""
+    def _check_r_installation() -> str:
+        """Check if R and languageserver are available.
+
+        Returns the resolved path to the R executable when successful.
+        """
+        # Resolve R executable in a cross-platform way (supports Windows PATH semantics)
+        r_executable = find_executable_in_path("R")
+        if not r_executable:
+            raise RuntimeError(
+                "R is not installed or not in PATH. Please install R from https://www.r-project.org/ and ensure it is on PATH."
+            )
+
         try:
             # Check R installation
-            result = subprocess.run(["R", "--version"], capture_output=True, text=True, check=False)
+            result = subprocess.run(
+                [r_executable, "--version"],
+                capture_output=True,
+                text=True,
+                check=False,
+                env=os.environ.copy(),
+            )
             if result.returncode != 0:
                 raise RuntimeError("R is not installed or not in PATH")
 
             # Check languageserver package
             result = subprocess.run(
-                ["R", "--vanilla", "--quiet", "--slave", "-e", "if (!require('languageserver', quietly=TRUE)) quit(status=1)"],
+                [
+                    r_executable,
+                    "--vanilla",
+                    "--quiet",
+                    "--slave",
+                    "-e",
+                    "if (!require('languageserver', quietly=TRUE)) quit(status=1)",
+                ],
                 capture_output=True,
                 text=True,
                 check=False,
+                env=os.environ.copy(),
             )
 
             if result.returncode != 0:
@@ -54,19 +79,28 @@ class RLanguageServer(SolidLanguageServer):
                     "R languageserver package is not installed.\nInstall it with: R -e \"install.packages('languageserver')\""
                 )
 
+            return r_executable
+
         except FileNotFoundError:
             raise RuntimeError("R is not installed. Please install R from https://www.r-project.org/")
 
     def __init__(
         self, config: LanguageServerConfig, logger: LanguageServerLogger, repository_root_path: str, solidlsp_settings: SolidLSPSettings
     ):
-        # Check R installation
-        self._check_r_installation()
+        # Check R installation and get the resolved R executable path
+        r_executable = self._check_r_installation()
 
         # R command to start language server
         # Use --vanilla for minimal startup and --quiet to suppress all output except LSP
         # Set specific options to improve parsing stability
-        r_cmd = 'R --vanilla --quiet --slave -e "options(languageserver.debug_mode = FALSE); languageserver::run()"'
+        r_cmd = [
+            r_executable,
+            "--vanilla",
+            "--quiet",
+            "--slave",
+            "-e",
+            "options(languageserver.debug_mode = FALSE); languageserver::run()",
+        ]
 
         super().__init__(
             config,

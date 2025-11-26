@@ -13,6 +13,7 @@ from solidlsp.ls_logger import LanguageServerLogger
 from solidlsp.lsp_protocol_handler.lsp_types import InitializeParams
 from solidlsp.lsp_protocol_handler.server import ProcessLaunchInfo
 from solidlsp.settings import SolidLSPSettings
+from solidlsp.util.subprocess_util import find_executable_in_path
 
 
 class Gopls(SolidLanguageServer):
@@ -49,8 +50,17 @@ class Gopls(SolidLanguageServer):
     @staticmethod
     def _get_go_version() -> str | None:
         """Get the installed Go version or None if not found."""
+        go_executable = find_executable_in_path("go")
+        if not go_executable:
+            return None
         try:
-            result = subprocess.run(["go", "version"], capture_output=True, text=True, check=False)
+            result = subprocess.run(
+                [go_executable, "version"],
+                capture_output=True,
+                text=True,
+                check=False,
+                env=os.environ.copy(),
+            )
             if result.returncode == 0:
                 return result.stdout.strip()
         except FileNotFoundError:
@@ -60,8 +70,17 @@ class Gopls(SolidLanguageServer):
     @staticmethod
     def _get_gopls_version() -> str | None:
         """Get the installed gopls version or None if not found."""
+        gopls_executable = find_executable_in_path("gopls")
+        if not gopls_executable:
+            return None
         try:
-            result = subprocess.run(["gopls", "version"], capture_output=True, text=True, check=False)
+            result = subprocess.run(
+                [gopls_executable, "version"],
+                capture_output=True,
+                text=True,
+                check=False,
+                env=os.environ.copy(),
+            )
             if result.returncode == 0:
                 return result.stdout.strip()
         except FileNotFoundError:

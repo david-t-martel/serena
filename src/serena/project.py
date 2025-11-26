@@ -7,6 +7,11 @@ from typing import Any
 import pathspec
 from sensai.util.string import ToStringMixin
 
+try:  # Optional Rust-accelerated core; project falls back to Python only if unavailable
+    import serena_core  # type: ignore[import]
+except Exception:  # pragma: no cover - defensive, means we use pure-Python path
+    serena_core = None  # type: ignore[assignment]
+
 from serena.config.serena_config import DEFAULT_TOOL_TIMEOUT, ProjectConfig, get_serena_managed_in_project_dir
 from serena.constants import SERENA_FILE_ENCODING, SERENA_MANAGED_DIR_NAME
 from serena.ls_manager import LanguageServerFactory, LanguageServerManager
@@ -267,42 +272,90 @@ class Project(ToStringMixin):
             if self.is_ignored_path(relative_path):
                 raise ValueError(f"Path {relative_path} is ignored; cannot access for safety reasons")
 
-    def gather_source_files(self, relative_path: str = "") -> list[str]:
-        """Retrieves relative paths of all source files, optionally limited to the given path
+    def _gather_source_files_python(self, relative_path: str = "") -> list[str]:
+        """Pure-Python implementation based on os.walk and is_ignored_path.
 
-        :param relative_path: if provided, restrict search to this path
+        Exposed for benchmarking; prefer :meth:`gather_source_files` for
+        normal use so that Rust acceleration can be applied when available.
         """
-        rel_file_paths = []
         start_path = os.path.join(self.project_root, relative_path)
         if not os.path.exists(start_path):
             raise FileNotFoundError(f"Relative path {start_path} not found.")
         if os.path.isfile(start_path):
             return [relative_path]
-        else:
-            for root, dirs, files in os.walk(start_path, followlinks=True):
-                # prevent recursion into ignored directories
-                dirs[:] = [d for d in dirs if not self.is_ignored_path(os.path.join(root, d))]
 
-                # collect non-ignored files
-                for file in files:
-                    abs_file_path = os.path.join(root, file)
-                    try:
-                        if not self.is_ignored_path(abs_file_path, ignore_non_source_files=True):
-                            try:
-                                rel_file_path = os.path.relpath(abs_file_path, start=self.project_root)
-                            except Exception:
-                                log.warning(
-                                    "Ignoring path '%s' because it appears to be outside of the project root (%s)",
-                                    abs_file_path,
-                                    self.project_root,
-                                )
-                                continue
-                            rel_file_paths.append(rel_file_path)
-                    except FileNotFoundError:
-                        log.warning(
-                            f"File {abs_file_path} not found (possibly due it being a symlink), skipping it in request_parsed_files",
-                        )
-            return rel_file_paths
+        rel_file_paths: list[str] = []
+        for root, dirs, files in os.walk(start_path, followlinks=True):
+            # prevent recursion into ignored directories
+            dirs[:] = [d for d in dirs if not self.is_ignored_path(os.path.join(root, d))]
+
+            # collect non-ignored files
+            for file in files:
+                abs_file_path = os.path.join(root, file)
+                try:
+                    if not self.is_ignored_path(abs_file_path, ignore_non_source_files=True):
+                        try:
+                            rel_file_path = os.path.relpath(abs_file_path, start=self.project_root)
+                        except Exception:
+                            log.warning(
+                                "Ignoring path '%s' because it appears to be outside of the project root (%s)",
+                                abs_file_path,
+                                self.project_root,
+                            )
+                            continue
+                        rel_file_paths.append(rel_file_path)
+                except FileNotFoundError:
+                    log.warning(
+                        "File %s not found (possibly due it being a symlink), skipping it in request_parsed_files",
+                        abs_file_path,
+                    )
+        return rel_file_paths
+
+    def _gather_source_files_rust(self, relative_path: str = "") -> list[str]:
+        """Rust-based implementation using serena_core.walk_files_gitignored.
+
+        Applies Serena's own ignore rules on top of gitignore semantics.
+        """
+        start_path = os.path.join(self.project_root, relative_path)
+        if not os.path.exists(start_path):
+            raise FileNotFoundError(f"Relative path {start_path} not found.")
+        if os.path.isfile(start_path):
+            return [relative_path]
+
+        if serena_core is None:  # type: ignore[truthy-function]
+            raise RuntimeError("serena_core is not available")
+
+        rel_file_paths: list[str] = []
+        # walk_files_gitignored returns paths relative to the project root (forward slashes).
+        candidate_paths: list[str] = serena_core.walk_files_gitignored(  # type: ignore[attr-defined]
+            self.project_root,
+            relative_path or None,
+        )
+        for rel_path in candidate_paths:
+            # Normalise to OS-specific separators for compatibility with is_ignored_path
+            rel_path_os = rel_path.replace("/", os.path.sep)
+            abs_file_path = os.path.join(self.project_root, rel_path_os)
+            try:
+                if not self.is_ignored_path(abs_file_path, ignore_non_source_files=True):
+                    rel_file_paths.append(os.path.relpath(abs_file_path, start=self.project_root))
+            except FileNotFoundError:
+                log.warning(
+                    "File %s not found (possibly due it being a symlink), skipping it in gather_source_files",
+                    abs_file_path,
+                )
+        return rel_file_paths
+
+    def gather_source_files(self, relative_path: str = "") -> list[str]:
+        """Retrieves relative paths of all source files, optionally limited to the given path.
+
+        :param relative_path: if provided, restrict search to this path
+        """
+        if serena_core is not None:  # type: ignore[truthy-function]
+            try:
+                return self._gather_source_files_rust(relative_path)
+            except Exception as e:  # pragma: no cover - defensive fallback
+                log.exception("Rust-backed gather_source_files failed, falling back to Python implementation: %s", e)
+        return self._gather_source_files_python(relative_path)
 
     def search_source_files_for_pattern(
         self,

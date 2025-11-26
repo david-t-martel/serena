@@ -2,7 +2,7 @@
 
 import logging
 import os
-import shutil
+import platform
 import subprocess
 import threading
 import time
@@ -14,6 +14,7 @@ from solidlsp.ls_config import LanguageServerConfig
 from solidlsp.ls_logger import LanguageServerLogger
 from solidlsp.lsp_protocol_handler.server import ProcessLaunchInfo
 from solidlsp.settings import SolidLSPSettings
+from solidlsp.util.subprocess_util import find_executable_in_path
 
 
 class ErlangLanguageServer(SolidLanguageServer):
@@ -30,9 +31,10 @@ class ErlangLanguageServer(SolidLanguageServer):
         Creates an ErlangLanguageServer instance. This class is not meant to be instantiated directly.
         Use LanguageServer.create() instead.
         """
-        self.erlang_ls_path = shutil.which("erlang_ls")
-        if not self.erlang_ls_path:
+        erlang_ls_path = find_executable_in_path("erlang_ls")
+        if not erlang_ls_path:
             raise RuntimeError("Erlang LS not found. Install from: https://github.com/erlang-ls/erlang_ls")
+        self.erlang_ls_path = erlang_ls_path
 
         if not self._check_erlang_installation():
             raise RuntimeError("Erlang/OTP not found. Install from: https://www.erlang.org/downloads")
@@ -54,8 +56,18 @@ class ErlangLanguageServer(SolidLanguageServer):
 
     def _check_erlang_installation(self) -> bool:
         """Check if Erlang/OTP is available."""
+        erl_executable = find_executable_in_path("erl")
+        if not erl_executable:
+            return False
         try:
-            result = subprocess.run(["erl", "-version"], check=False, capture_output=True, text=True, timeout=10)
+            result = subprocess.run(
+                [erl_executable, "-version"],
+                check=False,
+                capture_output=True,
+                text=True,
+                timeout=10,
+                env=os.environ.copy(),
+            )
             return result.returncode == 0
         except (subprocess.SubprocessError, FileNotFoundError):
             return False
@@ -63,8 +75,18 @@ class ErlangLanguageServer(SolidLanguageServer):
     @classmethod
     def _get_erlang_version(cls) -> str | None:
         """Get the installed Erlang/OTP version or None if not found."""
+        erl_executable = find_executable_in_path("erl")
+        if not erl_executable:
+            return None
         try:
-            result = subprocess.run(["erl", "-version"], check=False, capture_output=True, text=True, timeout=10)
+            result = subprocess.run(
+                [erl_executable, "-version"],
+                check=False,
+                capture_output=True,
+                text=True,
+                timeout=10,
+                env=os.environ.copy(),
+            )
             if result.returncode == 0:
                 return result.stderr.strip()  # erl -version outputs to stderr
         except (subprocess.SubprocessError, FileNotFoundError):
@@ -74,8 +96,18 @@ class ErlangLanguageServer(SolidLanguageServer):
     @classmethod
     def _check_rebar3_available(cls) -> bool:
         """Check if rebar3 build tool is available."""
+        rebar_executable = find_executable_in_path("rebar3")
+        if not rebar_executable:
+            return False
         try:
-            result = subprocess.run(["rebar3", "version"], check=False, capture_output=True, text=True, timeout=10)
+            result = subprocess.run(
+                [rebar_executable, "version"],
+                check=False,
+                capture_output=True,
+                text=True,
+                timeout=10,
+                env=os.environ.copy(),
+            )
             return result.returncode == 0
         except (subprocess.SubprocessError, FileNotFoundError):
             return False
@@ -165,7 +197,8 @@ class ErlangLanguageServer(SolidLanguageServer):
 
         # Wait for Erlang LS to be ready - adjust timeout based on environment
         is_ci = os.getenv("CI") == "true" or os.getenv("GITHUB_ACTIONS") == "true"
-        is_macos = os.uname().sysname == "Darwin" if hasattr(os, "uname") else False
+        system = platform.system()
+        is_macos = system == "Darwin"
 
         # macOS in CI can be particularly slow for language server startup
         if is_ci and is_macos:

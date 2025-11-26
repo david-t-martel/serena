@@ -575,3 +575,72 @@ class TestExpandBraces:
         from serena.text_utils import expand_braces
 
         assert sorted(expand_braces(pattern)) == sorted(expected)
+
+
+class TestSearchFilesWithSerenaCore:
+    """Tests that exercise the optional Rust serena_core integration when available.
+
+    These tests are skipped automatically if the serena_core extension module is not installed
+    (e.g. when running in environments without a Rust toolchain or maturin-built wheel).
+    """
+
+    def test_search_files_rust_core_matches_python(self, tmp_path, monkeypatch):
+        """Rust-backed search_files should produce the same results as the pure Python path.
+
+        We build a small temporary Rust/TypeScript-style project and compare the textual
+        representation of matches from both implementations.
+        """
+        pytest.importorskip("serena_core")
+
+        import importlib
+
+        import serena.text_utils as text_utils  # type: ignore[import]
+
+        # Create a small tree with Rust and TypeScript files
+        root = tmp_path
+        src_dir = root / "src"
+        src_dir.mkdir()
+        (src_dir / "lib.rs").write_text(
+            "pub struct Foo {\n    value: i32,\n}\n\nimpl Foo {\n    pub fn new(value: i32) -> Self {\n        Self { value }\n    }\n}\n",
+            encoding="utf-8",
+        )
+        (src_dir / "main.ts").write_text(
+            "export class Bar {\n  constructor(private value: number) {}\n  getValue(): number {\n    return this.value;\n  }\n}\n",
+            encoding="utf-8",
+        )
+
+        rel_paths = ["src/lib.rs", "src/main.ts"]
+        pattern = "value"  # appears in both files
+
+        # First, force Python implementation
+        monkeypatch.setenv("SERENA_USE_RUST_CORE", "0")
+        importlib.reload(text_utils)
+        python_results = text_utils.search_files(
+            relative_file_paths=rel_paths,
+            pattern=pattern,
+            root_path=str(root),
+            context_lines_before=1,
+            context_lines_after=1,
+        )
+
+        # Then enable Rust core and reload
+        monkeypatch.setenv("SERENA_USE_RUST_CORE", "1")
+        importlib.reload(text_utils)
+        rust_results = text_utils.search_files(
+            relative_file_paths=rel_paths,
+            pattern=pattern,
+            root_path=str(root),
+            context_lines_before=1,
+            context_lines_after=1,
+        )
+
+        def normalise(results):
+            return sorted(
+                (
+                    m.source_file_path,
+                    m.to_display_string(include_line_numbers=True),
+                )
+                for m in results
+            )
+
+        assert normalise(rust_results) == normalise(python_results)

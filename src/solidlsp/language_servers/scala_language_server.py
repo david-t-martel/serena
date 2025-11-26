@@ -5,7 +5,6 @@ Provides Scala specific instantiation of the LanguageServer class. Contains vari
 import logging
 import os
 import pathlib
-import shutil
 import subprocess
 
 from overrides import override
@@ -17,6 +16,7 @@ from solidlsp.ls_utils import PlatformUtils
 from solidlsp.lsp_protocol_handler.lsp_types import InitializeParams
 from solidlsp.lsp_protocol_handler.server import ProcessLaunchInfo
 from solidlsp.settings import SolidLSPSettings
+from solidlsp.util.subprocess_util import find_executable_in_path
 
 if not PlatformUtils.get_platform_id().value.startswith("win"):
     pass
@@ -58,25 +58,32 @@ class ScalaLanguageServer(SolidLanguageServer):
         """
         Setup runtime dependencies for Scala Language Server and return the command to start the server.
         """
-        assert shutil.which("java") is not None, "JDK is not installed or not in PATH."
+        java_path = find_executable_in_path("java")
+        assert java_path is not None, "JDK is not installed or not in PATH."
 
         metals_home = os.path.join(cls.ls_resources_dir(solidlsp_settings), "metals-lsp")
         os.makedirs(metals_home, exist_ok=True)
         metals_executable = os.path.join(metals_home, "metals")
-        coursier_command_path = shutil.which("coursier")
+        coursier_command_path = find_executable_in_path("coursier")
         assert coursier_command_path is not None, "coursier is not installed or not in PATH."
-        cs_command_path = shutil.which("cs")
+        cs_command_path = find_executable_in_path("cs")
 
         if not os.path.exists(metals_executable):
             if not cs_command_path:
                 logger.log("'cs' command not found. Trying to install it using 'coursier'.", logging.INFO)
                 try:
                     logger.log("Running 'coursier setup --yes' to install 'cs'...", logging.INFO)
-                    subprocess.run([coursier_command_path, "setup", "--yes"], check=True, capture_output=True, text=True)
+                    subprocess.run(
+                        [coursier_command_path, "setup", "--yes"],
+                        check=True,
+                        capture_output=True,
+                        text=True,
+                        env=os.environ.copy(),
+                    )
                 except subprocess.CalledProcessError as e:
                     raise RuntimeError(f"Failed to set up 'cs' command with 'coursier setup'. Stderr: {e.stderr}")
 
-                cs_command_path = shutil.which("cs")
+                cs_command_path = find_executable_in_path("cs")
                 if not cs_command_path:
                     raise RuntimeError(
                         "'cs' command not found after running 'coursier setup'. Please check your PATH or install it manually."
@@ -104,7 +111,7 @@ class ScalaLanguageServer(SolidLanguageServer):
                 "-f",
             ]
             logger.log("Bootstrapping metals...", logging.INFO)
-            subprocess.run(cmd, cwd=metals_home, check=True)
+            subprocess.run(cmd, cwd=metals_home, check=True, env=os.environ.copy())
             logger.log("Bootstrapping metals finished.", logging.INFO)
         return [metals_executable]
 

@@ -11,7 +11,15 @@ from joblib import Parallel, delayed
 
 from serena.constants import DEFAULT_SOURCE_FILE_ENCODING
 
+try:  # Optional Rust-accelerated core; search falls back to Python if unavailable
+    import serena_core  # type: ignore[import]
+except Exception:  # pragma: no cover - extremely defensive, just means we use Python path
+    serena_core = None  # type: ignore[assignment]
+
 log = logging.getLogger(__name__)
+
+# Environment toggle: set SERENA_USE_RUST_CORE=0 to force Python implementation
+USE_SERENA_CORE = os.getenv("SERENA_USE_RUST_CORE", "1") != "0"
 
 
 class LineType(StrEnum):
@@ -319,50 +327,15 @@ def glob_match(pattern: str, path: str) -> bool:
         return fnmatch.fnmatch(path, pattern)
 
 
-def search_files(
-    relative_file_paths: list[str],
+def _search_files_python(
+    filtered_paths: list[str],
     pattern: str,
-    root_path: str = "",
-    file_reader: Callable[[str], str] = default_file_reader,
-    context_lines_before: int = 0,
-    context_lines_after: int = 0,
-    paths_include_glob: str | None = None,
-    paths_exclude_glob: str | None = None,
+    root_path: str,
+    file_reader: Callable[[str], str],
+    context_lines_before: int,
+    context_lines_after: int,
 ) -> list[MatchedConsecutiveLines]:
-    """
-    Search for a pattern in a list of files.
-
-    :param relative_file_paths: List of relative file paths in which to search
-    :param pattern: Pattern to search for
-    :param root_path: Root path to resolve relative paths against (by default, current working directory).
-    :param file_reader: Function to read a file, by default will just use os.open.
-        All files that can't be read by it will be skipped.
-    :param context_lines_before: Number of context lines to include before matches
-    :param context_lines_after: Number of context lines to include after matches
-    :param paths_include_glob: Optional glob pattern to include files from the list
-    :param paths_exclude_glob: Optional glob pattern to exclude files from the list
-    :return: List of MatchedConsecutiveLines objects
-    """
-    # Pre-filter paths (done sequentially to avoid overhead)
-    # Use proper glob matching instead of gitignore patterns
-    include_patterns = expand_braces(paths_include_glob) if paths_include_glob else None
-    exclude_patterns = expand_braces(paths_exclude_glob) if paths_exclude_glob else None
-
-    filtered_paths = []
-    for path in relative_file_paths:
-        if include_patterns:
-            if not any(glob_match(p, path) for p in include_patterns):
-                log.debug(f"Skipping {path}: does not match include pattern {paths_include_glob}")
-                continue
-
-        if exclude_patterns:
-            if any(glob_match(p, path) for p in exclude_patterns):
-                log.debug(f"Skipping {path}: matches exclude pattern {paths_exclude_glob}")
-                continue
-
-        filtered_paths.append(path)
-
-    log.info(f"Processing {len(filtered_paths)} files.")
+    """Pure-Python implementation of multi-file search (existing behaviour)."""
 
     def process_single_file(path: str) -> dict[str, Any]:
         """Process a single file - this function will be parallelized."""
@@ -380,7 +353,7 @@ def search_files(
             if len(search_results) > 0:
                 log.debug(f"Found {len(search_results)} matches in {path}")
             return {"path": path, "results": search_results, "error": None}
-        except Exception as e:
+        except Exception as e:  # pragma: no cover - defensive around file I/O
             log.debug(f"Error processing {path}: {e}")
             return {"path": path, "results": [], "error": str(e)}
 
@@ -390,9 +363,8 @@ def search_files(
         backend="threading",
     )(delayed(process_single_file)(path) for path in filtered_paths)
 
-    # Collect results and errors
-    matches = []
-    skipped_file_error_tuples = []
+    matches: list[MatchedConsecutiveLines] = []
+    skipped_file_error_tuples: list[tuple[str, str]] = []
 
     for result in results:
         if result["error"]:
@@ -402,6 +374,126 @@ def search_files(
 
     if skipped_file_error_tuples:
         log.debug(f"Failed to read {len(skipped_file_error_tuples)} files: {skipped_file_error_tuples}")
+
+    return matches
+
+
+def _search_files_rust(
+    filtered_paths: list[str],
+    pattern: str,
+    root_path: str,
+    context_lines_before: int,
+    context_lines_after: int,
+) -> list[MatchedConsecutiveLines]:
+    """Use serena_core.search_files if available to accelerate multi-file search.
+
+    The Rust core returns a list of dicts of the form:
+    {"path": str, "lines": [{"line_number": int, "content": str, "match_type": str}, ...]}.
+    We convert these into MatchedConsecutiveLines instances to preserve public API.
+    """
+    if serena_core is None:  # type: ignore[truthy-function]
+        raise RuntimeError("serena_core is not available")
+
+    # Default to current working directory if root_path is empty, matching previous behaviour
+    effective_root = root_path or os.getcwd()
+
+    raw_results = serena_core.search_files(  # type: ignore[attr-defined]
+        pattern,
+        effective_root,
+        filtered_paths,
+        context_lines_before,
+        context_lines_after,
+    )
+
+    matches: list[MatchedConsecutiveLines] = []
+    for item in raw_results:
+        path = str(item["path"])  # type: ignore[index]
+        line_dicts = item["lines"]  # type: ignore[index]
+        text_lines: list[TextLine] = []
+        for ld in line_dicts:
+            line_number = int(ld["line_number"])  # type: ignore[index]
+            content = str(ld["content"])  # type: ignore[index]
+            match_type = LineType(str(ld["match_type"]))  # type: ignore[index]
+            text_lines.append(TextLine(line_number=line_number, line_content=content, match_type=match_type))
+        matches.append(MatchedConsecutiveLines(lines=text_lines, source_file_path=path))
+
+    return matches
+
+
+def search_files(
+    relative_file_paths: list[str],
+    pattern: str,
+    root_path: str = "",
+    file_reader: Callable[[str], str] = default_file_reader,
+    context_lines_before: int = 0,
+    context_lines_after: int = 0,
+    paths_include_glob: str | None = None,
+    paths_exclude_glob: str | None = None,
+) -> list[MatchedConsecutiveLines]:
+    """Search for a pattern in a list of files.
+
+    :param relative_file_paths: List of relative file paths in which to search
+    :param pattern: Pattern to search for
+    :param root_path: Root path to resolve relative paths against (by default, current working directory).
+    :param file_reader: Function to read a file, by default will just use os.open.
+        All files that can't be read by it will be skipped.
+    :param context_lines_before: Number of context lines to include before matches
+    :param context_lines_after: Number of context lines to include after matches
+    :param paths_include_glob: Optional glob pattern to include files from the list
+    :param paths_exclude_glob: Optional glob pattern to exclude files from the list
+    :return: List of MatchedConsecutiveLines objects
+    """
+    # Pre-filter paths (done sequentially to avoid overhead)
+    # Use proper glob matching instead of gitignore patterns
+    include_patterns = expand_braces(paths_include_glob) if paths_include_glob else None
+    exclude_patterns = expand_braces(paths_exclude_glob) if paths_exclude_glob else None
+
+    filtered_paths: list[str] = []
+    for path in relative_file_paths:
+        if include_patterns:
+            if not any(glob_match(p, path) for p in include_patterns):
+                log.debug(f"Skipping {path}: does not match include pattern {paths_include_glob}")
+                continue
+
+        if exclude_patterns:
+            if any(glob_match(p, path) for p in exclude_patterns):
+                log.debug(f"Skipping {path}: matches exclude pattern {paths_exclude_glob}")
+                continue
+
+        filtered_paths.append(path)
+
+    log.info(f"Processing {len(filtered_paths)} files.")
+
+    # Prefer Rust core when available and explicitly enabled; fall back to Python otherwise.
+    matches: list[MatchedConsecutiveLines]
+    if serena_core is not None and USE_SERENA_CORE:  # type: ignore[truthy-function]
+        try:
+            matches = _search_files_rust(
+                filtered_paths,
+                pattern,
+                root_path=root_path,
+                context_lines_before=context_lines_before,
+                context_lines_after=context_lines_after,
+            )
+        except Exception as e:  # pragma: no cover - defensive fallback
+            log.exception("serena_core.search_files failed, falling back to Python implementation: %s", e)
+            matches = _search_files_python(
+                filtered_paths,
+                pattern,
+                root_path=root_path,
+                file_reader=file_reader,
+                context_lines_before=context_lines_before,
+                context_lines_after=context_lines_after,
+            )
+    else:
+        matches = _search_files_python(
+            filtered_paths,
+            pattern,
+            root_path=root_path,
+            file_reader=file_reader,
+            context_lines_before=context_lines_before,
+            context_lines_after=context_lines_after,
+        )
 
     log.info(f"Found {len(matches)} total matches across {len(filtered_paths)} files")
     return matches

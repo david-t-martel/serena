@@ -31,6 +31,7 @@ from serena.constants import (
     USER_MODE_YAMLS_DIR,
 )
 from serena.mcp import SerenaMCPFactory, SerenaMCPFactorySingleProcess
+from serena.perf import benchmark_gather_backends, benchmark_search_backends
 from serena.project import Project
 from serena.tools import FindReferencingSymbolsTool, FindSymbolTool, GetSymbolsOverviewTool, SearchForPatternTool, ToolRegistry
 from serena.util.logging import MemoryLogHandler
@@ -607,6 +608,147 @@ class ProjectCommands(AutoRegisteringGroup):
                 click.echo(f"Successfully indexed file '{file}', {len(symbols)} symbols saved to cache in {ls.cache_dir}.")
         finally:
             ls_mgr.stop_all()
+
+    @staticmethod
+    @click.command(
+        "profile-gather",
+        help=(
+            "Compare Python and Rust backends for source file gathering. "
+            "Runs both implementations a few times and prints timing statistics."
+        ),
+    )
+    @click.argument("project", type=click.Path(exists=True, file_okay=False, dir_okay=True), default=os.getcwd())
+    @click.argument("relative_path", type=str, required=False, default="")
+    @click.option("--runs", type=int, default=3, show_default=True, help="Number of runs per backend.")
+    @click.option("--json-out", type=str, default=None, help="Optional path to write JSON benchmark results.")
+    def profile_gather(
+        project: str,
+        relative_path: str,
+        runs: int,
+        json_out: str | None,
+    ) -> None:
+        """Profile gather performance with and without Rust acceleration."""
+        project_root = os.path.abspath(project)
+        click.echo(f"Profiling source file gathering in project {project_root} …")
+
+        results = benchmark_gather_backends(
+            project_root=project_root,
+            relative_path=relative_path,
+            runs=runs,
+        )
+
+        def format_result(label: str) -> str:
+            res = results.get(label)
+            if res is None:
+                return f"{label}: not available"
+            speed = f"{res.seconds:.4f}s"
+            extras = ", ".join(f"{k}={v}" for k, v in (res.extra or {}).items())
+            return f"{label:7} -> {speed} (runs={res.runs}; {extras})"
+
+        click.echo("Gather backend timings:")
+        click.echo(format_result("python"))
+        click.echo(format_result("rust"))
+
+        if "python" in results and "rust" in results:
+            t_py = results["python"].seconds
+            t_rs = results["rust"].seconds
+            if t_rs > 0:
+                speedup = t_py / t_rs
+                click.echo(f"Rust speedup: {speedup:.2f}x over Python")
+
+        if json_out:
+            serializable = {
+                name: {
+                    "backend": res.backend,
+                    "seconds": res.seconds,
+                    "runs": res.runs,
+                    "extra": res.extra or {},
+                }
+                for name, res in results.items()
+            }
+            with open(json_out, "w", encoding="utf-8") as f:
+                json.dump(serializable, f, indent=2)
+            click.echo(f"Wrote benchmark results to {json_out}")
+
+    @staticmethod
+    @click.command(
+        "profile-search",
+        help=(
+            "Compare Python and Rust backends for project-wide search. "
+            "Runs both implementations a few times and prints timing statistics."
+        ),
+    )
+    @click.argument("project", type=click.Path(exists=True, file_okay=False, dir_okay=True), default=os.getcwd())
+    @click.argument("pattern", type=str)
+    @click.option("--relative-path", type=str, default="", help="Restrict search to this subpath of the project root.")
+    @click.option("--context-before", type=int, default=0, show_default=True)
+    @click.option("--context-after", type=int, default=0, show_default=True)
+    @click.option("--include-glob", type=str, default=None, help="Optional include glob for search_files.")
+    @click.option("--exclude-glob", type=str, default=None, help="Optional exclude glob for search_files.")
+    @click.option("--runs", type=int, default=3, show_default=True, help="Number of runs per backend.")
+    @click.option("--json-out", type=str, default=None, help="Optional path to write JSON benchmark results.")
+    def profile_search(
+        project: str,
+        pattern: str,
+        relative_path: str,
+        context_before: int,
+        context_after: int,
+        include_glob: str | None,
+        exclude_glob: str | None,
+        runs: int,
+        json_out: str | None,
+    ) -> None:
+        """Profile search performance with and without Rust acceleration.
+
+        This does not change any project state; it simply measures how long
+        the underlying search backends take on the current codebase.
+        """
+        project_root = os.path.abspath(project)
+        click.echo(f"Profiling search in project {project_root} …")
+
+        results = benchmark_search_backends(
+            project_root=project_root,
+            pattern=pattern,
+            relative_path=relative_path,
+            context_lines_before=context_before,
+            context_lines_after=context_after,
+            paths_include_glob=include_glob,
+            paths_exclude_glob=exclude_glob,
+            runs=runs,
+        )
+
+        def format_result(label: str) -> str:
+            res = results.get(label)
+            if res is None:
+                return f"{label}: not available"
+            speed = f"{res.seconds:.4f}s"
+            extras = ", ".join(f"{k}={v}" for k, v in (res.extra or {}).items())
+            return f"{label:7} -> {speed} (runs={res.runs}; {extras})"
+
+        click.echo("Search backend timings:")
+        click.echo(format_result("python"))
+        click.echo(format_result("rust"))
+
+        if "python" in results and "rust" in results:
+            t_py = results["python"].seconds
+            t_rs = results["rust"].seconds
+            if t_rs > 0:
+                speedup = t_py / t_rs
+                click.echo(f"Rust speedup: {speedup:.2f}x over Python")
+
+        if json_out:
+            serializable = {
+                name: {
+                    "backend": res.backend,
+                    "seconds": res.seconds,
+                    "runs": res.runs,
+                    "extra": res.extra or {},
+                }
+                for name, res in results.items()
+            }
+            with open(json_out, "w", encoding="utf-8") as f:
+                json.dump(serializable, f, indent=2)
+            click.echo(f"Wrote benchmark results to {json_out}")
 
     @staticmethod
     @click.command("health-check", help="Perform a comprehensive health check of the project's tools and language server.")

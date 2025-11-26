@@ -4,6 +4,7 @@ import threading
 from collections.abc import Callable
 from typing import TYPE_CHECKING, Any, Self
 
+import requests
 from flask import Flask, Response, request, send_from_directory
 from pydantic import BaseModel
 from sensai.util import logging
@@ -560,6 +561,19 @@ class SerenaDashboardAPI:
 
         raise RuntimeError(f"No free ports found starting from {start_port}")
 
+    @staticmethod
+    def _is_dashboard_running(host: str, port: int, timeout: float = 0.5) -> bool:
+        """Check if a Serena dashboard is already running on the given host/port.
+
+        Uses the /heartbeat endpoint to distinguish our dashboard from other
+        processes that might be bound to the same port.
+        """
+        try:
+            resp = requests.get(f"http://{host}:{port}/heartbeat", timeout=timeout)
+            return resp.ok
+        except Exception:
+            return False
+
     def run(self, host: str = "0.0.0.0", port: int = 0x5EDA) -> int:
         """
         Runs the dashboard on the given host and port and returns the port number.
@@ -573,7 +587,23 @@ class SerenaDashboardAPI:
         return port
 
     def run_in_thread(self) -> tuple[threading.Thread, int]:
-        port = self._find_first_free_port(0x5EDA)
+        """Run the dashboard in a background thread.
+
+        If a dashboard is already running on the preferred port, reuse it
+        instead of starting a second server, so that localhost URLs remain
+        stable across agent initialisations.
+        """
+        preferred_port = 0x5EDA
+        host_for_check = "127.0.0.1"
+
+        if self._is_dashboard_running(host_for_check, preferred_port):
+            log.info("Reusing existing Serena dashboard at http://%s:%d/", host_for_check, preferred_port)
+            # Return a dummy thread; the actual server is already running.
+            thread = threading.Thread(target=lambda: None, daemon=True)
+            thread.start()
+            return thread, preferred_port
+
+        port = self._find_first_free_port(preferred_port)
         thread = threading.Thread(target=lambda: self.run(port=port), daemon=True)
         thread.start()
         return thread, port

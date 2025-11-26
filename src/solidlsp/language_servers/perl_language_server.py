@@ -1,7 +1,8 @@
 """
 Provides Perl specific instantiation of the LanguageServer class using Perl::LanguageServer.
 
-Note: Windows is not supported as Nix itself doesn't support Windows natively.
+Note: Originally targeted Unix-like systems; implementation is now made Windows-compatible
+where Perl and Perl::LanguageServer are available.
 """
 
 import logging
@@ -20,6 +21,7 @@ from solidlsp.ls_utils import PlatformId, PlatformUtils
 from solidlsp.lsp_protocol_handler.lsp_types import DidChangeConfigurationParams, InitializeParams
 from solidlsp.lsp_protocol_handler.server import ProcessLaunchInfo
 from solidlsp.settings import SolidLSPSettings
+from solidlsp.util.subprocess_util import find_executable_in_path
 
 
 class PerlLanguageServer(SolidLanguageServer):
@@ -30,8 +32,17 @@ class PerlLanguageServer(SolidLanguageServer):
     @staticmethod
     def _get_perl_version() -> str | None:
         """Get the installed Perl version or None if not found."""
+        perl_executable = find_executable_in_path("perl")
+        if not perl_executable:
+            return None
         try:
-            result = subprocess.run(["perl", "-v"], capture_output=True, text=True, check=False)
+            result = subprocess.run(
+                [perl_executable, "-v"],
+                capture_output=True,
+                text=True,
+                check=False,
+                env=os.environ.copy(),
+            )
             if result.returncode == 0:
                 return result.stdout.strip()
         except FileNotFoundError:
@@ -41,12 +52,16 @@ class PerlLanguageServer(SolidLanguageServer):
     @staticmethod
     def _get_perl_language_server_version() -> str | None:
         """Get the installed Perl::LanguageServer version or None if not found."""
+        perl_executable = find_executable_in_path("perl")
+        if not perl_executable:
+            return None
         try:
             result = subprocess.run(
-                ["perl", "-MPerl::LanguageServer", "-e", "print $Perl::LanguageServer::VERSION"],
+                [perl_executable, "-MPerl::LanguageServer", "-e", "print $Perl::LanguageServer::VERSION"],
                 capture_output=True,
                 text=True,
                 check=False,
+                env=os.environ.copy(),
             )
             if result.returncode == 0:
                 return result.stdout.strip()
@@ -65,10 +80,11 @@ class PerlLanguageServer(SolidLanguageServer):
         return super().is_ignored_dirname(dirname) or dirname in ["blib", "local", ".carton", "vendor", "_build", "cover_db"]
 
     @classmethod
-    def _setup_runtime_dependencies(cls) -> str:
+    def _setup_runtime_dependencies(cls) -> list[str]:
         """
         Check if required Perl runtime dependencies are available.
         Raises RuntimeError with helpful message if dependencies are missing.
+        Returns the command list to start Perl::LanguageServer.
         """
         platform_id = PlatformUtils.get_platform_id()
 
@@ -78,6 +94,8 @@ class PerlLanguageServer(SolidLanguageServer):
             PlatformId.OSX,
             PlatformId.OSX_x64,
             PlatformId.OSX_arm64,
+            PlatformId.WIN_x64,
+            PlatformId.WIN_arm64,
         ]
         if platform_id not in valid_platforms:
             raise RuntimeError(f"Platform {platform_id} is not supported for Perl at the moment")
@@ -96,7 +114,13 @@ class PerlLanguageServer(SolidLanguageServer):
                 "See: https://metacpan.org/pod/Perl::LanguageServer"
             )
 
-        return "perl -MPerl::LanguageServer -e 'Perl::LanguageServer::run'"
+        # Use argument list form for cross-platform compatibility (especially on Windows)
+        return [
+            "perl",
+            "-MPerl::LanguageServer",
+            "-e",
+            "Perl::LanguageServer::run",
+        ]
 
     def __init__(
         self, config: LanguageServerConfig, logger: LanguageServerLogger, repository_root_path: str, solidlsp_settings: SolidLSPSettings
