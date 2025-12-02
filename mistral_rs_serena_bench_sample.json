@@ -1,0 +1,1274 @@
+{
+  "project_root": "T:\\projects\\rust-mistral\\mistral.rs",
+  "runs": 3,
+  "perf": {
+    "project_root": "T:\\projects\\rust-mistral\\mistral.rs",
+    "runs": 3,
+    "gather": {
+      "python": {
+        "backend": "python",
+        "seconds": 1.0556290666657635,
+        "runs": 3,
+        "extra": {
+          "num_files": 713
+        }
+      },
+      "rust": {
+        "backend": "rust",
+        "seconds": 0.5291716666664191,
+        "runs": 3,
+        "extra": {
+          "num_files": 712
+        }
+      }
+    },
+    "search": {
+      "mistral": {
+        "python": {
+          "backend": "python",
+          "seconds": 0.2331372333331577,
+          "runs": 3,
+          "extra": {
+            "num_matches": 1168,
+            "num_files": 712
+          }
+        },
+        "rust": {
+          "backend": "rust",
+          "seconds": 0.19817260000005868,
+          "runs": 3,
+          "extra": {
+            "num_matches": 1168,
+            "num_files": 712
+          }
+        }
+      },
+      "unwrap\\(": {
+        "python": {
+          "backend": "python",
+          "seconds": 0.2834484666673234,
+          "runs": 3,
+          "extra": {
+            "num_matches": 2343,
+            "num_files": 712
+          }
+        },
+        "rust": {
+          "backend": "rust",
+          "seconds": 0.2503353666664528,
+          "runs": 3,
+          "extra": {
+            "num_matches": 2343,
+            "num_files": 712
+          }
+        }
+      },
+      "expect\\(": {
+        "python": {
+          "backend": "python",
+          "seconds": 0.24442959999942104,
+          "runs": 3,
+          "extra": {
+            "num_matches": 790,
+            "num_files": 712
+          }
+        },
+        "rust": {
+          "backend": "rust",
+          "seconds": 0.22398096666681036,
+          "runs": 3,
+          "extra": {
+            "num_matches": 790,
+            "num_files": 712
+          }
+        }
+      },
+      "panic!": {
+        "python": {
+          "backend": "python",
+          "seconds": 0.7743795333335584,
+          "runs": 3,
+          "extra": {
+            "num_matches": 114,
+            "num_files": 712
+          }
+        },
+        "rust": {
+          "backend": "rust",
+          "seconds": 0.24328940000001845,
+          "runs": 3,
+          "extra": {
+            "num_matches": 114,
+            "num_files": 712
+          }
+        }
+      },
+      "unsafe": {
+        "python": {
+          "backend": "python",
+          "seconds": 0.5660314333326824,
+          "runs": 3,
+          "extra": {
+            "num_matches": 279,
+            "num_files": 712
+          }
+        },
+        "rust": {
+          "backend": "rust",
+          "seconds": 0.27834230000007665,
+          "runs": 3,
+          "extra": {
+            "num_matches": 279,
+            "num_files": 712
+          }
+        }
+      }
+    }
+  },
+  "pattern_counts": {
+    "mistral": {
+      "examples\\secure_mcp_example.rs": 7,
+      "mistralrs\\examples\\anymoe\\main.rs": 2,
+      "mistralrs\\examples\\anymoe_lora\\main.rs": 2,
+      "mistralrs\\examples\\async\\main.rs": 1,
+      "mistralrs\\examples\\batching\\main.rs": 1,
+      "mistralrs\\examples\\custom_logits_processor\\main.rs": 2,
+      "mistralrs\\examples\\custom_search\\main.rs": 2,
+      "mistralrs\\examples\\custom_tool_call\\main.rs": 2,
+      "mistralrs\\examples\\deepseekr1\\main.rs": 1,
+      "mistralrs\\examples\\deepseekv2\\main.rs": 1,
+      "mistralrs\\examples\\dia\\main.rs": 2,
+      "mistralrs\\examples\\flux\\main.rs": 1,
+      "mistralrs\\examples\\gemma2\\main.rs": 1,
+      "mistralrs\\examples\\gemma3\\main.rs": 1,
+      "mistralrs\\examples\\gemma3n\\main.rs": 1,
+      "mistralrs\\examples\\gguf\\main.rs": 1,
+      "mistralrs\\examples\\gguf_locally\\main.rs": 4,
+      "mistralrs\\examples\\grammar\\main.rs": 2,
+      "mistralrs\\examples\\idefics2\\main.rs": 1,
+      "mistralrs\\examples\\idefics3\\main.rs": 1,
+      "mistralrs\\examples\\imatrix\\main.rs": 1,
+      "mistralrs\\examples\\isq\\main.rs": 1,
+      "mistralrs\\examples\\json_schema\\main.rs": 2,
+      "mistralrs\\examples\\llama4\\main.rs": 1,
+      "mistralrs\\examples\\llama_vision\\main.rs": 1,
+      "mistralrs\\examples\\llama_vision_multiturn\\main.rs": 2,
+      "mistralrs\\examples\\llava\\main.rs": 1,
+      "mistralrs\\examples\\llava_next\\main.rs": 2,
+      "mistralrs\\examples\\llguidance\\main.rs": 2,
+      "mistralrs\\examples\\lora\\main.rs": 1,
+      "mistralrs\\examples\\mcp_client\\main.rs": 3,
+      "mistralrs\\examples\\minicpmo_2_6\\main.rs": 1,
+      "mistralrs\\examples\\mistral3\\main.rs": 2,
+      "mistralrs\\examples\\mixture_of_quant_experts\\main.rs": 1,
+      "mistralrs\\examples\\paged_attn\\main.rs": 1,
+      "mistralrs\\examples\\perplexity\\main.rs": 2,
+      "mistralrs\\examples\\phi3v\\main.rs": 1,
+      "mistralrs\\examples\\phi3_5_moe\\main.rs": 1,
+      "mistralrs\\examples\\phi4mm\\main.rs": 1,
+      "mistralrs\\examples\\phi4mm_audio\\main.rs": 1,
+      "mistralrs\\examples\\qwen2vl\\main.rs": 1,
+      "mistralrs\\examples\\qwen2_5vl\\main.rs": 2,
+      "mistralrs\\examples\\qwen3\\main.rs": 1,
+      "mistralrs\\examples\\react_agent\\main.rs": 3,
+      "mistralrs\\examples\\simple\\main.rs": 1,
+      "mistralrs\\examples\\simple_stream\\main.rs": 1,
+      "mistralrs\\examples\\smollm3\\main.rs": 1,
+      "mistralrs\\examples\\smolvlm\\main.rs": 1,
+      "mistralrs\\examples\\speculative\\main.rs": 1,
+      "mistralrs\\examples\\text_auto_device_map\\main.rs": 1,
+      "mistralrs\\examples\\tools\\main.rs": 1,
+      "mistralrs\\examples\\topology\\main.rs": 1,
+      "mistralrs\\examples\\uqff\\main.rs": 1,
+      "mistralrs\\examples\\uqff_vision\\main.rs": 1,
+      "mistralrs\\examples\\vision_auto_device_map\\main.rs": 1,
+      "mistralrs\\examples\\web_search\\main.rs": 1,
+      "mistralrs\\examples\\xlora\\main.rs": 1,
+      "mistralrs\\src\\anymoe.rs": 1,
+      "mistralrs\\src\\diffusion_model.rs": 1,
+      "mistralrs\\src\\gguf.rs": 2,
+      "mistralrs\\src\\gguf_lora_model.rs": 1,
+      "mistralrs\\src\\gguf_xlora_model.rs": 1,
+      "mistralrs\\src\\lib.rs": 10,
+      "mistralrs\\src\\lora_model.rs": 1,
+      "mistralrs\\src\\model.rs": 1,
+      "mistralrs\\src\\multi_model.rs": 5,
+      "mistralrs\\src\\react_agent.rs": 6,
+      "mistralrs\\src\\speculative.rs": 1,
+      "mistralrs\\src\\speech_model.rs": 1,
+      "mistralrs\\src\\text_model.rs": 2,
+      "mistralrs\\src\\vision_model.rs": 2,
+      "mistralrs\\src\\xlora_model.rs": 1,
+      "mistralrs-agent-tools\\src\\bin\\mcp-server.rs": 2,
+      "mistralrs-agent-tools\\src\\core_integration.rs": 5,
+      "mistralrs-agent-tools\\src\\lib.rs": 10,
+      "mistralrs-agent-tools\\src\\pathlib.rs": 1,
+      "mistralrs-agent-tools\\src\\test_utils.rs": 12,
+      "mistralrs-agent-tools\\src\\tools\\winutils\\text.rs": 9,
+      "mistralrs-agent-tools\\src\\tools\\winutils\\wrapper.rs": 3,
+      "mistralrs-agent-tools\\tests\\tool_registry_integration.rs": 1,
+      "mistralrs-audio\\src\\lib.rs": 2,
+      "mistralrs-bench\\src\\main.rs": 13,
+      "mistralrs-core\\build.rs": 5,
+      "mistralrs-core\\src\\amoe\\mod.rs": 1,
+      "mistralrs-core\\src\\attention\\backends\\naive.rs": 1,
+      "mistralrs-core\\src\\attention\\mod.rs": 2,
+      "mistralrs-core\\src\\device_map.rs": 16,
+      "mistralrs-core\\src\\diffusion_models\\clip\\text.rs": 1,
+      "mistralrs-core\\src\\diffusion_models\\flux\\autoencoder.rs": 1,
+      "mistralrs-core\\src\\diffusion_models\\flux\\model.rs": 1,
+      "mistralrs-core\\src\\diffusion_models\\flux\\stepper.rs": 1,
+      "mistralrs-core\\src\\diffusion_models\\t5\\mod.rs": 1,
+      "mistralrs-core\\src\\distributed.rs": 11,
+      "mistralrs-core\\src\\embedding\\bert.rs": 1,
+      "mistralrs-core\\src\\engine\\mod.rs": 4,
+      "mistralrs-core\\src\\feature_detection.rs": 3,
+      "mistralrs-core\\src\\gguf\\content.rs": 3,
+      "mistralrs-core\\src\\gguf\\gguf_tokenizer.rs": 6,
+      "mistralrs-core\\src\\layers.rs": 6,
+      "mistralrs-core\\src\\lib.rs": 10,
+      "mistralrs-core\\src\\lora\\loralinear.rs": 1,
+      "mistralrs-core\\src\\lora\\mod.rs": 1,
+      "mistralrs-core\\src\\lora\\qloralinear.rs": 1,
+      "mistralrs-core\\src\\models\\deepseek2.rs": 4,
+      "mistralrs-core\\src\\models\\deepseek3.rs": 4,
+      "mistralrs-core\\src\\models\\gemma.rs": 5,
+      "mistralrs-core\\src\\models\\gemma2.rs": 5,
+      "mistralrs-core\\src\\models\\glm4.rs": 5,
+      "mistralrs-core\\src\\models\\llama.rs": 5,
+      "mistralrs-core\\src\\models\\mistral.rs": 7,
+      "mistralrs-core\\src\\models\\mixtral.rs": 9,
+      "mistralrs-core\\src\\models\\mod.rs": 1,
+      "mistralrs-core\\src\\models\\phi2.rs": 6,
+      "mistralrs-core\\src\\models\\phi3.rs": 5,
+      "mistralrs-core\\src\\models\\phi3_5_moe.rs": 7,
+      "mistralrs-core\\src\\models\\quantized_llama.rs": 1,
+      "mistralrs-core\\src\\models\\quantized_phi2.rs": 3,
+      "mistralrs-core\\src\\models\\quantized_phi3.rs": 1,
+      "mistralrs-core\\src\\models\\quantized_qwen.rs": 1,
+      "mistralrs-core\\src\\models\\quantized_qwen3.rs": 1,
+      "mistralrs-core\\src\\models\\quantized_qwen3_moe.rs": 1,
+      "mistralrs-core\\src\\models\\quantized_starcoder2.rs": 1,
+      "mistralrs-core\\src\\models\\qwen2.rs": 5,
+      "mistralrs-core\\src\\models\\qwen3.rs": 7,
+      "mistralrs-core\\src\\models\\qwen3_moe.rs": 9,
+      "mistralrs-core\\src\\models\\smollm3.rs": 5,
+      "mistralrs-core\\src\\models\\starcoder2.rs": 6,
+      "mistralrs-core\\src\\model_loader.rs": 1,
+      "mistralrs-core\\src\\paged_attention\\cache_engine.rs": 1,
+      "mistralrs-core\\src\\paged_attention\\layers\\paged_attention.rs": 1,
+      "mistralrs-core\\src\\pipeline\\amoe.rs": 1,
+      "mistralrs-core\\src\\pipeline\\diffusion.rs": 2,
+      "mistralrs-core\\src\\pipeline\\ggml.rs": 3,
+      "mistralrs-core\\src\\pipeline\\gguf.rs": 1,
+      "mistralrs-core\\src\\pipeline\\isq.rs": 3,
+      "mistralrs-core\\src\\pipeline\\loaders\\diffusion_loaders.rs": 3,
+      "mistralrs-core\\src\\pipeline\\loaders\\mod.rs": 2,
+      "mistralrs-core\\src\\pipeline\\loaders\\normal_loaders.rs": 43,
+      "mistralrs-core\\src\\pipeline\\loaders\\vision_loaders.rs": 39,
+      "mistralrs-core\\src\\pipeline\\macros.rs": 2,
+      "mistralrs-core\\src\\pipeline\\mod.rs": 5,
+      "mistralrs-core\\src\\pipeline\\normal.rs": 5,
+      "mistralrs-core\\src\\pipeline\\paths.rs": 2,
+      "mistralrs-core\\src\\pipeline\\speculative.rs": 1,
+      "mistralrs-core\\src\\pipeline\\speech.rs": 2,
+      "mistralrs-core\\src\\pipeline\\vision.rs": 5,
+      "mistralrs-core\\src\\request.rs": 2,
+      "mistralrs-core\\src\\sampler.rs": 2,
+      "mistralrs-core\\src\\search\\mod.rs": 2,
+      "mistralrs-core\\src\\speech_models\\dia\\dac.rs": 1,
+      "mistralrs-core\\src\\speech_models\\dia\\mod.rs": 2,
+      "mistralrs-core\\src\\speech_models\\dia\\model.rs": 1,
+      "mistralrs-core\\src\\toml_selector.rs": 1,
+      "mistralrs-core\\src\\tools\\mod.rs": 2,
+      "mistralrs-core\\src\\tools\\request.rs": 1,
+      "mistralrs-core\\src\\tools\\response.rs": 1,
+      "mistralrs-core\\src\\topology\\mod.rs": 1,
+      "mistralrs-core\\src\\utils\\debug.rs": 1,
+      "mistralrs-core\\src\\utils\\model_config.rs": 1,
+      "mistralrs-core\\src\\utils\\progress.rs": 1,
+      "mistralrs-core\\src\\utils\\tiktoken.rs": 1,
+      "mistralrs-core\\src\\utils\\unvarbuilder.rs": 1,
+      "mistralrs-core\\src\\utils\\varbuilder_utils.rs": 2,
+      "mistralrs-core\\src\\vision_models\\clip.rs": 7,
+      "mistralrs-core\\src\\vision_models\\conformer\\encoder.rs": 5,
+      "mistralrs-core\\src\\vision_models\\conformer\\nemo.rs": 1,
+      "mistralrs-core\\src\\vision_models\\conformer\\pos_embed.rs": 1,
+      "mistralrs-core\\src\\vision_models\\gemma3\\config.rs": 1,
+      "mistralrs-core\\src\\vision_models\\gemma3\\inputs_processor.rs": 1,
+      "mistralrs-core\\src\\vision_models\\gemma3\\mmproj.rs": 1,
+      "mistralrs-core\\src\\vision_models\\gemma3\\mod.rs": 1,
+      "mistralrs-core\\src\\vision_models\\gemma3\\text.rs": 5,
+      "mistralrs-core\\src\\vision_models\\gemma3n\\audio.rs": 11,
+      "mistralrs-core\\src\\vision_models\\gemma3n\\audio_processing.rs": 1,
+      "mistralrs-core\\src\\vision_models\\gemma3n\\config.rs": 1,
+      "mistralrs-core\\src\\vision_models\\gemma3n\\inputs_processor.rs": 1,
+      "mistralrs-core\\src\\vision_models\\gemma3n\\mod.rs": 1,
+      "mistralrs-core\\src\\vision_models\\gemma3n\\multimodal_embedding.rs": 2,
+      "mistralrs-core\\src\\vision_models\\gemma3n\\text.rs": 7,
+      "mistralrs-core\\src\\vision_models\\gemma3n\\vision.rs": 4,
+      "mistralrs-core\\src\\vision_models\\idefics2\\idefics2_input_processor.rs": 5,
+      "mistralrs-core\\src\\vision_models\\idefics2\\mod.rs": 7,
+      "mistralrs-core\\src\\vision_models\\idefics3\\inputs_processor.rs": 4,
+      "mistralrs-core\\src\\vision_models\\idefics3\\mod.rs": 2,
+      "mistralrs-core\\src\\vision_models\\idefics3\\vision.rs": 7,
+      "mistralrs-core\\src\\vision_models\\llama4\\config.rs": 1,
+      "mistralrs-core\\src\\vision_models\\llama4\\inputs_processor.rs": 1,
+      "mistralrs-core\\src\\vision_models\\llama4\\mod.rs": 1,
+      "mistralrs-core\\src\\vision_models\\llama4\\text.rs": 8,
+      "mistralrs-core\\src\\vision_models\\llama4\\vision.rs": 10,
+      "mistralrs-core\\src\\vision_models\\llava\\config.rs": 3,
+      "mistralrs-core\\src\\vision_models\\llava\\llava15.rs": 9,
+      "mistralrs-core\\src\\vision_models\\llava\\llava_llm\\llama.rs": 6,
+      "mistralrs-core\\src\\vision_models\\llava\\llava_llm\\mistral.rs": 9,
+      "mistralrs-core\\src\\vision_models\\llava\\llava_llm\\mod.rs": 2,
+      "mistralrs-core\\src\\vision_models\\llava\\llava_next.rs": 8,
+      "mistralrs-core\\src\\vision_models\\llava\\llava_next_inputs_processor.rs": 1,
+      "mistralrs-core\\src\\vision_models\\minicpmo\\inputs_processor.rs": 1,
+      "mistralrs-core\\src\\vision_models\\minicpmo\\mod.rs": 1,
+      "mistralrs-core\\src\\vision_models\\minicpmo\\resampler.rs": 1,
+      "mistralrs-core\\src\\vision_models\\mistral3\\config.rs": 2,
+      "mistralrs-core\\src\\vision_models\\mistral3\\inputs_processor.rs": 2,
+      "mistralrs-core\\src\\vision_models\\mistral3\\mod.rs": 2,
+      "mistralrs-core\\src\\vision_models\\mistral3\\vision.rs": 1,
+      "mistralrs-core\\src\\vision_models\\mllama\\config.rs": 1,
+      "mistralrs-core\\src\\vision_models\\mllama\\inputs_processor.rs": 2,
+      "mistralrs-core\\src\\vision_models\\mllama\\mod.rs": 1,
+      "mistralrs-core\\src\\vision_models\\mllama\\text.rs": 6,
+      "mistralrs-core\\src\\vision_models\\mllama\\vision.rs": 8,
+      "mistralrs-core\\src\\vision_models\\mod.rs": 1,
+      "mistralrs-core\\src\\vision_models\\phi3\\mod.rs": 10,
+      "mistralrs-core\\src\\vision_models\\phi3\\phi3_inputs_processor.rs": 1,
+      "mistralrs-core\\src\\vision_models\\phi4\\audio_embedding.rs": 1,
+      "mistralrs-core\\src\\vision_models\\phi4\\config.rs": 1,
+      "mistralrs-core\\src\\vision_models\\phi4\\image_embedding.rs": 6,
+      "mistralrs-core\\src\\vision_models\\phi4\\inputs_processor.rs": 1,
+      "mistralrs-core\\src\\vision_models\\phi4\\mm_embedding.rs": 1,
+      "mistralrs-core\\src\\vision_models\\phi4\\mod.rs": 5,
+      "mistralrs-core\\src\\vision_models\\qwen2vl\\config.rs": 1,
+      "mistralrs-core\\src\\vision_models\\qwen2vl\\inputs_processor.rs": 2,
+      "mistralrs-core\\src\\vision_models\\qwen2vl\\mod.rs": 1,
+      "mistralrs-core\\src\\vision_models\\qwen2vl\\text.rs": 6,
+      "mistralrs-core\\src\\vision_models\\qwen2vl\\vision.rs": 6,
+      "mistralrs-core\\src\\vision_models\\qwen2_5_vl\\config.rs": 1,
+      "mistralrs-core\\src\\vision_models\\qwen2_5_vl\\inputs_processor.rs": 2,
+      "mistralrs-core\\src\\vision_models\\qwen2_5_vl\\mod.rs": 1,
+      "mistralrs-core\\src\\vision_models\\qwen2_5_vl\\text.rs": 6,
+      "mistralrs-core\\src\\vision_models\\qwen2_5_vl\\vision.rs": 6,
+      "mistralrs-core\\src\\vision_models\\siglip.rs": 7,
+      "mistralrs-core\\src\\xlora_models\\classifier.rs": 1,
+      "mistralrs-core\\src\\xlora_models\\gemma.rs": 1,
+      "mistralrs-core\\src\\xlora_models\\gemma2.rs": 1,
+      "mistralrs-core\\src\\xlora_models\\llama.rs": 1,
+      "mistralrs-core\\src\\xlora_models\\mistral.rs": 4,
+      "mistralrs-core\\src\\xlora_models\\mixtral.rs": 2,
+      "mistralrs-core\\src\\xlora_models\\mod.rs": 2,
+      "mistralrs-core\\src\\xlora_models\\phi2.rs": 1,
+      "mistralrs-core\\src\\xlora_models\\phi3.rs": 1,
+      "mistralrs-core\\src\\xlora_models\\quantized_llama.rs": 1,
+      "mistralrs-core\\src\\xlora_models\\quantized_phi3.rs": 1,
+      "mistralrs-core\\src\\xlora_models\\starcoder2.rs": 1,
+      "mistralrs-mcp\\benches\\performance.rs": 3,
+      "mistralrs-mcp\\benches\\performance_optimized.rs": 3,
+      "mistralrs-mcp\\examples\\config.rs": 2,
+      "mistralrs-mcp\\examples\\optimized_config.rs": 2,
+      "mistralrs-mcp\\examples\\rag_redis_smoke.rs": 4,
+      "mistralrs-mcp\\src\\client.rs": 4,
+      "mistralrs-mcp\\src\\lib.rs": 2,
+      "mistralrs-mcp\\src\\resource_monitor.rs": 1,
+      "mistralrs-mcp\\src\\runtime.rs": 3,
+      "mistralrs-mcp\\src\\shutdown.rs": 1,
+      "mistralrs-mcp\\src\\transport.rs": 9,
+      "mistralrs-mcp\\tests\\client_tests.rs": 1,
+      "mistralrs-mcp\\tests\\integration_tests.rs": 1,
+      "mistralrs-mcp\\tests\\mock_server.rs": 1,
+      "mistralrs-mcp\\tests\\rag_redis_smoke.rs": 6,
+      "mistralrs-mcp\\tests\\transport_tests.rs": 1,
+      "mistralrs-paged-attn\\build.rs": 11,
+      "mistralrs-paged-attn\\src\\metal\\kernels\\mod.rs": 2,
+      "mistralrs-pyo3\\src\\anymoe.rs": 1,
+      "mistralrs-pyo3\\src\\lib.rs": 31,
+      "mistralrs-pyo3\\src\\requests.rs": 1,
+      "mistralrs-pyo3\\src\\stream.rs": 1,
+      "mistralrs-pyo3\\src\\util.rs": 4,
+      "mistralrs-pyo3\\src\\which.rs": 6,
+      "mistralrs-pyo3-tools\\src\\lib.rs": 2,
+      "mistralrs-quant\\build.rs": 10,
+      "mistralrs-quant\\src\\blockwise_fp8\\ops.rs": 1,
+      "mistralrs-quant\\src\\metal_kernels\\mod.rs": 2,
+      "mistralrs-quant\\src\\utils\\uqff.rs": 1,
+      "mistralrs-server\\src\\agent_mode.rs": 5,
+      "mistralrs-server\\src\\bin\\mistral-rs.rs": 3,
+      "mistralrs-server\\src\\interactive_mode.rs": 22,
+      "mistralrs-server\\src\\main.rs": 15,
+      "mistralrs-server\\src\\mcp_server.rs": 7,
+      "mistralrs-server\\src\\tool_registry.rs": 24,
+      "mistralrs-server-core\\src\\chat_completion.rs": 4,
+      "mistralrs-server-core\\src\\completions.rs": 4,
+      "mistralrs-server-core\\src\\completion_core.rs": 2,
+      "mistralrs-server-core\\src\\handlers.rs": 2,
+      "mistralrs-server-core\\src\\handler_core.rs": 2,
+      "mistralrs-server-core\\src\\image_generation.rs": 2,
+      "mistralrs-server-core\\src\\lib.rs": 33,
+      "mistralrs-server-core\\src\\mistralrs_for_server_builder.rs": 41,
+      "mistralrs-server-core\\src\\mistralrs_server_router_builder.rs": 33,
+      "mistralrs-server-core\\src\\openai.rs": 10,
+      "mistralrs-server-core\\src\\openapi_doc.rs": 11,
+      "mistralrs-server-core\\src\\responses.rs": 3,
+      "mistralrs-server-core\\src\\speech_generation.rs": 2,
+      "mistralrs-server-core\\src\\streaming.rs": 2,
+      "mistralrs-server-core\\src\\types.rs": 7,
+      "mistralrs-server-core\\src\\util.rs": 8,
+      "mistralrs-tui\\examples\\editor_demo.rs": 2,
+      "mistralrs-tui\\examples\\file_explorer_demo.rs": 1,
+      "mistralrs-tui\\src\\agent\\context\\gatherer.rs": 3,
+      "mistralrs-tui\\src\\agent\\context\\mod.rs": 2,
+      "mistralrs-tui\\src\\agent\\execution.rs": 1,
+      "mistralrs-tui\\src\\agent\\mod.rs": 1,
+      "mistralrs-tui\\src\\agent\\react\\engine.rs": 6,
+      "mistralrs-tui\\src\\agent\\react\\thought.rs": 1,
+      "mistralrs-tui\\src\\agent\\toolkit.rs": 1,
+      "mistralrs-tui\\src\\app.rs": 3,
+      "mistralrs-tui\\src\\backend\\gpu.rs": 5,
+      "mistralrs-tui\\src\\config.rs": 2,
+      "mistralrs-tui\\src\\main.rs": 9,
+      "mistralrs-tui\\src\\session.rs": 1,
+      "mistralrs-tui\\tests\\cli.rs": 2,
+      "mistralrs-tui\\tests\\git_status_integration.rs": 3,
+      "mistralrs-tui\\tests\\ui_snapshot.rs": 1,
+      "mistralrs-vision\\src\\lib.rs": 2,
+      "mistralrs-vision\\tests\\integration.rs": 1,
+      "mistralrs-web-chat\\src\\handlers\\api.rs": 1,
+      "mistralrs-web-chat\\src\\handlers\\websocket.rs": 4,
+      "mistralrs-web-chat\\src\\main.rs": 1,
+      "mistralrs-web-chat\\src\\models.rs": 1,
+      "mistralrs-web-chat\\src\\utils.rs": 2,
+      "tests\\integration_tests.rs": 3
+    },
+    "unwrap\\(": {},
+    "expect\\(": {
+      "mistralrs\\src\\anymoe.rs": 1,
+      "mistralrs\\src\\gguf.rs": 2,
+      "mistralrs\\src\\gguf_lora_model.rs": 1,
+      "mistralrs\\src\\gguf_xlora_model.rs": 1,
+      "mistralrs\\src\\lora_model.rs": 1,
+      "mistralrs\\src\\text_model.rs": 1,
+      "mistralrs\\src\\vision_model.rs": 1,
+      "mistralrs\\src\\xlora_model.rs": 1,
+      "mistralrs-agent-tools\\src\\test_utils.rs": 4,
+      "mistralrs-agent-tools\\src\\tools\\file\\cp.rs": 21,
+      "mistralrs-agent-tools\\src\\tools\\file\\mkdir.rs": 13,
+      "mistralrs-agent-tools\\src\\tools\\file\\touch.rs": 17,
+      "mistralrs-agent-tools\\winutils\\benchmarks\\src\\benchmarks.rs": 1,
+      "mistralrs-agent-tools\\winutils\\coreutils\\ls\\benches\\ls_benchmark.rs": 13,
+      "mistralrs-agent-tools\\winutils\\coreutils\\ls\\tests\\integration_tests.rs": 15,
+      "mistralrs-agent-tools\\winutils\\coreutils\\rg\\tests\\integration_tests.rs": 2,
+      "mistralrs-agent-tools\\winutils\\derive-utils\\winpath-old\\src\\main.rs": 11,
+      "mistralrs-agent-tools\\winutils\\shared\\winpath\\tests\\git_bash_tests.rs": 2,
+      "mistralrs-agent-tools\\winutils\\shared\\winpath\\tests\\integration_tests.rs": 12,
+      "mistralrs-bench\\src\\main.rs": 1,
+      "mistralrs-core\\src\\amoe\\mod.rs": 1,
+      "mistralrs-core\\src\\attention\\backends\\cpu.rs": 1,
+      "mistralrs-core\\src\\distributed.rs": 3,
+      "mistralrs-core\\src\\engine\\add_request.rs": 5,
+      "mistralrs-core\\src\\engine\\mod.rs": 16,
+      "mistralrs-core\\src\\engine\\search_request.rs": 2,
+      "mistralrs-core\\src\\gguf\\content.rs": 2,
+      "mistralrs-core\\src\\gguf\\gguf_tokenizer.rs": 3,
+      "mistralrs-core\\src\\kv_cache\\mod.rs": 49,
+      "mistralrs-core\\src\\kv_cache\\rotating_cache.rs": 2,
+      "mistralrs-core\\src\\kv_cache\\single_cache.rs": 2,
+      "mistralrs-core\\src\\lib.rs": 19,
+      "mistralrs-core\\src\\lora\\loralinear.rs": 1,
+      "mistralrs-core\\src\\lora\\qloralinear.rs": 1,
+      "mistralrs-core\\src\\models\\deepseek2.rs": 2,
+      "mistralrs-core\\src\\models\\deepseek3.rs": 2,
+      "mistralrs-core\\src\\models\\gemma.rs": 1,
+      "mistralrs-core\\src\\models\\gemma2.rs": 1,
+      "mistralrs-core\\src\\models\\glm4.rs": 1,
+      "mistralrs-core\\src\\models\\llama.rs": 1,
+      "mistralrs-core\\src\\models\\mistral.rs": 1,
+      "mistralrs-core\\src\\models\\mixtral.rs": 1,
+      "mistralrs-core\\src\\models\\phi2.rs": 1,
+      "mistralrs-core\\src\\models\\phi3.rs": 1,
+      "mistralrs-core\\src\\models\\phi3_5_moe.rs": 1,
+      "mistralrs-core\\src\\models\\quantized_llama.rs": 1,
+      "mistralrs-core\\src\\models\\quantized_qwen.rs": 1,
+      "mistralrs-core\\src\\models\\quantized_qwen3.rs": 1,
+      "mistralrs-core\\src\\models\\quantized_qwen3_moe.rs": 1,
+      "mistralrs-core\\src\\models\\quantized_starcoder2.rs": 1,
+      "mistralrs-core\\src\\models\\qwen2.rs": 1,
+      "mistralrs-core\\src\\models\\qwen3.rs": 1,
+      "mistralrs-core\\src\\models\\qwen3_moe.rs": 3,
+      "mistralrs-core\\src\\models\\smollm3.rs": 1,
+      "mistralrs-core\\src\\models\\starcoder2.rs": 3,
+      "mistralrs-core\\src\\paged_attention\\scheduler.rs": 1,
+      "mistralrs-core\\src\\pipeline\\auto.rs": 10,
+      "mistralrs-core\\src\\pipeline\\diffusion.rs": 2,
+      "mistralrs-core\\src\\pipeline\\ggml.rs": 2,
+      "mistralrs-core\\src\\pipeline\\gguf.rs": 1,
+      "mistralrs-core\\src\\pipeline\\inputs_processor.rs": 23,
+      "mistralrs-core\\src\\pipeline\\isq.rs": 1,
+      "mistralrs-core\\src\\pipeline\\loaders\\auto_device_map.rs": 1,
+      "mistralrs-core\\src\\pipeline\\loaders\\mod.rs": 1,
+      "mistralrs-core\\src\\pipeline\\loaders\\vision_loaders.rs": 5,
+      "mistralrs-core\\src\\pipeline\\macros.rs": 7,
+      "mistralrs-core\\src\\pipeline\\mod.rs": 5,
+      "mistralrs-core\\src\\pipeline\\normal.rs": 10,
+      "mistralrs-core\\src\\pipeline\\paths.rs": 29,
+      "mistralrs-core\\src\\pipeline\\response.rs": 1,
+      "mistralrs-core\\src\\pipeline\\speculative.rs": 2,
+      "mistralrs-core\\src\\pipeline\\speech.rs": 2,
+      "mistralrs-core\\src\\pipeline\\vision.rs": 15,
+      "mistralrs-core\\src\\prefix_cacher.rs": 4,
+      "mistralrs-core\\src\\sampler.rs": 3,
+      "mistralrs-core\\src\\scheduler\\default_scheduler.rs": 2,
+      "mistralrs-core\\src\\sequence.rs": 8,
+      "mistralrs-core\\src\\speech_models\\dia\\model.rs": 1,
+      "mistralrs-core\\src\\utils\\normal.rs": 2,
+      "mistralrs-core\\src\\utils\\unvarbuilder.rs": 4,
+      "mistralrs-core\\src\\utils\\varbuilder_utils.rs": 3,
+      "mistralrs-core\\src\\vision_models\\gemma3\\inputs_processor.rs": 6,
+      "mistralrs-core\\src\\vision_models\\gemma3\\text.rs": 2,
+      "mistralrs-core\\src\\vision_models\\gemma3n\\inputs_processor.rs": 10,
+      "mistralrs-core\\src\\vision_models\\gemma3n\\mod.rs": 1,
+      "mistralrs-core\\src\\vision_models\\gemma3n\\text.rs": 2,
+      "mistralrs-core\\src\\vision_models\\idefics2\\idefics2_input_processor.rs": 5,
+      "mistralrs-core\\src\\vision_models\\idefics2\\mod.rs": 1,
+      "mistralrs-core\\src\\vision_models\\idefics3\\inputs_processor.rs": 8,
+      "mistralrs-core\\src\\vision_models\\idefics3\\mod.rs": 1,
+      "mistralrs-core\\src\\vision_models\\llama4\\inputs_processor.rs": 7,
+      "mistralrs-core\\src\\vision_models\\llama4\\mod.rs": 1,
+      "mistralrs-core\\src\\vision_models\\llama4\\text.rs": 1,
+      "mistralrs-core\\src\\vision_models\\llava\\llava_inputs_processor.rs": 8,
+      "mistralrs-core\\src\\vision_models\\llava\\llava_next.rs": 1,
+      "mistralrs-core\\src\\vision_models\\llava\\llava_next_inputs_processor.rs": 8,
+      "mistralrs-core\\src\\vision_models\\minicpmo\\inputs_processor.rs": 2,
+      "mistralrs-core\\src\\vision_models\\minicpmo\\mod.rs": 4,
+      "mistralrs-core\\src\\vision_models\\minicpmo\\resampler.rs": 1,
+      "mistralrs-core\\src\\vision_models\\mistral3\\inputs_processor.rs": 6,
+      "mistralrs-core\\src\\vision_models\\mistral3\\mod.rs": 1,
+      "mistralrs-core\\src\\vision_models\\mllama\\inputs_processor.rs": 9,
+      "mistralrs-core\\src\\vision_models\\mllama\\mod.rs": 1,
+      "mistralrs-core\\src\\vision_models\\mllama\\text.rs": 1,
+      "mistralrs-core\\src\\vision_models\\phi3\\mod.rs": 6,
+      "mistralrs-core\\src\\vision_models\\phi3\\phi3_inputs_processor.rs": 12,
+      "mistralrs-core\\src\\vision_models\\phi4\\image_embedding.rs": 5,
+      "mistralrs-core\\src\\vision_models\\phi4\\inputs_processor.rs": 11,
+      "mistralrs-core\\src\\vision_models\\phi4\\mm_embedding.rs": 3,
+      "mistralrs-core\\src\\vision_models\\phi4\\mod.rs": 2,
+      "mistralrs-core\\src\\vision_models\\qwen2vl\\inputs_processor.rs": 10,
+      "mistralrs-core\\src\\vision_models\\qwen2vl\\mod.rs": 1,
+      "mistralrs-core\\src\\vision_models\\qwen2vl\\text.rs": 1,
+      "mistralrs-core\\src\\vision_models\\qwen2_5_vl\\inputs_processor.rs": 10,
+      "mistralrs-core\\src\\vision_models\\qwen2_5_vl\\mod.rs": 1,
+      "mistralrs-core\\src\\vision_models\\qwen2_5_vl\\text.rs": 1,
+      "mistralrs-core\\src\\xlora_models\\gemma.rs": 13,
+      "mistralrs-core\\src\\xlora_models\\gemma2.rs": 13,
+      "mistralrs-core\\src\\xlora_models\\llama.rs": 11,
+      "mistralrs-core\\src\\xlora_models\\mistral.rs": 13,
+      "mistralrs-core\\src\\xlora_models\\mixtral.rs": 18,
+      "mistralrs-core\\src\\xlora_models\\phi2.rs": 15,
+      "mistralrs-core\\src\\xlora_models\\phi3.rs": 5,
+      "mistralrs-core\\src\\xlora_models\\quantized_llama.rs": 1,
+      "mistralrs-core\\src\\xlora_models\\starcoder2.rs": 16,
+      "mistralrs-paged-attn\\build.rs": 8,
+      "mistralrs-pyo3\\src\\lib.rs": 1,
+      "mistralrs-quant\\build.rs": 9,
+      "mistralrs-quant\\src\\cublaslt\\matmul.rs": 3,
+      "mistralrs-quant\\src\\distributed\\mod.rs": 7,
+      "mistralrs-quant\\src\\gptq\\gptq_cuda.rs": 1,
+      "mistralrs-quant\\src\\lib.rs": 2,
+      "mistralrs-quant\\src\\metal_kernels\\mod.rs": 5,
+      "mistralrs-quant\\src\\utils\\log.rs": 2,
+      "mistralrs-quant\\src\\utils\\ops.rs": 1,
+      "mistralrs-server\\src\\agent_mode.rs": 7,
+      "mistralrs-server\\src\\interactive_mode.rs": 28,
+      "mistralrs-server\\src\\mcp_server.rs": 7,
+      "mistralrs-server-core\\src\\chat_completion.rs": 1,
+      "mistralrs-server-core\\src\\completions.rs": 1,
+      "mistralrs-server-core\\src\\image_generation.rs": 1,
+      "mistralrs-server-core\\src\\speech_generation.rs": 1,
+      "mistralrs-tui\\src\\agent\\react\\engine.rs": 16,
+      "mistralrs-tui\\src\\agent\\react\\observation.rs": 2,
+      "mistralrs-tui\\src\\agent\\react\\thought.rs": 1,
+      "mistralrs-tui\\src\\app.rs": 5,
+      "mistralrs-tui\\src\\config.rs": 1,
+      "mistralrs-tui\\src\\session.rs": 5,
+      "mistralrs-tui\\tests\\git_status_integration.rs": 2,
+      "mistralrs-tui\\tests\\ui_snapshot.rs": 10,
+      "mistralrs-vision\\src\\pad.rs": 4,
+      "mistralrs-web-chat\\src\\handlers\\websocket.rs": 1,
+      "tests\\integration_tests.rs": 3
+    },
+    "panic!": {
+      "mistralrs\\examples\\xlora\\main.rs": 1,
+      "mistralrs-agent-tools\\src\\test_utils.rs": 2,
+      "mistralrs-agent-tools\\src\\tools\\shell\\executor.rs": 1,
+      "mistralrs-agent-tools\\winutils\\coreutils\\rg\\src\\main.rs": 4,
+      "mistralrs-agent-tools\\winutils\\coreutils\\src\\cat\\src\\file_reader.rs": 1,
+      "mistralrs-agent-tools\\winutils\\shared\\winpath\\tests\\git_bash_tests.rs": 1,
+      "mistralrs-agent-tools\\winutils\\shared\\winutils-core\\src\\error.rs": 1,
+      "mistralrs-bench\\src\\main.rs": 4,
+      "mistralrs-core\\src\\amoe\\mod.rs": 3,
+      "mistralrs-core\\src\\dummy_paged_attention\\block_engine.rs": 1,
+      "mistralrs-core\\src\\dummy_paged_attention\\scheduler.rs": 1,
+      "mistralrs-core\\src\\kv_cache\\full_cache.rs": 2,
+      "mistralrs-core\\src\\lora\\mod.rs": 1,
+      "mistralrs-core\\src\\lora\\qloralinear.rs": 1,
+      "mistralrs-core\\src\\model_loader.rs": 9,
+      "mistralrs-core\\src\\ops.rs": 1,
+      "mistralrs-core\\src\\paged_attention\\block_engine.rs": 1,
+      "mistralrs-core\\src\\paged_attention\\scheduler.rs": 1,
+      "mistralrs-core\\src\\pipeline\\chat_template.rs": 3,
+      "mistralrs-core\\src\\pipeline\\inputs_processor.rs": 2,
+      "mistralrs-core\\src\\pipeline\\macros.rs": 5,
+      "mistralrs-core\\src\\pipeline\\mod.rs": 1,
+      "mistralrs-core\\src\\pipeline\\paths.rs": 6,
+      "mistralrs-core\\src\\toml_selector.rs": 5,
+      "mistralrs-core\\src\\utils\\progress.rs": 2,
+      "mistralrs-core\\src\\vision_models\\mllama\\inputs_processor.rs": 1,
+      "mistralrs-core\\src\\xlora_models\\gemma.rs": 1,
+      "mistralrs-core\\src\\xlora_models\\gemma2.rs": 1,
+      "mistralrs-core\\src\\xlora_models\\llama.rs": 1,
+      "mistralrs-core\\src\\xlora_models\\mistral.rs": 1,
+      "mistralrs-core\\src\\xlora_models\\mixtral.rs": 1,
+      "mistralrs-core\\src\\xlora_models\\phi2.rs": 1,
+      "mistralrs-core\\src\\xlora_models\\phi3.rs": 1,
+      "mistralrs-core\\src\\xlora_models\\starcoder2.rs": 1,
+      "mistralrs-paged-attn\\build.rs": 6,
+      "mistralrs-paged-attn\\src\\cuda\\backend\\cache.rs": 1,
+      "mistralrs-paged-attn\\src\\metal\\backend\\cache.rs": 1,
+      "mistralrs-pyo3\\src\\lib.rs": 9,
+      "mistralrs-quant\\build.rs": 9,
+      "mistralrs-quant\\src\\distributed\\mod.rs": 5,
+      "mistralrs-quant\\src\\lib.rs": 1,
+      "mistralrs-quant\\src\\metal_kernels\\mod.rs": 2,
+      "mistralrs-quant\\src\\metal_kernels\\utils.rs": 2,
+      "mistralrs-server-core\\src\\mistralrs_for_server_builder.rs": 4,
+      "mistralrs-tui\\src\\agent\\events.rs": 1,
+      "mistralrs-tui\\src\\agent\\react\\observation.rs": 2,
+      "mistralrs-vision\\src\\pad.rs": 2
+    },
+    "unsafe": {
+      "mistralrs-agent-tools\\src\\tools\\file\\touch.rs": 1,
+      "mistralrs-agent-tools\\winutils\\benchmarks\\src\\memory.rs": 3,
+      "mistralrs-agent-tools\\winutils\\benchmarks\\src\\platforms.rs": 2,
+      "mistralrs-agent-tools\\winutils\\benchmarks\\src\\platforms_enhanced.rs": 1,
+      "mistralrs-agent-tools\\winutils\\coreutils\\ls\\src\\main.rs": 1,
+      "mistralrs-agent-tools\\winutils\\coreutils\\ls\\src\\windows_attrs.rs": 3,
+      "mistralrs-agent-tools\\winutils\\coreutils\\src\\cat\\src\\file_reader.rs": 1,
+      "mistralrs-agent-tools\\winutils\\coreutils\\src\\cat\\src\\windows_fs.rs": 1,
+      "mistralrs-agent-tools\\winutils\\coreutils\\src\\cp\\src\\copy_engine.rs": 6,
+      "mistralrs-agent-tools\\winutils\\coreutils\\src\\cp\\src\\file_attributes.rs": 6,
+      "mistralrs-agent-tools\\winutils\\coreutils\\src\\cp\\src\\junction_handler.rs": 6,
+      "mistralrs-agent-tools\\winutils\\coreutils\\src\\cp\\src\\main_demo.rs": 3,
+      "mistralrs-agent-tools\\winutils\\derive-utils\\bash-wrapper\\src\\main.rs": 1,
+      "mistralrs-agent-tools\\winutils\\derive-utils\\bash-wrapper\\src\\main_fixed.rs": 1,
+      "mistralrs-agent-tools\\winutils\\derive-utils\\cmd-wrapper\\src\\main.rs": 1,
+      "mistralrs-agent-tools\\winutils\\derive-utils\\cmd-wrapper\\src\\main_fixed.rs": 1,
+      "mistralrs-agent-tools\\winutils\\derive-utils\\fd-wrapper\\src\\lib.rs": 1,
+      "mistralrs-agent-tools\\winutils\\derive-utils\\find-wrapper\\src\\windows.rs": 3,
+      "mistralrs-agent-tools\\winutils\\derive-utils\\pwsh-wrapper\\src\\main.rs": 1,
+      "mistralrs-agent-tools\\winutils\\derive-utils\\pwsh-wrapper\\src\\main_fixed.rs": 1,
+      "mistralrs-agent-tools\\winutils\\derive-utils\\rg-wrapper\\src\\lib.rs": 1,
+      "mistralrs-agent-tools\\winutils\\derive-utils\\tree\\src\\windows.rs": 3,
+      "mistralrs-agent-tools\\winutils\\derive-utils\\winpath-old\\src\\lib.rs": 3,
+      "mistralrs-agent-tools\\winutils\\shared\\winpath\\src\\lib.rs": 2,
+      "mistralrs-agent-tools\\winutils\\shared\\winpath\\src\\normalizer.rs": 2,
+      "mistralrs-agent-tools\\winutils\\shared\\winpath\\src\\platform.rs": 22,
+      "mistralrs-agent-tools\\winutils\\shared\\winutils-core\\src\\windows.rs": 7,
+      "mistralrs-core\\src\\attention\\backends\\cpu.rs": 10,
+      "mistralrs-core\\src\\embedding\\bert.rs": 1,
+      "mistralrs-core\\src\\ops.rs": 5,
+      "mistralrs-core\\src\\paged_attention\\cache_engine.rs": 8,
+      "mistralrs-core\\src\\pipeline\\diffusion.rs": 1,
+      "mistralrs-core\\src\\pipeline\\ggml.rs": 1,
+      "mistralrs-core\\src\\pipeline\\gguf.rs": 1,
+      "mistralrs-core\\src\\pipeline\\isq.rs": 1,
+      "mistralrs-core\\src\\pipeline\\normal.rs": 2,
+      "mistralrs-core\\src\\pipeline\\speech.rs": 2,
+      "mistralrs-core\\src\\pipeline\\vision.rs": 2,
+      "mistralrs-core\\src\\utils\\varbuilder_utils.rs": 2,
+      "mistralrs-core\\src\\vision_models\\gemma3n\\text.rs": 1,
+      "mistralrs-paged-attn\\src\\cuda\\backend\\cache.rs": 8,
+      "mistralrs-paged-attn\\src\\cuda\\backend\\paged_attention.rs": 7,
+      "mistralrs-paged-attn\\src\\metal\\backend\\cache.rs": 2,
+      "mistralrs-quant\\src\\bitsandbytes\\op.rs": 3,
+      "mistralrs-quant\\src\\blockwise_fp8\\ops.rs": 13,
+      "mistralrs-quant\\src\\cublaslt\\api.rs": 6,
+      "mistralrs-quant\\src\\cublaslt\\matmul.rs": 19,
+      "mistralrs-quant\\src\\distributed\\mod.rs": 12,
+      "mistralrs-quant\\src\\distributed\\socket.rs": 1,
+      "mistralrs-quant\\src\\gptq\\gptq_cuda.rs": 7,
+      "mistralrs-quant\\src\\gptq\\marlin_backend.rs": 5,
+      "mistralrs-quant\\src\\hqq\\mod.rs": 12,
+      "mistralrs-quant\\src\\rotary\\mod.rs": 1,
+      "mistralrs-quant\\src\\safetensors.rs": 11,
+      "mistralrs-quant\\src\\scalar_fp8\\ops.rs": 6,
+      "mistralrs-quant\\src\\utils\\ops.rs": 18,
+      "mistralrs-quant\\src\\utils\\uqff.rs": 3,
+      "mistralrs-quant\\src\\vector_fp8\\ops.rs": 9,
+      "mistralrs-tui\\src\\backend\\gpu.rs": 6,
+      "tests\\integration_tests.rs": 9
+    }
+  },
+  "symbol_overview": {
+    "mistralrs-core\\src\\pipeline\\loaders\\vision_loaders.rs": {
+      "size_bytes": 214617,
+      "num_lines": 5478,
+      "num_symbols": 99,
+      "symbols_by_kind": {
+        "11": 2,
+        "10": 1,
+        "19": 64,
+        "23": 30,
+        "12": 2
+      }
+    },
+    "mistralrs-core\\src\\pipeline\\loaders\\normal_loaders.rs": {
+      "size_bytes": 142752,
+      "num_lines": 3809,
+      "num_symbols": 78,
+      "symbols_by_kind": {
+        "11": 2,
+        "23": 19,
+        "10": 1,
+        "19": 55,
+        "12": 1
+      }
+    },
+    "mistralrs-core\\src\\layers.rs": {
+      "size_bytes": 91940,
+      "num_lines": 2674,
+      "num_symbols": 89,
+      "symbols_by_kind": {
+        "12": 15,
+        "23": 29,
+        "19": 34,
+        "10": 9,
+        "11": 2
+      }
+    },
+    "mistralrs-pyo3\\src\\lib.rs": {
+      "size_bytes": 90435,
+      "num_lines": 2304,
+      "num_symbols": 28,
+      "symbols_by_kind": {
+        "2": 5,
+        "14": 2,
+        "12": 8,
+        "23": 5,
+        "19": 7,
+        "10": 1
+      }
+    },
+    "mistralrs-quant\\src\\metal_kernels\\mod.rs": {
+      "size_bytes": 78436,
+      "num_lines": 2421,
+      "num_symbols": 47,
+      "symbols_by_kind": {
+        "2": 1,
+        "14": 3,
+        "10": 3,
+        "19": 4,
+        "26": 1,
+        "23": 6,
+        "12": 29
+      }
+    },
+    "mistralrs-quant\\src\\utils\\ops.rs": {
+      "size_bytes": 77637,
+      "num_lines": 2042,
+      "num_symbols": 36,
+      "symbols_by_kind": {
+        "14": 1,
+        "23": 7,
+        "19": 18,
+        "11": 5,
+        "10": 2,
+        "2": 3
+      }
+    },
+    "mistralrs-agent-tools\\winutils\\benchmarks\\src\\workload_benchmarks.rs": {
+      "size_bytes": 75521,
+      "num_lines": 1747,
+      "num_symbols": 13,
+      "symbols_by_kind": {
+        "23": 9,
+        "10": 2,
+        "19": 1,
+        "2": 1
+      }
+    },
+    "mistralrs-core\\src\\vision_models\\gemma3n\\text.rs": {
+      "size_bytes": 60708,
+      "num_lines": 1598,
+      "num_symbols": 19,
+      "symbols_by_kind": {
+        "12": 2,
+        "14": 1,
+        "23": 6,
+        "19": 9,
+        "26": 1
+      }
+    },
+    "mistralrs-tui\\src\\app.rs": {
+      "size_bytes": 58123,
+      "num_lines": 1621,
+      "num_symbols": 14,
+      "symbols_by_kind": {
+        "10": 3,
+        "23": 6,
+        "19": 4,
+        "2": 1
+      }
+    },
+    "mistralrs-core\\src\\vision_models\\gemma3n\\audio.rs": {
+      "size_bytes": 56776,
+      "num_lines": 1509,
+      "num_symbols": 20,
+      "symbols_by_kind": {
+        "23": 10,
+        "19": 10
+      }
+    },
+    "mistralrs-mcp\\src\\transport.rs": {
+      "size_bytes": 51455,
+      "num_lines": 1408,
+      "num_symbols": 15,
+      "symbols_by_kind": {
+        "11": 1,
+        "23": 3,
+        "19": 11
+      }
+    },
+    "mistralrs-core\\src\\pipeline\\normal.rs": {
+      "size_bytes": 50743,
+      "num_lines": 1302,
+      "num_symbols": 12,
+      "symbols_by_kind": {
+        "23": 4,
+        "19": 8
+      }
+    },
+    "mistralrs-core\\src\\vision_models\\phi3\\mod.rs": {
+      "size_bytes": 48409,
+      "num_lines": 1342,
+      "num_symbols": 34,
+      "symbols_by_kind": {
+        "2": 1,
+        "23": 12,
+        "19": 17,
+        "11": 1,
+        "12": 1,
+        "14": 2
+      }
+    },
+    "mistralrs-quant\\src\\hqq\\mod.rs": {
+      "size_bytes": 48212,
+      "num_lines": 1296,
+      "num_symbols": 20,
+      "symbols_by_kind": {
+        "2": 5,
+        "14": 3,
+        "12": 1,
+        "10": 2,
+        "19": 7,
+        "23": 2
+      }
+    },
+    "mistralrs-core\\src\\pipeline\\mod.rs": {
+      "size_bytes": 46935,
+      "num_lines": 1045,
+      "num_symbols": 41,
+      "symbols_by_kind": {
+        "2": 20,
+        "10": 5,
+        "19": 5,
+        "23": 3,
+        "11": 7,
+        "12": 1
+      }
+    },
+    "mistralrs-quant\\src\\distributed\\layers.rs": {
+      "size_bytes": 46815,
+      "num_lines": 1276,
+      "num_symbols": 19,
+      "symbols_by_kind": {
+        "12": 3,
+        "23": 5,
+        "19": 11
+      }
+    },
+    "mistralrs-server-core\\src\\mistralrs_for_server_builder.rs": {
+      "size_bytes": 46714,
+      "num_lines": 1251,
+      "num_symbols": 14,
+      "symbols_by_kind": {
+        "23": 2,
+        "19": 3,
+        "2": 1,
+        "12": 8
+      }
+    },
+    "mistralrs-agent-tools\\winutils\\benchmarks\\src\\file_operation_benchmarks.rs": {
+      "size_bytes": 46259,
+      "num_lines": 1261,
+      "num_symbols": 14,
+      "symbols_by_kind": {
+        "23": 10,
+        "10": 2,
+        "19": 1,
+        "2": 1
+      }
+    },
+    "mistralrs-core\\src\\pipeline\\vision.rs": {
+      "size_bytes": 46043,
+      "num_lines": 1142,
+      "num_symbols": 12,
+      "symbols_by_kind": {
+        "23": 4,
+        "19": 8
+      }
+    },
+    "mistralrs-core\\src\\vision_models\\idefics2\\mod.rs": {
+      "size_bytes": 44384,
+      "num_lines": 1303,
+      "num_symbols": 58,
+      "symbols_by_kind": {
+        "2": 1,
+        "12": 25,
+        "23": 16,
+        "19": 16
+      }
+    },
+    "mistralrs-core\\src\\pipeline\\isq.rs": {
+      "size_bytes": 43830,
+      "num_lines": 1060,
+      "num_symbols": 13,
+      "symbols_by_kind": {
+        "23": 2,
+        "19": 3,
+        "14": 3,
+        "12": 1,
+        "10": 2,
+        "11": 2
+      }
+    },
+    "mistralrs-core\\src\\lib.rs": {
+      "size_bytes": 42895,
+      "num_lines": 1139,
+      "num_symbols": 55,
+      "symbols_by_kind": {
+        "2": 37,
+        "14": 2,
+        "23": 7,
+        "19": 8,
+        "10": 1
+      }
+    },
+    "mistralrs-core\\src\\sequence.rs": {
+      "size_bytes": 42783,
+      "num_lines": 1352,
+      "num_symbols": 20,
+      "symbols_by_kind": {
+        "10": 5,
+        "19": 8,
+        "12": 2,
+        "23": 5
+      }
+    },
+    "mistralrs-core\\src\\models\\deepseek3.rs": {
+      "size_bytes": 42131,
+      "num_lines": 1229,
+      "num_symbols": 23,
+      "symbols_by_kind": {
+        "10": 4,
+        "23": 7,
+        "19": 12
+      }
+    },
+    "mistralrs-core\\src\\vision_models\\phi4\\inputs_processor.rs": {
+      "size_bytes": 41118,
+      "num_lines": 1131,
+      "num_symbols": 15,
+      "symbols_by_kind": {
+        "14": 6,
+        "26": 1,
+        "23": 2,
+        "19": 6
+      }
+    },
+    "mistralrs-core\\src\\vision_models\\gemma3n\\vision.rs": {
+      "size_bytes": 41095,
+      "num_lines": 1344,
+      "num_symbols": 46,
+      "symbols_by_kind": {
+        "10": 3,
+        "12": 8,
+        "23": 11,
+        "19": 18,
+        "14": 6
+      }
+    },
+    "mistralrs-core\\src\\models\\deepseek2.rs": {
+      "size_bytes": 39865,
+      "num_lines": 1175,
+      "num_symbols": 23,
+      "symbols_by_kind": {
+        "10": 4,
+        "23": 7,
+        "19": 12
+      }
+    },
+    "mistralrs-mcp\\src\\capabilities.rs": {
+      "size_bytes": 39305,
+      "num_lines": 1169,
+      "num_symbols": 31,
+      "symbols_by_kind": {
+        "23": 13,
+        "12": 8,
+        "19": 7,
+        "10": 2,
+        "2": 1
+      }
+    },
+    "mistralrs-quant\\src\\blockwise_fp8\\ops.rs": {
+      "size_bytes": 39070,
+      "num_lines": 1038,
+      "num_symbols": 9,
+      "symbols_by_kind": {
+        "23": 2,
+        "19": 4,
+        "12": 2,
+        "2": 1
+      }
+    },
+    "mistralrs-server\\src\\interactive_mode.rs": {
+      "size_bytes": 38631,
+      "num_lines": 1023,
+      "num_symbols": 29,
+      "symbols_by_kind": {
+        "12": 13,
+        "14": 15,
+        "2": 1
+      }
+    },
+    "mistralrs-agent-tools\\src\\mcp_server.rs": {
+      "size_bytes": 38024,
+      "num_lines": 941,
+      "num_symbols": 8,
+      "symbols_by_kind": {
+        "23": 5,
+        "19": 2,
+        "2": 1
+      }
+    },
+    "mistralrs-core\\src\\xlora_models\\quantized_llama.rs": {
+      "size_bytes": 37147,
+      "num_lines": 959,
+      "num_symbols": 13,
+      "symbols_by_kind": {
+        "14": 2,
+        "23": 3,
+        "19": 7,
+        "10": 1
+      }
+    },
+    "mistralrs-core\\src\\kv_cache\\mod.rs": {
+      "size_bytes": 36855,
+      "num_lines": 980,
+      "num_symbols": 18,
+      "symbols_by_kind": {
+        "2": 3,
+        "11": 1,
+        "10": 3,
+        "19": 5,
+        "23": 4,
+        "12": 2
+      }
+    },
+    "mistralrs-core\\src\\models\\qwen3_moe.rs": {
+      "size_bytes": 36164,
+      "num_lines": 1048,
+      "num_symbols": 20,
+      "symbols_by_kind": {
+        "12": 1,
+        "23": 7,
+        "19": 11,
+        "10": 1
+      }
+    },
+    "mistralrs-core\\src\\xlora_models\\mixtral.rs": {
+      "size_bytes": 35697,
+      "num_lines": 1038,
+      "num_symbols": 14,
+      "symbols_by_kind": {
+        "23": 5,
+        "19": 9
+      }
+    },
+    "mistralrs-agent-tools\\winutils\\derive-utils\\rg-wrapper\\src\\lib.rs": {
+      "size_bytes": 34969,
+      "num_lines": 1048,
+      "num_symbols": 17,
+      "symbols_by_kind": {
+        "10": 2,
+        "23": 7,
+        "19": 7,
+        "2": 1
+      }
+    },
+    "mistralrs-server\\src\\tool_registry.rs": {
+      "size_bytes": 34527,
+      "num_lines": 785,
+      "num_symbols": 1,
+      "symbols_by_kind": {
+        "12": 1
+      }
+    },
+    "mistralrs-core\\src\\attention\\backends\\cpu.rs": {
+      "size_bytes": 34245,
+      "num_lines": 971,
+      "num_symbols": 25,
+      "symbols_by_kind": {
+        "12": 11,
+        "14": 3,
+        "23": 1,
+        "19": 7,
+        "11": 2,
+        "2": 1
+      }
+    },
+    "mistralrs-core\\src\\sampler.rs": {
+      "size_bytes": 34054,
+      "num_lines": 1000,
+      "num_symbols": 17,
+      "symbols_by_kind": {
+        "14": 1,
+        "10": 1,
+        "23": 6,
+        "19": 6,
+        "11": 1,
+        "12": 1,
+        "2": 1
+      }
+    },
+    "mistralrs-quant\\src\\distributed\\mod.rs": {
+      "size_bytes": 34002,
+      "num_lines": 974,
+      "num_symbols": 23,
+      "symbols_by_kind": {
+        "2": 8,
+        "23": 3,
+        "19": 7,
+        "11": 1,
+        "12": 2,
+        "10": 2
+      }
+    },
+    "mistralrs-core\\src\\pipeline\\inputs_processor.rs": {
+      "size_bytes": 33212,
+      "num_lines": 852,
+      "num_symbols": 4,
+      "symbols_by_kind": {
+        "10": 1,
+        "23": 1,
+        "11": 1,
+        "2": 1
+      }
+    },
+    "mistralrs-server-core\\src\\openai.rs": {
+      "size_bytes": 33188,
+      "num_lines": 983,
+      "num_symbols": 55,
+      "symbols_by_kind": {
+        "23": 26,
+        "19": 13,
+        "12": 11,
+        "10": 5
+      }
+    },
+    "mistralrs-core\\src\\engine\\search_request.rs": {
+      "size_bytes": 32908,
+      "num_lines": 770,
+      "num_symbols": 4,
+      "symbols_by_kind": {
+        "12": 4
+      }
+    },
+    "mistralrs-agent-tools\\winutils\\benchmarks\\src\\path_benchmarks.rs": {
+      "size_bytes": 32853,
+      "num_lines": 813,
+      "num_symbols": 11,
+      "symbols_by_kind": {
+        "23": 8,
+        "10": 1,
+        "19": 1,
+        "2": 1
+      }
+    },
+    "mistralrs-core\\src\\toml_selector.rs": {
+      "size_bytes": 32782,
+      "num_lines": 981,
+      "num_symbols": 17,
+      "symbols_by_kind": {
+        "12": 10,
+        "10": 1,
+        "23": 5,
+        "19": 1
+      }
+    },
+    "mistralrs-core\\src\\models\\glm4.rs": {
+      "size_bytes": 32606,
+      "num_lines": 909,
+      "num_symbols": 13,
+      "symbols_by_kind": {
+        "23": 5,
+        "19": 8
+      }
+    },
+    "mistralrs-tui\\src\\agent\\ui.rs": {
+      "size_bytes": 32213,
+      "num_lines": 996,
+      "num_symbols": 16,
+      "symbols_by_kind": {
+        "23": 4,
+        "19": 4,
+        "10": 1,
+        "12": 7
+      }
+    },
+    "mistralrs-core\\src\\xlora_models\\gemma2.rs": {
+      "size_bytes": 31620,
+      "num_lines": 951,
+      "num_symbols": 12,
+      "symbols_by_kind": {
+        "23": 4,
+        "19": 8
+      }
+    },
+    "mistralrs-core\\src\\vision_models\\minicpmo\\inputs_processor.rs": {
+      "size_bytes": 31526,
+      "num_lines": 859,
+      "num_symbols": 26,
+      "symbols_by_kind": {
+        "14": 18,
+        "26": 1,
+        "23": 2,
+        "19": 5
+      }
+    },
+    "mistralrs-tui\\src\\agent\\react\\engine.rs": {
+      "size_bytes": 31454,
+      "num_lines": 924,
+      "num_symbols": 7,
+      "symbols_by_kind": {
+        "23": 3,
+        "19": 2,
+        "2": 2
+      }
+    }
+  }
+}

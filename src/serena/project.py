@@ -97,6 +97,10 @@ class Project(ToStringMixin):
         log.debug(f"Processing {len(processed_patterns)} ignored paths")
         self._ignore_spec = pathspec.PathSpec.from_lines(pathspec.patterns.GitWildMatchPattern, processed_patterns)
 
+        # Per-project cache for ignore decisions to avoid repeatedly evaluating the same paths.
+        # The cache key is (relative_path_str, ignore_non_source_files).
+        self._ignore_cache: dict[tuple[str, bool], bool] = {}
+
     def _tostring_includes(self) -> list[str]:
         return []
 
@@ -230,7 +234,14 @@ class Project(ToStringMixin):
         else:
             relative_path = path
 
-        return self._is_ignored_relative_path(str(relative_path), ignore_non_source_files=ignore_non_source_files)
+        key = (str(relative_path), ignore_non_source_files)
+        cached = self._ignore_cache.get(key)
+        if cached is not None:
+            return cached
+
+        result = self._is_ignored_relative_path(str(relative_path), ignore_non_source_files=ignore_non_source_files)
+        self._ignore_cache[key] = result
+        return result
 
     def is_path_in_project(self, path: str | Path) -> bool:
         """

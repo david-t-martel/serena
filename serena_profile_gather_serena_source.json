@@ -1,0 +1,18 @@
+{
+  "python": {
+    "backend": "python",
+    "seconds": 0.1446715800004313,
+    "runs": 5,
+    "extra": {
+      "num_files": 200
+    }
+  },
+  "rust": {
+    "backend": "rust",
+    "seconds": 0.13480844000005163,
+    "runs": 5,
+    "extra": {
+      "num_files": 200
+    }
+  }
+}

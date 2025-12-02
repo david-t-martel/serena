@@ -3,9 +3,65 @@ use ignore::WalkBuilder;
 use pyo3::exceptions::PyValueError;
 use pyo3::prelude::*;
 use pyo3::types::PyDict;
+use rayon::prelude::*;
 use regex::RegexBuilder;
 use std::fs;
 use std::path::{Path, PathBuf};
+
+#[derive(Debug)]
+struct MatchLine {
+    line_number: usize,
+    content: String,
+    match_type: &'static str,
+}
+
+#[derive(Debug)]
+struct FileMatch {
+    lines: Vec<MatchLine>,
+}
+
+fn search_files_impl(
+    pattern: &str,
+    root: &str,
+    relative_paths: Vec<String>,
+    context_lines_before: usize,
+    context_lines_after: usize,
+) -> Result<Vec<(String, Vec<FileMatch>)>> {
+    let re = RegexBuilder::new(pattern)
+        .dot_matches_new_line(true)
+        .build()
+        .map_err(|e| anyhow::anyhow!("Invalid regex pattern: {e}"))?;
+
+    let root_path = PathBuf::from(root);
+
+    // Parallelise across files using rayon. For each file we read the contents
+    // and compute FileMatch structures; unreadable files are skipped, mirroring
+    // the Python implementation.
+    let results: Vec<(String, Vec<FileMatch>)> = relative_paths
+        .into_par_iter()
+        .filter_map(|rel_path| {
+            let full_path = root_path.join(&rel_path);
+            let content = match fs::read_to_string(&full_path) {
+                Ok(c) => c,
+                Err(_) => return None,
+            };
+
+            let file_matches = match search_in_content(
+                &content,
+                &re,
+                context_lines_before,
+                context_lines_after,
+            ) {
+                Ok(m) if !m.is_empty() => m,
+                _ => return None,
+            };
+
+            Some((rel_path, file_matches))
+        })
+        .collect();
+
+    Ok(results)
+}
 
 #[pyfunction]
 fn search_files(
@@ -16,33 +72,22 @@ fn search_files(
     context_lines_before: usize,
     context_lines_after: usize,
 ) -> PyResult<Vec<PyObject>> {
-    let re = RegexBuilder::new(pattern)
-        .dot_matches_new_line(true)
-        .build()
-        .map_err(|e| PyValueError::new_err(format!("Invalid regex pattern: {e}")))?;
+    // Run the heavy I/O and regex work without holding the GIL.
+    let raw_results = py
+        .allow_threads(|| {
+            search_files_impl(
+                pattern,
+                root,
+                relative_paths,
+                context_lines_before,
+                context_lines_after,
+            )
+        })
+        .map_err(|e| PyValueError::new_err(format!("search_files failed: {e}")))?;
 
-    let mut results: Vec<PyObject> = Vec::new();
+    let mut out: Vec<PyObject> = Vec::with_capacity(raw_results.len());
 
-    for rel_path in relative_paths {
-        let full_path = Path::new(root).join(&rel_path);
-        let content = match fs::read_to_string(&full_path) {
-            Ok(c) => c,
-            Err(_) => {
-                // Skip unreadable files, as Python implementation does
-                continue;
-            }
-        };
-
-        let file_matches = match search_in_content(
-            &content,
-            &re,
-            context_lines_before,
-            context_lines_after,
-        ) {
-            Ok(m) => m,
-            Err(_) => continue,
-        };
-
+    for (rel_path, file_matches) in raw_results {
         for m in file_matches {
             let dict = PyDict::new(py);
             dict.set_item("path", &rel_path)?;
@@ -57,21 +102,11 @@ fn search_files(
             }
 
             dict.set_item("lines", lines_objs)?;
-            results.push(dict.into_py(py));
+            out.push(dict.into_py(py));
         }
     }
 
-    Ok(results)
-}
-
-struct MatchLine {
-    line_number: usize,
-    content: String,
-    match_type: &'static str,
-}
-
-struct FileMatch {
-    lines: Vec<MatchLine>,
+    Ok(out)
 }
 
 #[pyfunction]

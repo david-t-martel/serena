@@ -13,6 +13,8 @@ import time
 from dataclasses import dataclass
 from typing import Any
 
+import psutil
+
 from serena import text_utils
 from serena.project import Project
 
@@ -51,16 +53,19 @@ def benchmark_gather_backends(
     if rust_func is not None:
         rust_func(relative_path)
 
+    proc = psutil.Process()
+
     # Python baseline
     t0 = time.perf_counter()
     for _ in range(runs):
         files_py = python_func(relative_path)
     t1 = time.perf_counter()
+    mem_py = proc.memory_info().rss
     results["python"] = TimingResult(
         backend="python",
         seconds=(t1 - t0) / runs,
         runs=runs,
-        extra={"num_files": len(files_py)},
+        extra={"num_files": len(files_py), "rss_bytes": mem_py},
     )
 
     # Rust path (if available)
@@ -69,11 +74,12 @@ def benchmark_gather_backends(
         for _ in range(runs):
             files_rust = rust_func(relative_path)
         t1 = time.perf_counter()
+        mem_rust = proc.memory_info().rss
         results["rust"] = TimingResult(
             backend="rust",
             seconds=(t1 - t0) / runs,
             runs=runs,
-            extra={"num_files": len(files_rust)},
+            extra={"num_files": len(files_rust), "rss_bytes": mem_rust},
         )
 
     return results
@@ -120,6 +126,8 @@ def benchmark_search_backends(
 
     results: dict[str, TimingResult] = {}
 
+    proc = psutil.Process()
+
     # Python baseline
     t0 = time.perf_counter()
     last_py = []
@@ -133,11 +141,12 @@ def benchmark_search_backends(
             context_lines_after=context_lines_after,
         )
     t1 = time.perf_counter()
+    mem_py = proc.memory_info().rss
     results["python"] = TimingResult(
         backend="python",
         seconds=(t1 - t0) / runs,
         runs=runs,
-        extra={"num_matches": len(last_py), "num_files": len(rel_paths)},
+        extra={"num_matches": len(last_py), "num_files": len(rel_paths), "rss_bytes": mem_py},
     )
 
     # Rust path (if available)
@@ -153,11 +162,12 @@ def benchmark_search_backends(
                 context_lines_after=context_lines_after,
             )
         t1 = time.perf_counter()
+        mem_rust = proc.memory_info().rss
         results["rust"] = TimingResult(
             backend="rust",
             seconds=(t1 - t0) / runs,
             runs=runs,
-            extra={"num_matches": len(last_rust), "num_files": len(rel_paths)},
+            extra={"num_matches": len(last_rust), "num_files": len(rel_paths), "rss_bytes": mem_rust},
         )
 
     return results
