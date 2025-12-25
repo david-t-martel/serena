@@ -137,8 +137,8 @@ description = "Create distribution package"
 script = '''
 cargo build --workspace --profile release-optimized
 
-# Get version from Cargo.toml
-VERSION=$(cargo metadata --format-version=1 | jq -r '.packages[] | select(.name == "serena") | .version')
+# Get version from workspace Cargo.toml (no jq dependency)
+VERSION=$(grep '^version = ' Cargo.toml | head -1 | sed 's/version = "\(.*\)"/\1/')
 
 echo "Packaging serena v${VERSION}"
 

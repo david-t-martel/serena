@@ -38,7 +38,8 @@ class NewLanguageServer(SolidLanguageServer):
 
         super().__init__(config,
             ProcessLaunchInfo(cmd=cmd, cwd=repository_root_path),
-            "new_language",,
+            "new_language",
+        )
 
     def _get_language_server_command(self) -> list[str]:
         """Get the command to start the language server."""

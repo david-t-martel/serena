@@ -74,7 +74,12 @@ impl ReadFileTool {
         let (selected_lines, lines_read) =
             if params.start_line.is_some() || params.end_line.is_some() {
                 let start = params.start_line.unwrap_or(0);
-                let end = params.end_line.unwrap_or(total_lines);
+                // end_line is documented as inclusive, so add 1 for exclusive slice
+                // If not provided, default to total_lines (meaning all remaining lines)
+                let end = match params.end_line {
+                    Some(e) => e.saturating_add(1), // Convert inclusive to exclusive
+                    None => total_lines,
+                };
 
                 if start > total_lines {
                     warn!("start_line {} exceeds total lines {}", start, total_lines);
@@ -87,6 +92,7 @@ impl ReadFileTool {
                     });
                 }
 
+                // Cap at total_lines to prevent out-of-bounds
                 let end = end.min(total_lines);
                 let slice = &lines[start..end];
                 let count = slice.len();
@@ -221,6 +227,8 @@ mod tests {
         let (temp_dir, _) = setup_test_env().await;
         let tool = ReadFileTool::new(temp_dir.path());
 
+        // end_line is inclusive per the schema documentation
+        // start_line=1, end_line=3 means lines 1, 2, and 3 (0-based indices)
         let params = json!({
             "relative_path": "test.txt",
             "start_line": 1,
@@ -231,10 +239,12 @@ mod tests {
         let data = result.data.unwrap();
         let output: ReadFileOutput = serde_json::from_value(data).unwrap();
 
-        assert_eq!(output.lines_read, 2);
+        // Should include lines 1, 2, and 3 (3 lines total, inclusive)
+        assert_eq!(output.lines_read, 3);
         assert!(output.content.contains("Line 1"));
         assert!(output.content.contains("Line 2"));
-        assert!(!output.content.contains("Line 3"));
+        assert!(output.content.contains("Line 3"));
+        assert!(!output.content.contains("Line 4"));
     }
 
     #[tokio::test]
