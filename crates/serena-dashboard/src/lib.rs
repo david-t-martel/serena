@@ -7,11 +7,11 @@ use leptos::*;
 use serde::{Deserialize, Serialize};
 use wasm_bindgen::prelude::*;
 
-mod components;
 mod api;
+mod components;
 
-pub use components::*;
 pub use api::*;
+pub use components::*;
 
 /// Heartbeat response from the Serena backend
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
@@ -34,10 +34,10 @@ pub enum RuntimeState {
 impl RuntimeState {
     pub fn icon(&self) -> &'static str {
         match self {
-            RuntimeState::Connecting => "\u{23F3}", // ⏳
+            RuntimeState::Connecting => "\u{23F3}",          // ⏳
             RuntimeState::Rust { .. } => "\u{2699}\u{FE0F}", // ⚙️
-            RuntimeState::Python => "\u{1F40D}", // 🐍
-            RuntimeState::Error => "\u{26A0}\u{FE0F}", // ⚠️
+            RuntimeState::Python => "\u{1F40D}",             // 🐍
+            RuntimeState::Error => "\u{26A0}\u{FE0F}",       // ⚠️
         }
     }
 

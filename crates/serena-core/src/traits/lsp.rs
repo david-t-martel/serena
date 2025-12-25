@@ -10,7 +10,10 @@ use crate::{LspError, SymbolInfo};
 #[async_trait]
 pub trait LanguageServer: Send + Sync {
     /// Initialize the language server
-    async fn initialize(&mut self, params: InitializeParams) -> Result<ServerCapabilities, LspError>;
+    async fn initialize(
+        &mut self,
+        params: InitializeParams,
+    ) -> Result<ServerCapabilities, LspError>;
 
     /// Shutdown the language server
     async fn shutdown(&mut self) -> Result<(), LspError>;
@@ -37,7 +40,12 @@ pub trait LanguageServer: Send + Sync {
     ) -> Result<GotoDefinitionResponse, LspError>;
 
     /// Notify the server that a document was opened
-    async fn did_open(&self, uri: String, language_id: String, text: String) -> Result<(), LspError>;
+    async fn did_open(
+        &self,
+        uri: String,
+        language_id: String,
+        text: String,
+    ) -> Result<(), LspError>;
 
     /// Notify the server that a document was closed
     async fn did_close(&self, uri: String) -> Result<(), LspError>;

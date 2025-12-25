@@ -258,9 +258,7 @@ pub fn get_config(language: Language) -> anyhow::Result<LanguageServerConfig> {
 /// # Returns
 /// The detected language, or `None` if the extension is not recognized
 pub fn detect_language(file_path: &str) -> Option<Language> {
-    let extension = std::path::Path::new(file_path)
-        .extension()?
-        .to_str()?;
+    let extension = std::path::Path::new(file_path).extension()?.to_str()?;
 
     Language::from_extension(extension)
 }

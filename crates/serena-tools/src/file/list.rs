@@ -16,6 +16,13 @@ struct ListDirectoryParams {
     relative_path: String,
     #[serde(default)]
     recursive: bool,
+    /// Maximum characters to return. -1 for unlimited. Default: -1
+    #[serde(default = "default_max_chars")]
+    max_answer_chars: i32,
+}
+
+fn default_max_chars() -> i32 {
+    -1
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -52,51 +59,66 @@ impl ListDirectoryTool {
         let full_path = self.project_root.join(&params.relative_path);
 
         // Security check: ensure path is within project root
-        let canonical_root = self.project_root.canonicalize()
-            .map_err(|e| SerenaError::InvalidParameter(
-                format!("Invalid project root: {}", e)
-            ))?;
+        let canonical_root = self
+            .project_root
+            .canonicalize()
+            .map_err(|e| SerenaError::InvalidParameter(format!("Invalid project root: {}", e)))?;
 
-        let canonical_path = full_path.canonicalize()
-            .map_err(|_e| SerenaError::NotFound(
-                format!("Directory not found: {}", params.relative_path)
-            ))?;
+        let canonical_path = full_path.canonicalize().map_err(|_e| {
+            SerenaError::NotFound(format!("Directory not found: {}", params.relative_path))
+        })?;
 
         if !canonical_path.starts_with(&canonical_root) {
-            return Err(SerenaError::Tool(ToolError::PermissionDenied(
-                format!("Path '{}' is outside project root", params.relative_path)
-            )));
+            return Err(SerenaError::Tool(ToolError::PermissionDenied(format!(
+                "Path '{}' is outside project root",
+                params.relative_path
+            ))));
         }
 
         // Check if it's a directory
-        let metadata = fs::metadata(&canonical_path).await
+        let metadata = fs::metadata(&canonical_path)
+            .await
             .map_err(|e| SerenaError::Io(e))?;
 
         if !metadata.is_dir() {
-            return Err(SerenaError::InvalidParameter(
-                format!("'{}' is not a directory", params.relative_path)
-            ));
+            return Err(SerenaError::InvalidParameter(format!(
+                "'{}' is not a directory",
+                params.relative_path
+            )));
         }
 
-        debug!("Listing directory: {:?} (recursive: {})", canonical_path, params.recursive);
+        debug!(
+            "Listing directory: {:?} (recursive: {})",
+            canonical_path, params.recursive
+        );
 
         let mut entries = Vec::new();
         let mut total_files = 0;
         let mut total_dirs = 0;
 
         if params.recursive {
-            self.walk_recursive(&canonical_path, &mut entries, &mut total_files, &mut total_dirs).await?;
+            self.walk_recursive(
+                &canonical_path,
+                &mut entries,
+                &mut total_files,
+                &mut total_dirs,
+            )
+            .await?;
         } else {
-            self.list_single_level(&canonical_path, &mut entries, &mut total_files, &mut total_dirs).await?;
+            self.list_single_level(
+                &canonical_path,
+                &mut entries,
+                &mut total_files,
+                &mut total_dirs,
+            )
+            .await?;
         }
 
         // Sort entries: directories first, then by name
-        entries.sort_by(|a, b| {
-            match (a.is_dir, b.is_dir) {
-                (true, false) => std::cmp::Ordering::Less,
-                (false, true) => std::cmp::Ordering::Greater,
-                _ => a.name.cmp(&b.name),
-            }
+        entries.sort_by(|a, b| match (a.is_dir, b.is_dir) {
+            (true, false) => std::cmp::Ordering::Less,
+            (false, true) => std::cmp::Ordering::Greater,
+            _ => a.name.cmp(&b.name),
         });
 
         Ok(ListDirectoryOutput {
@@ -114,19 +136,26 @@ impl ListDirectoryTool {
         total_files: &mut usize,
         total_dirs: &mut usize,
     ) -> Result<(), SerenaError> {
-        let mut read_dir = fs::read_dir(dir_path).await
+        let mut read_dir = fs::read_dir(dir_path)
+            .await
             .map_err(|e| SerenaError::Io(e))?;
 
-        while let Some(entry) = read_dir.next_entry().await.map_err(|e| SerenaError::Io(e))? {
+        while let Some(entry) = read_dir
+            .next_entry()
+            .await
+            .map_err(|e| SerenaError::Io(e))?
+        {
             let path = entry.path();
             let metadata = entry.metadata().await.map_err(|e| SerenaError::Io(e))?;
 
-            let relative_path = path.strip_prefix(&self.project_root)
+            let relative_path = path
+                .strip_prefix(&self.project_root)
                 .unwrap_or(&path)
                 .to_string_lossy()
                 .replace('\\', "/");
 
-            let name = path.file_name()
+            let name = path
+                .file_name()
                 .and_then(|n| n.to_str())
                 .unwrap_or("")
                 .to_string();
@@ -179,12 +208,14 @@ impl ListDirectoryTool {
                 Err(_) => continue,
             };
 
-            let relative_path = path.strip_prefix(&self.project_root)
+            let relative_path = path
+                .strip_prefix(&self.project_root)
                 .unwrap_or(path)
                 .to_string_lossy()
                 .replace('\\', "/");
 
-            let name = path.file_name()
+            let name = path
+                .file_name()
                 .and_then(|n| n.to_str())
                 .unwrap_or("")
                 .to_string();
@@ -242,18 +273,38 @@ impl Tool for ListDirectoryTool {
         let params: ListDirectoryParams = serde_json::from_value(params)
             .map_err(|e| SerenaError::InvalidParameter(e.to_string()))?;
 
+        let max_answer_chars = params.max_answer_chars;
         let output = self.list_dir_impl(params).await?;
 
         let message = format!(
             "Listed {} files and {} directories in '{}'",
-            output.total_files,
-            output.total_dirs,
-            output.path
+            output.total_files, output.total_dirs, output.path
         );
 
+        // Apply character limit truncation
+        let json_output = serde_json::to_value(&output)?;
+        let output_str = json_output.to_string();
+        let final_output = if max_answer_chars < 0 {
+            output_str
+        } else {
+            let max = max_answer_chars as usize;
+            if output_str.len() > max {
+                let truncated = output_str.chars().take(max).collect::<String>();
+                format!(
+                    "{}...
+[Output truncated at {} chars. {} chars total.]",
+                    truncated,
+                    max,
+                    output_str.len()
+                )
+            } else {
+                output_str
+            }
+        };
+
         Ok(ToolResult::success_with_message(
-            serde_json::to_value(output)?,
-            message
+            serde_json::from_str(&final_output).unwrap_or(json_output),
+            message,
         ))
     }
 
@@ -266,7 +317,11 @@ impl Tool for ListDirectoryTool {
     }
 
     fn tags(&self) -> Vec<String> {
-        vec!["file".to_string(), "directory".to_string(), "list".to_string()]
+        vec![
+            "file".to_string(),
+            "directory".to_string(),
+            "list".to_string(),
+        ]
     }
 }
 
@@ -288,8 +343,12 @@ mod tests {
         // Create files
         write(root.join("file1.txt"), "content1").await.unwrap();
         write(root.join("file2.txt"), "content2").await.unwrap();
-        write(root.join("dir1/file3.txt"), "content3").await.unwrap();
-        write(root.join("dir1/subdir/file4.txt"), "content4").await.unwrap();
+        write(root.join("dir1/file3.txt"), "content3")
+            .await
+            .unwrap();
+        write(root.join("dir1/subdir/file4.txt"), "content4")
+            .await
+            .unwrap();
 
         temp_dir
     }

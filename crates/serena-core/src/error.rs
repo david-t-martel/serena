@@ -60,6 +60,21 @@ pub enum LspError {
 
     #[error("Invalid response: {0}")]
     InvalidResponse(String),
+
+    #[error("Initialization failed: {0}")]
+    InitializationError(String),
+
+    #[error("Shutdown failed: {0}")]
+    ShutdownError(String),
+
+    #[error("Request failed: {0}")]
+    RequestFailed(String),
+
+    #[error("Notification failed: {0}")]
+    NotificationFailed(String),
+
+    #[error("Invalid URI: {0}")]
+    InvalidUri(String),
 }
 
 /// Configuration errors

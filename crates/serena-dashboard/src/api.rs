@@ -2,8 +2,8 @@
 //!
 //! Handles all HTTP communication with the Serena backend server.
 
-use gloo_net::http::Request;
 use crate::HeartbeatResponse;
+use gloo_net::http::Request;
 
 /// Fetch heartbeat from the Serena backend
 pub async fn fetch_heartbeat() -> Result<HeartbeatResponse, gloo_net::Error> {

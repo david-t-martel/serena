@@ -3,7 +3,7 @@
 //! Provides an Axum-based web server that exposes MCP functionality through
 //! HTTP JSON-RPC and Server-Sent Events endpoints.
 
-use crate::{http, sse, HttpTransport, McpRequest, McpResponse, SerenaMcpServer, SseTransport};
+use crate::{api, http, sse, ApiState, HttpTransport, SerenaMcpServer, SseTransport};
 use anyhow::{Context, Result};
 use axum::{
     http::{header, Method, StatusCode},
@@ -30,7 +30,9 @@ pub struct WebServerConfig {
 impl Default for WebServerConfig {
     fn default() -> Self {
         Self {
-            bind_addr: "127.0.0.1:3000".parse().unwrap(),
+            bind_addr: "127.0.0.1:3000"
+                .parse()
+                .expect("hardcoded bind address is valid"),
             enable_cors: true,
             max_body_size: 10 * 1024 * 1024, // 10MB
         }
@@ -54,30 +56,19 @@ impl WebServer {
 
     /// Create a new web server with custom configuration
     pub fn with_config(mcp_server: Arc<SerenaMcpServer>, config: WebServerConfig) -> Self {
-        Self {
-            config,
-            mcp_server,
-        }
+        Self { config, mcp_server }
     }
 
     /// Build the Axum router with all endpoints
     fn build_router(&self) -> Router {
-        // Create HTTP transport with MCP request handler
-        let http_transport = Arc::new(HttpTransport::new({
-            let _mcp_server = Arc::clone(&self.mcp_server);
-            move |request: McpRequest| {
-                // TODO: Integrate with actual MCP server request handling
-                // For now, return a placeholder response
-                McpResponse::error(
-                    request.id,
-                    -32601,
-                    format!("Method '{}' not implemented", request.method),
-                )
-            }
-        }));
+        // Create HTTP transport wrapping the MCP server
+        let http_transport = Arc::new(HttpTransport::new(Arc::clone(&self.mcp_server)));
 
         // Create SSE transport
         let sse_transport = Arc::new(SseTransport::new().0);
+
+        // Create API state for dashboard endpoints
+        let api_state = Arc::new(ApiState::new(Arc::clone(&self.mcp_server)));
 
         // Build CORS layer if enabled
         let cors_layer = if self.config.enable_cors {
@@ -90,18 +81,31 @@ impl WebServer {
             CorsLayer::permissive()
         };
 
-        // Build the router
+        // Build the MCP protocol router
+        let mcp_router = Router::new()
+            .route("/mcp", post(http::http_handler))
+            .route("/mcp/batch", post(http::http_batch_handler))
+            .route("/mcp/events", get(sse::sse_handler))
+            .with_state(http_transport)
+            .layer(Extension(sse_transport));
+
+        // Build the API router for dashboard
+        let api_router = Router::new()
+            .route("/heartbeat", get(api::heartbeat_handler))
+            .route("/get_config", get(api::config_handler))
+            .route("/get_stats", get(api::stats_handler))
+            .route("/shutdown", post(api::shutdown_handler))
+            .route("/tools", get(api::list_tools_handler))
+            .route("/info", get(api::info_handler))
+            .with_state(api_state);
+
+        // Combine routers
         Router::new()
             // Health check endpoint
             .route("/health", get(health_handler))
-            // HTTP JSON-RPC endpoints
-            .route("/mcp", post(http::http_handler))
-            .route("/mcp/batch", post(http::http_batch_handler))
-            // SSE endpoint for streaming responses
-            .route("/mcp/events", get(sse::sse_handler))
-            // Add state and extensions
-            .with_state(http_transport)
-            .layer(Extension(sse_transport))
+            // Merge MCP and API routers
+            .merge(mcp_router)
+            .merge(api_router)
             // Add middleware - layers are applied bottom-up (last to first)
             .layer(tower_http::trace::TraceLayer::new_for_http())
             .layer(cors_layer)
@@ -120,10 +124,18 @@ impl WebServer {
             "MCP web server listening on http://{}",
             self.config.bind_addr
         );
+        info!("MCP Protocol:");
         info!("  - HTTP JSON-RPC: POST /mcp");
         info!("  - Batch requests: POST /mcp/batch");
         info!("  - SSE events: GET /mcp/events");
-        info!("  - Health check: GET /health");
+        info!("Dashboard API:");
+        info!("  - Heartbeat: GET /heartbeat");
+        info!("  - Config: GET /get_config");
+        info!("  - Stats: GET /get_stats");
+        info!("  - Tools: GET /tools");
+        info!("  - Info: GET /info");
+        info!("  - Health: GET /health");
+        info!("  - Shutdown: POST /shutdown");
 
         axum::serve(listener, router)
             .await

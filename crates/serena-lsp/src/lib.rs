@@ -8,12 +8,25 @@ pub mod cache;
 pub mod client;
 pub mod languages;
 pub mod manager;
+pub mod resources;
+pub mod tools;
 
 // Re-exports
 pub use cache::LspCache;
-pub use client::{JsonRpcError, JsonRpcNotification, JsonRpcRequest, JsonRpcResponse, LspClient};
+pub use client::{
+    JsonRpcError, JsonRpcNotification, JsonRpcRequest, JsonRpcResponse, LspClient, LspClientAdapter,
+};
 pub use languages::{get_config, LanguageServerConfig};
 pub use manager::LanguageServerManager;
+
+// Re-export tools
+pub use tools::{
+    create_lsp_tools, ClearLspCacheTool, ListLanguageServersTool, RestartLanguageServerTool,
+    StopLanguageServerTool,
+};
+
+// Re-export resource manager
+pub use resources::ResourceManager;
 
 /// LSP-related errors
 #[derive(Debug, thiserror::Error)]

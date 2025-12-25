@@ -56,22 +56,29 @@
 //! - Metadata tracking (timestamps, tags, sizes)
 
 pub mod error;
+pub mod manager;
 pub mod memory;
 pub mod store;
-pub mod manager;
+pub mod tools;
 
 // Re-export main types
+pub use manager::{MemoryManager, ReplaceMode};
 pub use memory::{Memory, MemoryMetadata};
 pub use store::MemoryStore;
-pub use manager::{MemoryManager, ReplaceMode};
 
 // Re-export errors
 pub use error::MemoryError;
 
+// Re-export tools
+pub use tools::{
+    create_memory_tools, DeleteMemoryTool, EditMemoryTool, ListMemoriesTool, ReadMemoryTool,
+    SearchMemoriesTool, WriteMemoryTool,
+};
+
 /// Prelude module for convenient imports
 pub mod prelude {
+    pub use crate::error::MemoryError;
+    pub use crate::manager::{MemoryManager, ReplaceMode};
     pub use crate::memory::{Memory, MemoryMetadata};
     pub use crate::store::MemoryStore;
-    pub use crate::manager::{MemoryManager, ReplaceMode};
-    pub use crate::error::MemoryError;
 }

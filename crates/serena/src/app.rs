@@ -4,10 +4,15 @@ use std::sync::Arc;
 use tokio::sync::RwLock;
 use tracing::{debug, info, warn};
 
-use serena_config::{loader::ConfigLoader, ProjectConfig, SerenaConfig};
-use serena_core::ToolRegistry;
-use serena_lsp::LanguageServerManager;
+use serena_config::{
+    create_config_tools, loader::ConfigLoader, ConfigService, Language, ProjectConfig, SerenaConfig,
+};
+use serena_core::{LanguageServer, ToolRegistry, ToolRegistryBuilder};
+use serena_lsp::{create_lsp_tools, LanguageServerManager, LspClientAdapter};
 use serena_mcp::SerenaMcpServer;
+use serena_memory::{create_memory_tools, MemoryManager};
+use serena_symbol::create_symbol_tools;
+use serena_tools::ToolFactory;
 
 /// Main application structure that manages the Serena lifecycle
 pub struct App {
@@ -16,6 +21,12 @@ pub struct App {
 
     /// LSP manager for language servers
     lsp_manager: Arc<LanguageServerManager>,
+
+    /// Memory manager for project knowledge persistence
+    memory_manager: Arc<MemoryManager>,
+
+    /// Configuration service
+    config_service: Arc<ConfigService>,
 
     /// Tool registry
     tool_registry: Arc<ToolRegistry>,
@@ -32,10 +43,7 @@ pub struct App {
 
 impl App {
     /// Create a new App instance
-    pub async fn new(
-        config_path: Option<PathBuf>,
-        project_path: Option<PathBuf>,
-    ) -> Result<Self> {
+    pub async fn new(config_path: Option<PathBuf>, project_path: Option<PathBuf>) -> Result<Self> {
         info!("Initializing Serena application");
 
         // Initialize configuration loader
@@ -45,18 +53,45 @@ impl App {
         let config = Self::load_config(&config_loader, config_path).await?;
         let config = Arc::new(RwLock::new(config));
 
-        // Initialize tool registry
-        debug!("Initializing tool registry");
-        let tool_registry = Arc::new(ToolRegistry::new());
-
-        // Determine root path for LSP manager
+        // Determine root path for LSP manager and tools
         let root_path = project_path
             .clone()
             .unwrap_or_else(|| std::env::current_dir().unwrap_or_else(|_| PathBuf::from(".")));
 
-        // Initialize LSP manager
-        debug!("Initializing LSP manager with root: {}", root_path.display());
-        let lsp_manager = Arc::new(LanguageServerManager::new(root_path));
+        // Initialize managers
+        debug!("Initializing managers with project root: {}", root_path.display());
+
+        // LSP manager for language servers
+        let lsp_manager = Arc::new(LanguageServerManager::new(root_path.clone()));
+
+        // Memory manager for project knowledge persistence
+        let memory_manager = Arc::new(
+            MemoryManager::new(&root_path)
+                .context("Failed to initialize memory manager")?
+        );
+
+        // Configuration service
+        let config_service = Arc::new(ConfigService::new());
+
+        // Build comprehensive tool registry
+        debug!("Building tool registry with all tool factories");
+        let tool_factory = ToolFactory::new(&root_path);
+
+        let tool_registry = Arc::new(
+            ToolRegistryBuilder::new()
+                // Core tools: file, editor, workflow, command (18 tools)
+                .add_tools(tool_factory.core_tools())
+                // Memory tools (6 tools)
+                .add_tools(create_memory_tools(Arc::clone(&memory_manager)))
+                // Config tools (6 tools)
+                .add_tools(create_config_tools(Arc::clone(&config_service)))
+                // LSP management tools (4 tools)
+                .add_tools(create_lsp_tools(Arc::clone(&lsp_manager)))
+                // Note: Symbol tools (7) require an active LSP client and are added
+                // dynamically when a project is activated with language support
+                .build()
+        );
+        info!("Registered {} tools in registry", tool_registry.len());
 
         // Initialize MCP server with tool registry
         debug!("Initializing MCP server");
@@ -76,6 +111,8 @@ impl App {
         Ok(Self {
             mcp_server,
             lsp_manager,
+            memory_manager,
+            config_service,
             tool_registry,
             config,
             project_config,
@@ -95,9 +132,7 @@ impl App {
                 .context("Failed to load configuration file")
         } else {
             info!("Loading configuration from default locations");
-            loader
-                .load()
-                .context("Failed to load configuration")
+            loader.load().context("Failed to load configuration")
         }
     }
 
@@ -151,33 +186,64 @@ impl App {
     /// Run the MCP server using stdio transport
     pub async fn run_stdio(mut self) -> Result<()> {
         info!("Running MCP server on stdio transport");
-        
-        let server = self.mcp_server.take()
+
+        let server = self
+            .mcp_server
+            .take()
             .ok_or_else(|| anyhow::anyhow!("MCP server already consumed"))?;
-        
+
         server.serve_stdio().await
     }
 
     /// Run the MCP server using HTTP transport
     pub async fn run_http(mut self, port: u16) -> Result<()> {
+        use serena_web::{WebServer, WebServerConfig};
+        use std::net::SocketAddr;
+
         info!("Running MCP server on HTTP transport (port {})", port);
-        
-        let _server = self.mcp_server.take()
+
+        let server = self
+            .mcp_server
+            .take()
             .ok_or_else(|| anyhow::anyhow!("MCP server already consumed"))?;
-        
-        // TODO: Implement HTTP transport when available in serena-mcp
-        anyhow::bail!("HTTP transport not yet implemented");
+
+        // Configure the web server
+        let config = WebServerConfig {
+            bind_addr: SocketAddr::from(([0, 0, 0, 0], port)),
+            enable_cors: true,
+            max_body_size: 10 * 1024 * 1024, // 10MB
+        };
+
+        let web_server = WebServer::with_config(Arc::new(server), config);
+
+        info!("Starting HTTP MCP server on port {}", port);
+        web_server.serve().await
     }
 
     /// Run the MCP server using SSE transport
     pub async fn run_sse(mut self, port: u16) -> Result<()> {
+        use serena_web::{WebServer, WebServerConfig};
+        use std::net::SocketAddr;
+
         info!("Running MCP server on SSE transport (port {})", port);
-        
-        let _server = self.mcp_server.take()
+
+        let server = self
+            .mcp_server
+            .take()
             .ok_or_else(|| anyhow::anyhow!("MCP server already consumed"))?;
-        
-        // TODO: Implement SSE transport when available in serena-mcp
-        anyhow::bail!("SSE transport not yet implemented");
+
+        // Configure the web server (SSE uses the same web server infrastructure)
+        let config = WebServerConfig {
+            bind_addr: SocketAddr::from(([0, 0, 0, 0], port)),
+            enable_cors: true,
+            max_body_size: 10 * 1024 * 1024, // 10MB
+        };
+
+        let web_server = WebServer::with_config(Arc::new(server), config);
+
+        info!("Starting SSE MCP server on port {}", port);
+        info!("SSE events available at http://0.0.0.0:{}/mcp/events", port);
+        web_server.serve().await
     }
 
     /// Get the current configuration
@@ -203,24 +269,97 @@ impl App {
 
         let proj_config = Self::load_project_config(&project_path)?;
 
+        // Start LSP servers for detected languages and wire symbol tools
+        for language in &proj_config.languages {
+            match self.activate_language_support(&project_path, *language).await {
+                Ok(tool_count) => {
+                    info!(
+                        "Activated {} with {} symbol tools",
+                        language.display_name(),
+                        tool_count
+                    );
+                }
+                Err(e) => {
+                    warn!(
+                        "Failed to activate language support for {}: {}",
+                        language.display_name(),
+                        e
+                    );
+                }
+            }
+        }
+
         let mut project = self.project_config.write().await;
         *project = Some(proj_config);
 
-        // TODO: Initialize LSP servers for detected languages
-        // TODO: Load project-specific tools and memory
-
         Ok(())
+    }
+
+    /// Activate language support for a specific language
+    ///
+    /// This starts the language server and registers the symbol tools dynamically.
+    async fn activate_language_support(
+        &self,
+        project_path: &PathBuf,
+        language: Language,
+    ) -> Result<usize> {
+        info!("Activating language support for: {:?}", language);
+
+        // Start the language server
+        self.lsp_manager.start_server(language).await?;
+
+        // Get the LSP client (this is kept around for the manager to track)
+        let _client = self
+            .lsp_manager
+            .get_server(language)
+            .ok_or_else(|| anyhow::anyhow!("Failed to get LSP client for {:?}", language))?;
+
+        // Create adapter that implements LanguageServer trait
+        // Note: We create a new client instance because the adapter needs ownership
+        // In practice, we'd want to refactor to share clients more efficiently
+        let config = serena_lsp::get_config(language)?;
+        let adapter = LspClientAdapter::new(
+            serena_lsp::LspClient::new(config.command, config.args).await?,
+            language.display_name().to_string(),
+        );
+
+        // Wrap in Arc<RwLock<Box<dyn LanguageServer>>> as expected by symbol tools
+        // Symbol tools expect tokio::sync::RwLock
+        let lsp_client: Arc<tokio::sync::RwLock<Box<dyn LanguageServer>>> =
+            Arc::new(tokio::sync::RwLock::new(Box::new(adapter)));
+
+        // Create symbol tools with the LSP client
+        let symbol_tools = create_symbol_tools(project_path.clone(), lsp_client);
+
+        // Register the symbol tools dynamically
+        let tool_count = self.tool_registry.extend(symbol_tools);
+
+        info!("Registered {} symbol tools for {:?}", tool_count, language);
+        Ok(tool_count)
     }
 
     /// Deactivate the current project
     pub async fn deactivate_project(&self) -> Result<()> {
         info!("Deactivating current project");
 
+        // Remove symbol tools (they have a common prefix pattern)
+        let removed = self.tool_registry.remove_by_prefix("get_symbols_overview");
+        let removed = removed + self.tool_registry.remove_by_prefix("find_symbol");
+        let removed = removed + self.tool_registry.remove_by_prefix("find_referencing_symbols");
+        let removed = removed + self.tool_registry.remove_by_prefix("replace_symbol_body");
+        let removed = removed + self.tool_registry.remove_by_prefix("rename_symbol");
+        let removed = removed + self.tool_registry.remove_by_prefix("insert_after_symbol");
+        let removed = removed + self.tool_registry.remove_by_prefix("insert_before_symbol");
+
+        if removed > 0 {
+            info!("Removed {} symbol tools", removed);
+        }
+
+        // Stop all LSP servers
+        self.lsp_manager.stop_all_servers().await;
+
         let mut project = self.project_config.write().await;
         *project = None;
-
-        // TODO: Shutdown LSP servers
-        // TODO: Save project state
 
         Ok(())
     }

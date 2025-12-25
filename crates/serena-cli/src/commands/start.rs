@@ -3,8 +3,18 @@
 use crate::args::Transport;
 use crate::commands::Execute;
 use anyhow::{Context, Result};
+use serena_config::{create_config_tools, ConfigService};
+use serena_core::ToolRegistryBuilder;
+use serena_lsp::{create_lsp_tools, LanguageServerManager};
+use serena_mcp::SerenaMcpServer;
+use serena_memory::{create_memory_tools, MemoryManager};
+use serena_tools::ToolFactory;
 use std::path::PathBuf;
+use std::sync::Arc;
 use tracing::{error, info};
+
+#[cfg(feature = "web")]
+use serena_web::{WebServer, WebServerConfig};
 
 /// Configuration for the start command
 #[derive(Debug, Clone)]
@@ -74,67 +84,158 @@ impl StartCommand {
         Ok(())
     }
 
+    /// Build tool registry with all available tools
+    fn build_tool_registry(&self) -> Result<serena_core::ToolRegistry> {
+        let root_path = self
+            .project_path
+            .clone()
+            .unwrap_or_else(|| std::env::current_dir().unwrap_or_else(|_| PathBuf::from(".")));
+
+        info!("Building tool registry with project root: {}", root_path.display());
+
+        // Initialize managers
+        let lsp_manager = Arc::new(LanguageServerManager::new(root_path.clone()));
+        let memory_manager = Arc::new(
+            MemoryManager::new(&root_path).context("Failed to initialize memory manager")?,
+        );
+        let config_service = Arc::new(ConfigService::new());
+
+        // Build tool factory
+        let tool_factory = ToolFactory::new(&root_path);
+
+        // Build comprehensive tool registry
+        let registry = ToolRegistryBuilder::new()
+            // Core tools: file, editor, workflow, command (18 tools)
+            .add_tools(tool_factory.core_tools())
+            // Memory tools (6 tools)
+            .add_tools(create_memory_tools(Arc::clone(&memory_manager)))
+            // Config tools (6 tools)
+            .add_tools(create_config_tools(Arc::clone(&config_service)))
+            // LSP management tools (4 tools)
+            .add_tools(create_lsp_tools(Arc::clone(&lsp_manager)))
+            .build();
+
+        info!("Registered {} tools in registry", registry.len());
+        Ok(registry)
+    }
+
     /// Start the MCP server with stdio transport
     async fn start_stdio(&self) -> Result<()> {
         info!("Starting Serena MCP server with stdio transport");
 
-        // TODO: Initialize the MCP server with stdio transport
-        // This will be implemented when serena-mcp is ready
+        // Build tool registry
+        let registry = self.build_tool_registry()?;
+
+        // Create MCP server with registered tools
+        let mcp_server = SerenaMcpServer::new(registry);
 
         info!("MCP server initialization complete");
         info!("Listening on stdio for MCP requests");
 
-        // Keep the server running
-        tokio::signal::ctrl_c()
-            .await
-            .context("Failed to listen for ctrl-c signal")?;
+        // Start serving - this blocks until client disconnects
+        mcp_server.serve_stdio().await?;
 
         info!("Shutting down MCP server");
         Ok(())
     }
 
     /// Start the MCP server with HTTP transport
+    #[cfg(feature = "web")]
     async fn start_http(&self) -> Result<()> {
         info!(
             "Starting Serena MCP server with HTTP transport on {}:{}",
             self.host, self.port
         );
 
-        // TODO: Initialize the MCP server with HTTP transport
-        // This will be implemented when serena-web is available
+        // Build tool registry
+        let registry = self.build_tool_registry()?;
+
+        // Create MCP server with registered tools
+        let mcp_server = Arc::new(SerenaMcpServer::new(registry));
+
+        // Configure web server
+        let bind_addr = format!("{}:{}", self.host, self.port)
+            .parse()
+            .context("Invalid bind address")?;
+
+        let config = WebServerConfig {
+            bind_addr,
+            enable_cors: true,
+            max_body_size: 10 * 1024 * 1024, // 10MB
+        };
+
+        // Create and start web server
+        let server = WebServer::with_config(mcp_server, config);
 
         info!("MCP server initialization complete");
-        info!("Listening on http://{}:{} for MCP requests", self.host, self.port);
+        info!(
+            "Listening on http://{}:{} for MCP requests",
+            self.host, self.port
+        );
 
-        // Keep the server running
-        tokio::signal::ctrl_c()
-            .await
-            .context("Failed to listen for ctrl-c signal")?;
+        // Start serving - this blocks until shutdown
+        server.serve().await?;
 
         info!("Shutting down MCP server");
         Ok(())
     }
 
+    #[cfg(not(feature = "web"))]
+    async fn start_http(&self) -> Result<()> {
+        anyhow::bail!("HTTP transport requires 'web' feature to be enabled. Rebuild with --features web")
+    }
+
     /// Start the MCP server with SSE transport
+    #[cfg(feature = "web")]
     async fn start_sse(&self) -> Result<()> {
         info!(
             "Starting Serena MCP server with SSE transport on {}:{}",
             self.host, self.port
         );
 
-        // TODO: Initialize the MCP server with SSE transport
-        // This will be implemented when serena-web is available
+        // SSE is implemented as part of the web server
+        // The web server exposes both /mcp (HTTP) and /mcp/events (SSE) endpoints
+
+        // Build tool registry
+        let registry = self.build_tool_registry()?;
+
+        // Create MCP server with registered tools
+        let mcp_server = Arc::new(SerenaMcpServer::new(registry));
+
+        // Configure web server
+        let bind_addr = format!("{}:{}", self.host, self.port)
+            .parse()
+            .context("Invalid bind address")?;
+
+        let config = WebServerConfig {
+            bind_addr,
+            enable_cors: true,
+            max_body_size: 10 * 1024 * 1024, // 10MB
+        };
+
+        // Create and start web server (includes SSE endpoint)
+        let server = WebServer::with_config(mcp_server, config);
 
         info!("MCP server initialization complete");
-        info!("Listening on http://{}:{} for SSE connections", self.host, self.port);
+        info!(
+            "Listening on http://{}:{} for SSE connections",
+            self.host, self.port
+        );
+        info!(
+            "SSE endpoint: http://{}:{}/mcp/events",
+            self.host, self.port
+        );
 
-        // Keep the server running
-        tokio::signal::ctrl_c()
-            .await
-            .context("Failed to listen for ctrl-c signal")?;
+        // Start serving - this blocks until shutdown
+        server.serve().await?;
 
         info!("Shutting down MCP server");
         Ok(())
+    }
+
+    #[cfg(not(feature = "web"))]
+    async fn start_sse(&self) -> Result<()> {
+        anyhow::bail!("SSE transport requires 'web' feature to be enabled. Rebuild with --features web")
     }
 }
 
@@ -173,13 +274,7 @@ mod tests {
 
     #[test]
     fn test_start_command_creation() {
-        let cmd = StartCommand::new(
-            Transport::Stdio,
-            "127.0.0.1".to_string(),
-            3000,
-            None,
-            None,
-        );
+        let cmd = StartCommand::new(Transport::Stdio, "127.0.0.1".to_string(), 3000, None, None);
 
         assert_eq!(cmd.transport.as_str(), "stdio");
         assert_eq!(cmd.host, "127.0.0.1");
@@ -188,39 +283,21 @@ mod tests {
 
     #[test]
     fn test_validate_network_transport_requires_port() {
-        let cmd = StartCommand::new(
-            Transport::Http,
-            "127.0.0.1".to_string(),
-            0,
-            None,
-            None,
-        );
+        let cmd = StartCommand::new(Transport::Http, "127.0.0.1".to_string(), 0, None, None);
 
         assert!(cmd.validate().is_err());
     }
 
     #[test]
     fn test_validate_network_transport_requires_host() {
-        let cmd = StartCommand::new(
-            Transport::Http,
-            String::new(),
-            3000,
-            None,
-            None,
-        );
+        let cmd = StartCommand::new(Transport::Http, String::new(), 3000, None, None);
 
         assert!(cmd.validate().is_err());
     }
 
     #[test]
     fn test_validate_stdio_transport() {
-        let cmd = StartCommand::new(
-            Transport::Stdio,
-            "127.0.0.1".to_string(),
-            3000,
-            None,
-            None,
-        );
+        let cmd = StartCommand::new(Transport::Stdio, "127.0.0.1".to_string(), 3000, None, None);
 
         assert!(cmd.validate().is_ok());
     }

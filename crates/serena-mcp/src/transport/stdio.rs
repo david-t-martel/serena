@@ -63,8 +63,7 @@ impl StdioTransport {
             .await
             .context("Failed to read message body")?;
 
-        let content =
-            String::from_utf8(buffer).context("Message body is not valid UTF-8")?;
+        let content = String::from_utf8(buffer).context("Message body is not valid UTF-8")?;
 
         trace!("Received message: {}", content);
 

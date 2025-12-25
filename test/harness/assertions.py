@@ -19,7 +19,6 @@ class AssertionError(Exception):
     """Custom assertion error with detailed messages."""
 
 
-
 def assert_symbol_found(
     symbols: list[dict[str, Any]],
     name: str,
@@ -58,9 +57,7 @@ def assert_symbol_found(
 
     if not matches:
         symbol_names = [s.get("name", "?") for s in symbols]
-        raise AssertionError(
-            f"Symbol '{name}' not found. Available symbols: {symbol_names}"
-        )
+        raise AssertionError(f"Symbol '{name}' not found. Available symbols: {symbol_names}")
 
     if len(matches) > 1:
         # Return first match but note there are multiple
@@ -89,9 +86,7 @@ def assert_symbol_not_found(
     """
     for symbol in symbols:
         if symbol.get("name") == name:
-            raise AssertionError(
-                f"Symbol '{name}' was found but should not exist"
-            )
+            raise AssertionError(f"Symbol '{name}' was found but should not exist")
 
 
 def assert_file_contains(
@@ -123,18 +118,13 @@ def assert_file_contains(
 
     if regex:
         if not re.search(expected, content):
-            raise AssertionError(
-                f"Pattern '{expected}' not found in {path}"
-            )
+            raise AssertionError(f"Pattern '{expected}' not found in {path}")
     else:
         if expected not in content:
             # Show context around expected location
             lines = content.split("\n")[:20]
             preview = "\n".join(lines)
-            raise AssertionError(
-                f"Content '{expected}' not found in {path}\n"
-                f"File preview:\n{preview}"
-            )
+            raise AssertionError(f"Content '{expected}' not found in {path}\n" f"File preview:\n{preview}")
 
 
 def assert_file_not_contains(
@@ -162,15 +152,10 @@ def assert_file_not_contains(
     if regex:
         match = re.search(unexpected, content)
         if match:
-            raise AssertionError(
-                f"Pattern '{unexpected}' should not be in {path}, "
-                f"but found: {match.group()}"
-            )
+            raise AssertionError(f"Pattern '{unexpected}' should not be in {path}, " f"but found: {match.group()}")
     else:
         if unexpected in content:
-            raise AssertionError(
-                f"Content '{unexpected}' should not be in {path}"
-            )
+            raise AssertionError(f"Content '{unexpected}' should not be in {path}")
 
 
 def assert_mcp_response_valid(
@@ -197,25 +182,18 @@ def assert_mcp_response_valid(
 
     """
     if not isinstance(response, dict):
-        raise AssertionError(
-            f"MCP response must be a dictionary, got: {type(response)}"
-        )
+        raise AssertionError(f"MCP response must be a dictionary, got: {type(response)}")
 
     if "error" in response:
         error = response["error"]
         code = error.get("code", "?")
         message = error.get("message", "Unknown error")
-        raise AssertionError(
-            f"MCP response contains error: [{code}] {message}"
-        )
+        raise AssertionError(f"MCP response contains error: [{code}] {message}")
 
     if expected_keys:
         missing = [k for k in expected_keys if k not in response]
         if missing:
-            raise AssertionError(
-                f"MCP response missing keys: {missing}. "
-                f"Available keys: {list(response.keys())}"
-            )
+            raise AssertionError(f"MCP response missing keys: {missing}. " f"Available keys: {list(response.keys())}")
 
 
 def assert_mcp_tool_exists(
@@ -244,9 +222,7 @@ def assert_mcp_tool_exists(
             return tool
 
     tool_names = [t.get("name", "?") for t in tools]
-    raise AssertionError(
-        f"Tool '{tool_name}' not found. Available tools: {tool_names}"
-    )
+    raise AssertionError(f"Tool '{tool_name}' not found. Available tools: {tool_names}")
 
 
 def assert_lsp_location_valid(location: dict[str, Any]) -> None:
@@ -260,27 +236,19 @@ def assert_lsp_location_valid(location: dict[str, Any]) -> None:
 
     """
     if "uri" not in location and "targetUri" not in location:
-        raise AssertionError(
-            f"LSP location missing uri/targetUri: {location}"
-        )
+        raise AssertionError(f"LSP location missing uri/targetUri: {location}")
 
     range_key = "range" if "range" in location else "targetRange"
     if range_key not in location:
-        raise AssertionError(
-            f"LSP location missing range: {location}"
-        )
+        raise AssertionError(f"LSP location missing range: {location}")
 
     range_data = location[range_key]
     for pos_key in ("start", "end"):
         if pos_key not in range_data:
-            raise AssertionError(
-                f"LSP range missing {pos_key}: {range_data}"
-            )
+            raise AssertionError(f"LSP range missing {pos_key}: {range_data}")
         pos = range_data[pos_key]
         if "line" not in pos or "character" not in pos:
-            raise AssertionError(
-                f"LSP position missing line/character: {pos}"
-            )
+            raise AssertionError(f"LSP position missing line/character: {pos}")
 
 
 def assert_json_valid(content: str) -> dict[str, Any] | list[Any]:
@@ -300,9 +268,7 @@ def assert_json_valid(content: str) -> dict[str, Any] | list[Any]:
         return json.loads(content)
     except json.JSONDecodeError as e:
         preview = content[:200] + "..." if len(content) > 200 else content
-        raise AssertionError(
-            f"Invalid JSON: {e}\nContent preview: {preview}"
-        )
+        raise AssertionError(f"Invalid JSON: {e}\nContent preview: {preview}")
 
 
 def assert_within_range(
@@ -327,6 +293,4 @@ def assert_within_range(
 
     """
     if not (min_value <= value <= max_value):
-        raise AssertionError(
-            f"{description} {value} is out of range [{min_value}, {max_value}]"
-        )
+        raise AssertionError(f"{description} {value} is out of range [{min_value}, {max_value}]")

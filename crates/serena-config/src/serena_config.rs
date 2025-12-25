@@ -377,7 +377,9 @@ mod tests {
         assert!(!tools.is_empty());
 
         let mut project = ProjectConfig::new("test", PathBuf::from("/tmp"));
-        project.excluded_tools.push("execute_shell_command".to_string());
+        project
+            .excluded_tools
+            .push("execute_shell_command".to_string());
         let filtered_tools = config.get_active_tools("desktop-app", Some(&project));
         assert!(!filtered_tools.contains(&"execute_shell_command".to_string()));
     }

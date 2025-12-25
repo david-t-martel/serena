@@ -2,6 +2,7 @@
 name = "serena-lsp"
 version.workspace = true
 edition.workspace = true
+description = "LSP client and language server management for Serena"
 
 [dependencies]
 serena-core = { path = "../serena-core" }
@@ -17,3 +18,13 @@ tracing = { workspace = true }
 dashmap = { workspace = true }
 futures = { workspace = true }
 url = "2.5"
+
+# Resource management (downloading/extracting language servers)
+reqwest = { workspace = true }
+zip = { workspace = true }
+tar = { workspace = true }
+flate2 = { workspace = true }
+walkdir = { workspace = true }
+
+[dev-dependencies]
+tempfile = "3.8"

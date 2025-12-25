@@ -7,8 +7,10 @@ edition.workspace = true
 serena-core = { path = "../serena-core" }
 serena-config = { path = "../serena-config" }
 serena-mcp = { path = "../serena-mcp" }
-# serena-web will be added when the crate is created
-# serena-web = { path = "../serena-web" }
+serena-tools = { path = "../serena-tools" }
+serena-memory = { path = "../serena-memory" }
+serena-lsp = { path = "../serena-lsp" }
+serena-web = { path = "../serena-web", optional = true }
 
 tokio = { workspace = true }
 clap = { workspace = true }
@@ -21,5 +23,5 @@ tracing-subscriber = { workspace = true }
 directories = { workspace = true }
 
 [features]
-default = []
-# web = ["serena-web"]  # Enable when serena-web crate exists
+default = ["web"]
+web = ["dep:serena-web"]

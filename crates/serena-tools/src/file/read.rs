@@ -40,67 +40,73 @@ impl ReadFileTool {
     }
 
     /// Read file with optional line slicing
-    async fn read_file_impl(
-        &self,
-        params: ReadFileParams,
-    ) -> Result<ReadFileOutput, SerenaError> {
+    async fn read_file_impl(&self, params: ReadFileParams) -> Result<ReadFileOutput, SerenaError> {
         // Validate and construct full path
         let full_path = self.project_root.join(&params.relative_path);
 
         // Security check: ensure path is within project root
-        let canonical_root = self.project_root.canonicalize()
-            .map_err(|e| SerenaError::InvalidParameter(
-                format!("Invalid project root: {}", e)
-            ))?;
+        let canonical_root = self
+            .project_root
+            .canonicalize()
+            .map_err(|e| SerenaError::InvalidParameter(format!("Invalid project root: {}", e)))?;
 
-        let canonical_path = full_path.canonicalize()
-            .map_err(|_e| SerenaError::NotFound(
-                format!("File not found: {}", params.relative_path)
-            ))?;
+        let canonical_path = full_path.canonicalize().map_err(|_e| {
+            SerenaError::NotFound(format!("File not found: {}", params.relative_path))
+        })?;
 
         if !canonical_path.starts_with(&canonical_root) {
-            return Err(SerenaError::Tool(ToolError::PermissionDenied(
-                format!("Path '{}' is outside project root", params.relative_path)
-            )));
+            return Err(SerenaError::Tool(ToolError::PermissionDenied(format!(
+                "Path '{}' is outside project root",
+                params.relative_path
+            ))));
         }
 
         // Read file content
         debug!("Reading file: {:?}", canonical_path);
-        let content = fs::read_to_string(&canonical_path).await
+        let content = fs::read_to_string(&canonical_path)
+            .await
             .map_err(|e| SerenaError::Io(e))?;
 
         let lines: Vec<&str> = content.lines().collect();
         let total_lines = lines.len();
 
         // Apply line slicing if requested
-        let (selected_lines, lines_read) = if params.start_line.is_some() || params.end_line.is_some() {
-            let start = params.start_line.unwrap_or(0);
-            let end = params.end_line.unwrap_or(total_lines);
+        let (selected_lines, lines_read) =
+            if params.start_line.is_some() || params.end_line.is_some() {
+                let start = params.start_line.unwrap_or(0);
+                let end = params.end_line.unwrap_or(total_lines);
 
-            if start > total_lines {
-                warn!("start_line {} exceeds total lines {}", start, total_lines);
-                return Ok(ReadFileOutput {
-                    path: params.relative_path,
-                    content: String::new(),
-                    total_lines,
-                    lines_read: 0,
-                    truncated: false,
-                });
-            }
+                if start > total_lines {
+                    warn!("start_line {} exceeds total lines {}", start, total_lines);
+                    return Ok(ReadFileOutput {
+                        path: params.relative_path,
+                        content: String::new(),
+                        total_lines,
+                        lines_read: 0,
+                        truncated: false,
+                    });
+                }
 
-            let end = end.min(total_lines);
-            let slice = &lines[start..end];
-            let count = slice.len();
-            (slice.join("\n"), count)
-        } else {
-            (content, total_lines)
-        };
+                let end = end.min(total_lines);
+                let slice = &lines[start..end];
+                let count = slice.len();
+                (slice.join("\n"), count)
+            } else {
+                (content, total_lines)
+            };
 
         // Apply character limit if specified
         let (final_content, truncated) = if let Some(max_chars) = params.max_answer_chars {
             if selected_lines.len() > max_chars {
-                warn!("Content truncated from {} to {} chars", selected_lines.len(), max_chars);
-                (selected_lines.chars().take(max_chars).collect::<String>(), true)
+                warn!(
+                    "Content truncated from {} to {} chars",
+                    selected_lines.len(),
+                    max_chars
+                );
+                (
+                    selected_lines.chars().take(max_chars).collect::<String>(),
+                    true,
+                )
             } else {
                 (selected_lines, false)
             }
@@ -185,7 +191,9 @@ mod tests {
     async fn setup_test_env() -> (TempDir, PathBuf) {
         let temp_dir = TempDir::new().unwrap();
         let test_file = temp_dir.path().join("test.txt");
-        write(&test_file, "Line 0\nLine 1\nLine 2\nLine 3\nLine 4").await.unwrap();
+        write(&test_file, "Line 0\nLine 1\nLine 2\nLine 3\nLine 4")
+            .await
+            .unwrap();
         (temp_dir, test_file)
     }
 

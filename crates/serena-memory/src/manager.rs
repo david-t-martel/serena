@@ -38,15 +38,11 @@ impl MemoryManager {
         std::fs::create_dir_all(&memory_dir)
             .with_context(|| format!("Failed to create memory directory: {:?}", memory_dir))?;
 
-        let store = MemoryStore::new(&db_path)
-            .context("Failed to create memory store")?;
+        let store = MemoryStore::new(&db_path).context("Failed to create memory store")?;
 
         info!("Initialized memory manager at {:?}", memory_dir);
 
-        Ok(Self {
-            memory_dir,
-            store,
-        })
+        Ok(Self { memory_dir, store })
     }
 
     /// Create a memory manager with custom paths
@@ -56,13 +52,9 @@ impl MemoryManager {
         std::fs::create_dir_all(&memory_dir)
             .with_context(|| format!("Failed to create memory directory: {:?}", memory_dir))?;
 
-        let store = MemoryStore::new(db_path)
-            .context("Failed to create memory store")?;
+        let store = MemoryStore::new(db_path).context("Failed to create memory store")?;
 
-        Ok(Self {
-            memory_dir,
-            store,
-        })
+        Ok(Self { memory_dir, store })
     }
 
     /// Get the file path for a memory
@@ -83,7 +75,9 @@ impl MemoryManager {
 
         // Save to database
         let memory = Memory::new(name, content);
-        self.store.save(&memory).await
+        self.store
+            .save(&memory)
+            .await
             .context("Failed to save memory to database")?;
 
         info!("Saved memory: {}", name);
@@ -148,7 +142,9 @@ impl MemoryManager {
         }
 
         // Delete from database
-        self.store.delete(name).await
+        self.store
+            .delete(name)
+            .await
             .context("Failed to delete from database")?;
 
         info!("Deleted memory: {}", name);
@@ -263,7 +259,8 @@ impl MemoryStorage for MemoryManager {
     }
 
     async fn search(&self, query: &str) -> Result<Vec<(String, String)>, SerenaError> {
-        let results = self.search(query)
+        let results = self
+            .search(query)
             .await
             .map_err(|e| SerenaError::Internal(e.to_string()))?;
 
@@ -294,13 +291,13 @@ impl MemoryStorage for MemoryManager {
             let path = entry.path();
 
             if path.is_file() && path.extension().and_then(|s| s.to_str()) == Some("md") {
-                std::fs::remove_file(path)
-                    .map_err(|e| SerenaError::Internal(e.to_string()))?;
+                std::fs::remove_file(path).map_err(|e| SerenaError::Internal(e.to_string()))?;
             }
         }
 
         // Clear database
-        self.store.clear_all()
+        self.store
+            .clear_all()
             .await
             .map_err(|e| SerenaError::Internal(e.to_string()))?;
 
@@ -374,7 +371,8 @@ mod tests {
         let manager = MemoryManager::new(dir.path()).unwrap();
 
         manager.save_memory("test", "Hello World").await.unwrap();
-        manager.replace_content("test", "World", "Rust", ReplaceMode::Literal)
+        manager
+            .replace_content("test", "World", "Rust", ReplaceMode::Literal)
             .await
             .unwrap();
 
@@ -388,7 +386,8 @@ mod tests {
         let manager = MemoryManager::new(dir.path()).unwrap();
 
         manager.save_memory("test", "Test 123").await.unwrap();
-        manager.replace_content("test", r"\d+", "456", ReplaceMode::Regex)
+        manager
+            .replace_content("test", r"\d+", "456", ReplaceMode::Regex)
             .await
             .unwrap();
 

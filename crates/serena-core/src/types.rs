@@ -30,6 +30,8 @@ pub enum SymbolKind {
     Event,
     Operator,
     TypeParameter,
+    /// Unknown or unsupported symbol kind
+    Unknown,
 }
 
 impl From<lsp_types::SymbolKind> for SymbolKind {
@@ -95,6 +97,7 @@ impl From<SymbolKind> for lsp_types::SymbolKind {
             SymbolKind::Event => lsp_types::SymbolKind::EVENT,
             SymbolKind::Operator => lsp_types::SymbolKind::OPERATOR,
             SymbolKind::TypeParameter => lsp_types::SymbolKind::TYPE_PARAMETER,
+            SymbolKind::Unknown => lsp_types::SymbolKind::OBJECT, // fallback for unknown
         }
     }
 }

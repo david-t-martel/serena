@@ -67,7 +67,8 @@ impl LanguageServerManager {
 
         // Initialize the server with workspace root
         // Uri in lsp-types 0.97+ is a type alias for String, construct file:// URI manually
-        let path_str = self.root_path
+        let path_str = self
+            .root_path
             .to_str()
             .ok_or_else(|| anyhow::anyhow!("Invalid root path: {:?}", self.root_path))?;
 
@@ -77,9 +78,8 @@ impl LanguageServerManager {
         } else {
             format!("file://{}", path_str)
         };
-        let root_uri = Uri::from_str(&uri_string)
-            .map_err(|e| anyhow::anyhow!("Invalid URI: {:?}", e))?;
-
+        let root_uri =
+            Uri::from_str(&uri_string).map_err(|e| anyhow::anyhow!("Invalid URI: {:?}", e))?;
 
         client.initialize(root_uri).await?;
 
@@ -105,7 +105,10 @@ impl LanguageServerManager {
             // If we can't (multiple references), it will be killed on drop
             if let Some(mut client) = Arc::into_inner(client) {
                 if let Err(e) = client.shutdown().await {
-                    warn!("Error during graceful shutdown of {:?} server: {}", language, e);
+                    warn!(
+                        "Error during graceful shutdown of {:?} server: {}",
+                        language, e
+                    );
                 }
             } else {
                 debug!("Server has multiple references, will be killed on drop");
@@ -165,6 +168,46 @@ impl LanguageServerManager {
         info!("All language servers stopped");
     }
 
+    /// Restart a language server for the specified language
+    ///
+    /// This stops the server if running, clears its cache entries, and restarts it.
+    ///
+    /// # Arguments
+    /// * `language` - The programming language to restart the server for
+    ///
+    /// # Returns
+    /// `Ok(())` if the server was restarted successfully
+    pub async fn restart_server(&self, language: Language) -> anyhow::Result<()> {
+        info!("Restarting language server for {:?}", language);
+
+        // Stop the server if running
+        self.stop_server(language).await?;
+
+        // Clear cache for this language's files
+        self.cache.clear();
+
+        // Start the server again
+        self.start_server(language).await?;
+
+        info!("Language server for {:?} restarted successfully", language);
+        Ok(())
+    }
+
+    /// Clear the LSP response cache
+    ///
+    /// This removes all cached LSP responses, forcing fresh requests to the servers.
+    pub fn clear_cache(&self) {
+        info!("Clearing LSP cache");
+        self.cache.clear();
+    }
+
+    /// Clear expired cache entries
+    ///
+    /// This removes only the cache entries that have exceeded their TTL.
+    pub fn prune_cache(&self) {
+        self.cache.prune_expired();
+    }
+
     /// Get the number of running language servers
     pub fn server_count(&self) -> usize {
         self.servers.len()
@@ -195,7 +238,10 @@ impl Drop for LanguageServerManager {
     fn drop(&mut self) {
         // Note: This is a synchronous drop, so we can't await.
         // Language servers will be killed when their clients are dropped.
-        debug!("LanguageServerManager dropped, {} servers will be terminated", self.servers.len());
+        debug!(
+            "LanguageServerManager dropped, {} servers will be terminated",
+            self.servers.len()
+        );
     }
 }
 
@@ -203,6 +249,7 @@ impl Drop for LanguageServerManager {
 mod tests {
     use super::*;
     use std::env;
+    use tempfile::tempdir;
 
     #[test]
     fn test_manager_creation() {
@@ -217,6 +264,8 @@ mod tests {
         let temp_dir = env::temp_dir();
         let manager = LanguageServerManager::new(temp_dir);
         assert!(!manager.is_server_running(Language::Rust));
+        assert!(!manager.is_server_running(Language::Python));
+        assert!(!manager.is_server_running(Language::TypeScript));
     }
 
     #[test]
@@ -225,5 +274,142 @@ mod tests {
         let manager = LanguageServerManager::new(temp_dir);
         let servers = manager.list_running_servers();
         assert!(servers.is_empty());
+    }
+
+    #[test]
+    fn test_manager_with_custom_path() {
+        let temp = tempdir().unwrap();
+        let manager = LanguageServerManager::new(temp.path().to_path_buf());
+        assert_eq!(manager.root_path(), temp.path());
+    }
+
+    #[test]
+    fn test_cache_operations() {
+        let temp_dir = env::temp_dir();
+        let manager = LanguageServerManager::new(temp_dir);
+
+        // Cache should be accessible
+        let cache = manager.cache();
+        assert!(Arc::strong_count(cache) >= 1);
+
+        // Clear cache should not panic
+        manager.clear_cache();
+
+        // Prune should not panic
+        manager.prune_cache();
+    }
+
+    #[test]
+    fn test_get_server_returns_none_when_not_started() {
+        let temp_dir = env::temp_dir();
+        let manager = LanguageServerManager::new(temp_dir);
+
+        assert!(manager.get_server(Language::Rust).is_none());
+        assert!(manager.get_server(Language::Python).is_none());
+        assert!(manager.get_server(Language::TypeScript).is_none());
+    }
+
+    #[tokio::test]
+    async fn test_stop_server_when_not_running() {
+        let temp_dir = env::temp_dir();
+        let manager = LanguageServerManager::new(temp_dir);
+
+        // Should not error when stopping a server that's not running
+        let result = manager.stop_server(Language::Rust).await;
+        assert!(result.is_ok());
+    }
+
+    #[tokio::test]
+    async fn test_stop_all_servers_when_empty() {
+        let temp_dir = env::temp_dir();
+        let manager = LanguageServerManager::new(temp_dir);
+
+        // Should not error when stopping all servers and none are running
+        manager.stop_all_servers().await;
+        assert_eq!(manager.server_count(), 0);
+    }
+
+    #[test]
+    fn test_manager_drop_safety() {
+        let temp_dir = env::temp_dir();
+        // Manager should drop without panic
+        {
+            let _manager = LanguageServerManager::new(temp_dir);
+        }
+        // If we get here, drop was successful
+    }
+
+    // Integration tests that require actual language servers are skipped by default
+    // To run them, use: cargo test --features lsp-integration-tests
+    #[tokio::test]
+    #[ignore = "Requires rust-analyzer installed"]
+    async fn test_start_rust_analyzer() {
+        let temp_dir = env::temp_dir();
+        let manager = LanguageServerManager::new(temp_dir);
+
+        let result = manager.start_server(Language::Rust).await;
+        assert!(result.is_ok(), "Failed to start rust-analyzer: {:?}", result.err());
+
+        assert!(manager.is_server_running(Language::Rust));
+        assert_eq!(manager.server_count(), 1);
+
+        // Cleanup
+        let result = manager.stop_server(Language::Rust).await;
+        assert!(result.is_ok());
+    }
+
+    #[tokio::test]
+    #[ignore = "Requires pyright installed"]
+    async fn test_start_pyright() {
+        let temp_dir = env::temp_dir();
+        let manager = LanguageServerManager::new(temp_dir);
+
+        let result = manager.start_server(Language::Python).await;
+        assert!(result.is_ok(), "Failed to start pyright: {:?}", result.err());
+
+        assert!(manager.is_server_running(Language::Python));
+
+        // Cleanup
+        manager.stop_all_servers().await;
+    }
+
+    #[tokio::test]
+    #[ignore = "Requires language servers installed"]
+    async fn test_restart_server() {
+        let temp_dir = env::temp_dir();
+        let manager = LanguageServerManager::new(temp_dir);
+
+        // Start
+        manager.start_server(Language::Rust).await.unwrap();
+        assert!(manager.is_server_running(Language::Rust));
+
+        // Restart
+        let result = manager.restart_server(Language::Rust).await;
+        assert!(result.is_ok());
+        assert!(manager.is_server_running(Language::Rust));
+
+        // Cleanup
+        manager.stop_all_servers().await;
+    }
+
+    #[tokio::test]
+    #[ignore = "Requires language servers installed"]
+    async fn test_get_or_start_server() {
+        let temp_dir = env::temp_dir();
+        let manager = LanguageServerManager::new(temp_dir);
+
+        // First call should start the server
+        let result = manager.get_or_start_server(Language::Rust).await;
+        assert!(result.is_ok());
+
+        // Second call should return the same server
+        let result = manager.get_or_start_server(Language::Rust).await;
+        assert!(result.is_ok());
+
+        // Should still be only one server
+        assert_eq!(manager.server_count(), 1);
+
+        // Cleanup
+        manager.stop_all_servers().await;
     }
 }

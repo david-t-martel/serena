@@ -8,11 +8,20 @@ pub mod language;
 pub mod loader;
 pub mod project;
 pub mod serena_config;
+pub mod service;
+pub mod tools;
 
 pub use context_mode::{Context, Mode};
 pub use language::Language;
 pub use project::ProjectConfig;
 pub use serena_config::SerenaConfig;
+pub use service::ConfigService;
+
+// Re-export tools
+pub use tools::{
+    create_config_tools, ActivateProjectTool, GetActiveToolsTool, GetCurrentConfigTool,
+    ListProjectsTool, RemoveProjectTool, SwitchModesTool,
+};
 
 /// Configuration errors
 #[derive(Debug, thiserror::Error)]

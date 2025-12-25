@@ -40,16 +40,15 @@ impl CreateTextFileTool {
         let full_path = self.project_root.join(&params.relative_path);
 
         // Security check: ensure path is within project root
-        let canonical_root = self.project_root.canonicalize()
-            .map_err(|e| SerenaError::InvalidParameter(
-                format!("Invalid project root: {}", e)
-            ))?;
+        let canonical_root = self
+            .project_root
+            .canonicalize()
+            .map_err(|e| SerenaError::InvalidParameter(format!("Invalid project root: {}", e)))?;
 
         // Get parent directory for validation
-        let parent = full_path.parent()
-            .ok_or_else(|| SerenaError::InvalidParameter(
-                "Invalid file path: no parent directory".to_string()
-            ))?;
+        let parent = full_path.parent().ok_or_else(|| {
+            SerenaError::InvalidParameter("Invalid file path: no parent directory".to_string())
+        })?;
 
         // Check if file exists before writing
         let file_exists = full_path.exists();
@@ -57,25 +56,31 @@ impl CreateTextFileTool {
         // Create parent directories if needed
         if !parent.exists() {
             debug!("Creating parent directories: {:?}", parent);
-            fs::create_dir_all(parent).await
+            fs::create_dir_all(parent)
+                .await
                 .map_err(|e| SerenaError::Io(e))?;
         }
 
         // After creating directories, validate the path is still within project root
-        let canonical_parent = parent.canonicalize()
-            .map_err(|e| SerenaError::InvalidParameter(
-                format!("Cannot canonicalize parent directory: {}", e)
-            ))?;
+        let canonical_parent = parent.canonicalize().map_err(|e| {
+            SerenaError::InvalidParameter(format!("Cannot canonicalize parent directory: {}", e))
+        })?;
 
         if !canonical_parent.starts_with(&canonical_root) {
-            return Err(SerenaError::Tool(ToolError::PermissionDenied(
-                format!("Path '{}' is outside project root", params.relative_path)
-            )));
+            return Err(SerenaError::Tool(ToolError::PermissionDenied(format!(
+                "Path '{}' is outside project root",
+                params.relative_path
+            ))));
         }
 
         // Write file content
-        debug!("Writing file: {:?} ({} bytes)", full_path, params.content.len());
-        fs::write(&full_path, &params.content).await
+        debug!(
+            "Writing file: {:?} ({} bytes)",
+            full_path,
+            params.content.len()
+        );
+        fs::write(&full_path, &params.content)
+            .await
             .map_err(|e| SerenaError::Io(e))?;
 
         Ok(CreateTextFileOutput {
@@ -121,14 +126,20 @@ impl Tool for CreateTextFileTool {
         let output = self.write_file_impl(params).await?;
 
         let message = if output.created {
-            format!("Created file '{}' ({} bytes)", output.path, output.bytes_written)
+            format!(
+                "Created file '{}' ({} bytes)",
+                output.path, output.bytes_written
+            )
         } else {
-            format!("Overwrote file '{}' ({} bytes)", output.path, output.bytes_written)
+            format!(
+                "Overwrote file '{}' ({} bytes)",
+                output.path, output.bytes_written
+            )
         };
 
         Ok(ToolResult::success_with_message(
             serde_json::to_value(output)?,
-            message
+            message,
         ))
     }
 

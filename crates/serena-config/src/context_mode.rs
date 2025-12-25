@@ -188,8 +188,11 @@ impl Mode {
 
     /// Editing mode - code modification
     pub fn editing() -> Self {
-        Self::new("editing", "Code editing and modification mode")
-            .with_behaviors(["write-enabled", "precise", "symbol-aware"])
+        Self::new("editing", "Code editing and modification mode").with_behaviors([
+            "write-enabled",
+            "precise",
+            "symbol-aware",
+        ])
     }
 
     /// Interactive mode - conversational assistance
@@ -201,8 +204,11 @@ impl Mode {
 
     /// One-shot mode - single task execution
     pub fn one_shot() -> Self {
-        Self::new("one-shot", "Single task execution mode")
-            .with_behaviors(["focused", "completion-oriented", "minimal-output"])
+        Self::new("one-shot", "Single task execution mode").with_behaviors([
+            "focused",
+            "completion-oriented",
+            "minimal-output",
+        ])
     }
 
     /// Get all default modes

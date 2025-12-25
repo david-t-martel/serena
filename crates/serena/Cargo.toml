@@ -8,6 +8,10 @@ authors.workspace = true
 repository.workspace = true
 description = "Serena AI coding assistant - main binary"
 
+[lib]
+name = "serena"
+path = "src/lib.rs"
+
 [[bin]]
 name = "serena"
 path = "src/main.rs"
@@ -19,9 +23,9 @@ serena-config = { path = "../serena-config" }
 serena-tools = { path = "../serena-tools" }
 serena-mcp = { path = "../serena-mcp" }
 serena-lsp = { path = "../serena-lsp" }
-# TODO: Add when created
-# serena-memory = { path = "../serena-memory" }
-# serena-web = { path = "../serena-web" }
+serena-web = { path = "../serena-web" }
+serena-memory = { path = "../serena-memory" }
+serena-symbol = { path = "../serena-symbol" }
 # serena-cli = { path = "../serena-cli" }
 
 # Async runtime
@@ -49,3 +53,6 @@ rmcp = { workspace = true }
 
 # Utilities
 directories = { workspace = true }
+
+[dev-dependencies]
+tempfile = "3.8"

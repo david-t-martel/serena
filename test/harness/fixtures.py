@@ -34,11 +34,13 @@ class MCPServerMock:
 
     def add_tool(self, name: str, description: str, schema: dict[str, Any] | None = None) -> None:
         """Add a tool to the mock server."""
-        self.tools.append({
-            "name": name,
-            "description": description,
-            "inputSchema": schema or {"type": "object", "properties": {}},
-        })
+        self.tools.append(
+            {
+                "name": name,
+                "description": description,
+                "inputSchema": schema or {"type": "object", "properties": {}},
+            }
+        )
 
     def handle_call(self, method: str, params: dict[str, Any] | None = None) -> dict[str, Any]:
         """Handle an MCP method call."""
@@ -106,14 +108,16 @@ class LanguageServerMock:
         if file_path not in self.symbols:
             self.symbols[file_path] = []
 
-        self.symbols[file_path].append({
-            "name": name,
-            "kind": kind,
-            "range": {
-                "start": {"line": start_line, "character": start_char},
-                "end": {"line": end_line, "character": end_char},
-            },
-        })
+        self.symbols[file_path].append(
+            {
+                "name": name,
+                "kind": kind,
+                "range": {
+                    "start": {"line": start_line, "character": start_char},
+                    "end": {"line": end_line, "character": end_char},
+                },
+            }
+        )
 
     def get_document_symbols(self, file_path: str) -> list[dict[str, Any]]:
         """Get symbols for a document."""
@@ -164,10 +168,7 @@ def temp_project_dir() -> Generator[Path, None, None]:
         (temp_dir / ".serena" / "memories").mkdir()
 
         # Create minimal project config
-        config = {"name": "test_project", "language": "python"}
-        (temp_dir / ".serena" / "project.yml").write_text(
-            "name: test_project\nlanguage: python\n"
-        )
+        (temp_dir / ".serena" / "project.yml").write_text("name: test_project\nlanguage: python\n")
 
         yield temp_dir
     finally:
@@ -300,7 +301,7 @@ def sample_typescript_file(temp_project_dir: Path) -> Path:
 
     Returns the path to a TypeScript file with various symbols.
     """
-    content = '''/**
+    content = """/**
  * Sample TypeScript module for testing.
  */
 
@@ -328,7 +329,7 @@ export function standaloneFunction(x: number, y: number): number {
 }
 
 export const CONSTANT_VALUE: number = 42;
-'''
+"""
     file_path = temp_project_dir / "src" / "sample.ts"
     file_path.write_text(content)
     return file_path

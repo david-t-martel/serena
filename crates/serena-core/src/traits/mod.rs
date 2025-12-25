@@ -1,7 +1,7 @@
-pub mod tool;
 pub mod lsp;
 pub mod storage;
+pub mod tool;
 
-pub use tool::Tool;
 pub use lsp::LanguageServer;
 pub use storage::MemoryStorage;
+pub use tool::Tool;

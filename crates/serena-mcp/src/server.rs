@@ -1,6 +1,6 @@
 use crate::protocol::{
-    CallToolParams, CallToolResult, InitializeResult, McpRequest, McpResponse,
-    ServerCapabilities, ServerInfo, ToolContent, ToolInfo, ToolsCapability,
+    CallToolParams, CallToolResult, InitializeResult, McpRequest, McpResponse, ServerCapabilities,
+    ServerInfo, ToolContent, ToolInfo, ToolsCapability,
 };
 use crate::transport::stdio::StdioTransport;
 use anyhow::Result;
@@ -18,6 +18,26 @@ impl SerenaMcpServer {
         Self {
             tools: Arc::new(tools),
         }
+    }
+
+    /// Returns a list of tool info for all registered tools
+    ///
+    /// Used by the dashboard API to display available tools
+    pub fn list_tools(&self) -> Vec<ToolInfo> {
+        self.tools
+            .list_tools()
+            .iter()
+            .map(|tool| ToolInfo {
+                name: tool.name().to_string(),
+                description: tool.description().to_string(),
+                input_schema: tool.parameters_schema(),
+            })
+            .collect()
+    }
+
+    /// Returns the number of registered tools
+    pub fn tool_count(&self) -> usize {
+        self.tools.len()
     }
 
     pub async fn serve_stdio(self) -> Result<()> {
@@ -45,7 +65,7 @@ impl SerenaMcpServer {
         Ok(())
     }
 
-    async fn handle_request(&self, request: McpRequest) -> McpResponse {
+    pub async fn handle_request(&self, request: McpRequest) -> McpResponse {
         match request.method.as_str() {
             "initialize" => self.handle_initialize(request.id).await,
             "tools/list" => self.handle_list_tools(request.id).await,
@@ -102,11 +122,7 @@ impl SerenaMcpServer {
         McpResponse::success(id, json!({ "tools": tools }))
     }
 
-    async fn handle_call_tool(
-        &self,
-        id: Option<i64>,
-        params: serde_json::Value,
-    ) -> McpResponse {
+    async fn handle_call_tool(&self, id: Option<i64>, params: serde_json::Value) -> McpResponse {
         let call_params: CallToolParams = match serde_json::from_value(params) {
             Ok(p) => p,
             Err(e) => {
@@ -118,49 +134,47 @@ impl SerenaMcpServer {
         debug!("Calling tool: {}", call_params.name);
 
         match self.tools.get_tool(&call_params.name) {
-            Some(tool) => {
-                match tool.execute(call_params.arguments).await {
-                    Ok(result) => {
-                        let result_str = match serde_json::to_string_pretty(&result) {
-                            Ok(s) => s,
-                            Err(e) => {
-                                error!("Failed to serialize tool result: {}", e);
-                                return McpResponse::error(id, -32603, "Internal error");
-                            }
-                        };
-
-                        let call_result = CallToolResult {
-                            content: vec![ToolContent::Text { text: result_str }],
-                            is_error: Some(false),
-                        };
-
-                        match serde_json::to_value(call_result) {
-                            Ok(value) => McpResponse::success(id, value),
-                            Err(e) => {
-                                error!("Failed to serialize call result: {}", e);
-                                McpResponse::error(id, -32603, "Internal error")
-                            }
+            Some(tool) => match tool.execute(call_params.arguments).await {
+                Ok(result) => {
+                    let result_str = match serde_json::to_string_pretty(&result) {
+                        Ok(s) => s,
+                        Err(e) => {
+                            error!("Failed to serialize tool result: {}", e);
+                            return McpResponse::error(id, -32603, "Internal error");
                         }
-                    }
-                    Err(e) => {
-                        error!("Tool execution failed: {}", e);
-                        let call_result = CallToolResult {
-                            content: vec![ToolContent::Text {
-                                text: format!("Error: {}", e),
-                            }],
-                            is_error: Some(true),
-                        };
+                    };
 
-                        match serde_json::to_value(call_result) {
-                            Ok(value) => McpResponse::success(id, value),
-                            Err(e) => {
-                                error!("Failed to serialize error result: {}", e);
-                                McpResponse::error(id, -32603, "Internal error")
-                            }
+                    let call_result = CallToolResult {
+                        content: vec![ToolContent::Text { text: result_str }],
+                        is_error: Some(false),
+                    };
+
+                    match serde_json::to_value(call_result) {
+                        Ok(value) => McpResponse::success(id, value),
+                        Err(e) => {
+                            error!("Failed to serialize call result: {}", e);
+                            McpResponse::error(id, -32603, "Internal error")
                         }
                     }
                 }
-            }
+                Err(e) => {
+                    error!("Tool execution failed: {}", e);
+                    let call_result = CallToolResult {
+                        content: vec![ToolContent::Text {
+                            text: format!("Error: {}", e),
+                        }],
+                        is_error: Some(true),
+                    };
+
+                    match serde_json::to_value(call_result) {
+                        Ok(value) => McpResponse::success(id, value),
+                        Err(e) => {
+                            error!("Failed to serialize error result: {}", e);
+                            McpResponse::error(id, -32603, "Internal error")
+                        }
+                    }
+                }
+            },
             None => {
                 warn!("Tool not found: {}", call_params.name);
                 McpResponse::error(id, -32602, format!("Tool not found: {}", call_params.name))

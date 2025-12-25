@@ -6,9 +6,9 @@
 use anyhow::{Context, Result};
 use dashmap::DashMap;
 use lsp_types::{
-    notification::Notification, request::Request, ClientCapabilities, DocumentSymbolClientCapabilities,
-    InitializeParams, InitializeResult, InitializedParams, TextDocumentClientCapabilities, TraceValue,
-    Uri,
+    notification::Notification, request::Request, ClientCapabilities,
+    DocumentSymbolClientCapabilities, InitializeParams, InitializeResult, InitializedParams,
+    TextDocumentClientCapabilities, TraceValue, Uri,
 };
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
@@ -129,7 +129,8 @@ impl LspClient {
             }
         });
 
-        let pending_requests: Arc<DashMap<i64, oneshot::Sender<Result<Value>>>> = Arc::new(DashMap::new());
+        let pending_requests: Arc<DashMap<i64, oneshot::Sender<Result<Value>>>> =
+            Arc::new(DashMap::new());
         let pending_requests_clone = pending_requests.clone();
 
         // Reader Task - receives messages from language server stdout
@@ -148,7 +149,9 @@ impl LspClient {
                                 break;
                             }
                             if line.starts_with("Content-Length: ") {
-                                if let Ok(len) = line.trim()["Content-Length: ".len()..].parse::<usize>() {
+                                if let Ok(len) =
+                                    line.trim()["Content-Length: ".len()..].parse::<usize>()
+                                {
                                     content_length = len;
                                 }
                             }
@@ -179,7 +182,11 @@ impl LspClient {
                     if let Some(id) = resp.id {
                         if let Some((_, tx)) = pending_requests_clone.remove(&id) {
                             if let Some(error) = resp.error {
-                                let _ = tx.send(Err(anyhow::anyhow!("LSP Error {}: {}", error.code, error.message)));
+                                let _ = tx.send(Err(anyhow::anyhow!(
+                                    "LSP Error {}: {}",
+                                    error.code,
+                                    error.message
+                                )));
                             } else {
                                 let _ = tx.send(Ok(resp.result.unwrap_or(Value::Null)));
                             }
@@ -299,7 +306,9 @@ impl LspClient {
             ..Default::default()
         };
 
-        let result = self.send_request::<lsp_types::request::Initialize>(params).await?;
+        let result = self
+            .send_request::<lsp_types::request::Initialize>(params)
+            .await?;
 
         self.send_notification::<lsp_types::notification::Initialized>(InitializedParams {})
             .await?;
@@ -312,10 +321,13 @@ impl LspClient {
     /// Sends the `shutdown` request followed by the `exit` notification
     pub async fn shutdown(&mut self) -> Result<()> {
         // Send shutdown request
-        let _: () = self.send_request::<lsp_types::request::Shutdown>(()).await?;
+        let _: () = self
+            .send_request::<lsp_types::request::Shutdown>(())
+            .await?;
 
         // Send exit notification
-        self.send_notification::<lsp_types::notification::Exit>(()).await?;
+        self.send_notification::<lsp_types::notification::Exit>(())
+            .await?;
 
         // Wait a bit for graceful shutdown
         tokio::time::sleep(tokio::time::Duration::from_millis(100)).await;
@@ -326,6 +338,268 @@ impl LspClient {
         }
 
         Ok(())
+    }
+}
+
+// Implementation of LanguageServer trait for LspClient
+use async_trait::async_trait;
+use lsp_types::{
+    DidChangeTextDocumentParams, DidCloseTextDocumentParams, DidOpenTextDocumentParams,
+    DocumentSymbolParams, DocumentSymbolResponse, GotoDefinitionParams, GotoDefinitionResponse,
+    ReferenceContext, ReferenceParams, RenameParams, ServerCapabilities,
+    TextDocumentContentChangeEvent, TextDocumentItem, VersionedTextDocumentIdentifier,
+    WorkspaceEdit,
+};
+use serena_core::{LanguageServer, Location as CoreLocation, LspError, SymbolInfo};
+use std::sync::atomic::AtomicBool;
+
+/// LspClient extended with LanguageServer trait support
+pub struct LspClientAdapter {
+    client: LspClient,
+    language_id: String,
+    initialized: AtomicBool,
+}
+
+impl LspClientAdapter {
+    /// Create a new adapter wrapping an LspClient
+    pub fn new(client: LspClient, language_id: String) -> Self {
+        Self {
+            client,
+            language_id,
+            initialized: AtomicBool::new(false),
+        }
+    }
+
+    /// Convert lsp_types::DocumentSymbolResponse to Vec<SymbolInfo>
+    fn convert_symbols(response: DocumentSymbolResponse) -> Vec<SymbolInfo> {
+        match response {
+            DocumentSymbolResponse::Flat(symbols) => symbols
+                .into_iter()
+                .map(|s| SymbolInfo {
+                    name: s.name,
+                    kind: s.kind.into(), // Use From trait
+                    location: s.location.into(), // Use From trait
+                    detail: None,
+                    children: vec![],
+                    container_name: s.container_name,
+                })
+                .collect(),
+            DocumentSymbolResponse::Nested(symbols) => Self::convert_nested_symbols(symbols, None),
+        }
+    }
+
+    fn convert_nested_symbols(
+        symbols: Vec<lsp_types::DocumentSymbol>,
+        parent_uri: Option<&str>,
+    ) -> Vec<SymbolInfo> {
+        symbols
+            .into_iter()
+            .map(|s| {
+                // For nested symbols, we don't have a full location, create a placeholder
+                let location = CoreLocation {
+                    uri: parent_uri.unwrap_or("file:///unknown").to_string(),
+                    range: s.selection_range.into(),
+                };
+                SymbolInfo {
+                    name: s.name,
+                    kind: s.kind.into(),
+                    location,
+                    detail: s.detail,
+                    children: s
+                        .children
+                        .map(|c| Self::convert_nested_symbols(c, parent_uri))
+                        .unwrap_or_default(),
+                    container_name: None,
+                }
+            })
+            .collect()
+    }
+
+    /// Parse a URI string to lsp_types::Uri
+    fn parse_uri(uri: &str) -> Result<Uri, LspError> {
+        use std::str::FromStr;
+        Uri::from_str(uri).map_err(|e| LspError::InvalidUri(e.to_string()))
+    }
+}
+
+#[async_trait]
+impl LanguageServer for LspClientAdapter {
+    async fn initialize(
+        &mut self,
+        params: lsp_types::InitializeParams,
+    ) -> Result<ServerCapabilities, LspError> {
+        #[allow(deprecated)] // root_uri is deprecated but still widely used
+        let root_uri = params
+            .root_uri
+            .ok_or_else(|| LspError::InitializationError("No root URI provided".into()))?;
+
+        let result = self
+            .client
+            .initialize(root_uri)
+            .await
+            .map_err(|e| LspError::InitializationError(e.to_string()))?;
+
+        self.initialized
+            .store(true, std::sync::atomic::Ordering::SeqCst);
+        Ok(result.capabilities)
+    }
+
+    async fn shutdown(&mut self) -> Result<(), LspError> {
+        self.client
+            .shutdown()
+            .await
+            .map_err(|e| LspError::ShutdownError(e.to_string()))?;
+        self.initialized
+            .store(false, std::sync::atomic::Ordering::SeqCst);
+        Ok(())
+    }
+
+    async fn document_symbols(
+        &self,
+        document: lsp_types::TextDocumentIdentifier,
+    ) -> Result<Vec<SymbolInfo>, LspError> {
+        let params = DocumentSymbolParams {
+            text_document: document,
+            work_done_progress_params: Default::default(),
+            partial_result_params: Default::default(),
+        };
+
+        let result: Option<DocumentSymbolResponse> = self
+            .client
+            .send_request::<lsp_types::request::DocumentSymbolRequest>(params)
+            .await
+            .map_err(|e| LspError::RequestFailed(e.to_string()))?;
+
+        match result {
+            Some(response) => Ok(Self::convert_symbols(response)),
+            None => Ok(vec![]),
+        }
+    }
+
+    async fn find_references(
+        &self,
+        params: lsp_types::TextDocumentPositionParams,
+    ) -> Result<Vec<lsp_types::Location>, LspError> {
+        let ref_params = ReferenceParams {
+            text_document_position: params,
+            work_done_progress_params: Default::default(),
+            partial_result_params: Default::default(),
+            context: ReferenceContext {
+                include_declaration: true,
+            },
+        };
+
+        let result: Option<Vec<lsp_types::Location>> = self
+            .client
+            .send_request::<lsp_types::request::References>(ref_params)
+            .await
+            .map_err(|e| LspError::RequestFailed(e.to_string()))?;
+
+        Ok(result.unwrap_or_default())
+    }
+
+    async fn rename(&self, params: RenameParams) -> Result<WorkspaceEdit, LspError> {
+        let result: Option<WorkspaceEdit> = self
+            .client
+            .send_request::<lsp_types::request::Rename>(params)
+            .await
+            .map_err(|e| LspError::RequestFailed(e.to_string()))?;
+
+        Ok(result.unwrap_or_default())
+    }
+
+    async fn goto_definition(
+        &self,
+        params: lsp_types::TextDocumentPositionParams,
+    ) -> Result<GotoDefinitionResponse, LspError> {
+        let goto_params = GotoDefinitionParams {
+            text_document_position_params: params,
+            work_done_progress_params: Default::default(),
+            partial_result_params: Default::default(),
+        };
+
+        let result: Option<GotoDefinitionResponse> = self
+            .client
+            .send_request::<lsp_types::request::GotoDefinition>(goto_params)
+            .await
+            .map_err(|e| LspError::RequestFailed(e.to_string()))?;
+
+        Ok(result.unwrap_or(GotoDefinitionResponse::Array(vec![])))
+    }
+
+    async fn did_open(
+        &self,
+        uri: String,
+        language_id: String,
+        text: String,
+    ) -> Result<(), LspError> {
+        let lsp_uri = Self::parse_uri(&uri)?;
+
+        let params = DidOpenTextDocumentParams {
+            text_document: TextDocumentItem {
+                uri: lsp_uri,
+                language_id,
+                version: 1,
+                text,
+            },
+        };
+
+        self.client
+            .send_notification::<lsp_types::notification::DidOpenTextDocument>(params)
+            .await
+            .map_err(|e| LspError::NotificationFailed(e.to_string()))?;
+
+        Ok(())
+    }
+
+    async fn did_close(&self, uri: String) -> Result<(), LspError> {
+        let lsp_uri = Self::parse_uri(&uri)?;
+
+        let params = DidCloseTextDocumentParams {
+            text_document: lsp_types::TextDocumentIdentifier { uri: lsp_uri },
+        };
+
+        self.client
+            .send_notification::<lsp_types::notification::DidCloseTextDocument>(params)
+            .await
+            .map_err(|e| LspError::NotificationFailed(e.to_string()))?;
+
+        Ok(())
+    }
+
+    async fn did_change(&self, uri: String, text: String) -> Result<(), LspError> {
+        let lsp_uri = Self::parse_uri(&uri)?;
+
+        let params = DidChangeTextDocumentParams {
+            text_document: VersionedTextDocumentIdentifier {
+                uri: lsp_uri,
+                version: 1, // Version tracking would need to be improved
+            },
+            content_changes: vec![TextDocumentContentChangeEvent {
+                range: None,
+                range_length: None,
+                text,
+            }],
+        };
+
+        self.client
+            .send_notification::<lsp_types::notification::DidChangeTextDocument>(params)
+            .await
+            .map_err(|e| LspError::NotificationFailed(e.to_string()))?;
+
+        Ok(())
+    }
+
+    fn language_id(&self) -> &str {
+        &self.language_id
+    }
+
+    fn is_initialized(&self) -> bool {
+        self.initialized.load(std::sync::atomic::Ordering::SeqCst)
+    }
+
+    fn is_running(&self) -> bool {
+        self.client.child.is_some()
     }
 }
 

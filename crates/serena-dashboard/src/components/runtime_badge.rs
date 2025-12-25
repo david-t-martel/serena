@@ -7,8 +7,8 @@
 //! - Rust orange (#F74C00) accent for Rust backend
 //! - Python blue (#3776AB) accent for Python backend
 
-use leptos::*;
 use crate::{api, RuntimeState};
+use leptos::*;
 
 /// Standalone runtime badge that can be used anywhere
 #[component]
@@ -49,7 +49,11 @@ pub fn RuntimeBadgeStandalone() -> impl IntoView {
     let badge_class = move || {
         let base = "runtime-badge";
         let state_class = runtime_state.get().css_class();
-        let loaded_class = if is_loaded.get() { "runtime-badge--loaded" } else { "" };
+        let loaded_class = if is_loaded.get() {
+            "runtime-badge--loaded"
+        } else {
+            ""
+        };
         format!("{} {} {}", base, state_class, loaded_class)
     };
 

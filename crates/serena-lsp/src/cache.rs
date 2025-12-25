@@ -119,7 +119,8 @@ impl LspCache {
     /// also be called manually for cleanup.
     pub fn prune_expired(&self) {
         let now = Instant::now();
-        self.cache.retain(|_, v| now.duration_since(v.cached_at) < self.ttl);
+        self.cache
+            .retain(|_, v| now.duration_since(v.cached_at) < self.ttl);
     }
 
     /// Get the number of cached entries

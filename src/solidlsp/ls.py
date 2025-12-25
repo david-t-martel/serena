@@ -282,6 +282,7 @@ class SolidLanguageServer(ABC):
         if use_rust_env:
             try:
                 import serena_core
+
                 self.project_host = serena_core.ProjectHost(self.repository_root_path)
                 self.use_rust = True
                 log.info("Successfully initialized Rust ProjectHost")
@@ -489,13 +490,13 @@ class SolidLanguageServer(ABC):
                 cmd_parts = cmd_info.split()
             else:
                 cmd_parts = cmd_info
-            
+
             if not cmd_parts:
                 raise ValueError("Command is empty")
 
             executable = cmd_parts[0]
             args = cmd_parts[1:]
-            
+
             log.info(f"Starting Rust-backed LSP: {executable} {args}")
             self.project_host.start_lsp(executable, args)
             self.server_started = True
@@ -612,7 +613,7 @@ class SolidLanguageServer(ABC):
 
         new_contents, new_l, new_c = TextUtils.insert_text_at_position(file_buffer.contents, line, column, text_to_be_inserted)
         file_buffer.contents = new_contents
-        
+
         if self.use_rust:
             self.project_host.did_change(relative_file_path, new_contents, file_buffer.version)
         else:
@@ -660,7 +661,7 @@ class SolidLanguageServer(ABC):
             file_buffer.contents, start_line=start["line"], start_col=start["character"], end_line=end["line"], end_col=end["character"]
         )
         file_buffer.contents = new_contents
-        
+
         if self.use_rust:
             self.project_host.did_change(relative_file_path, new_contents, file_buffer.version)
         else:
@@ -685,19 +686,14 @@ class SolidLanguageServer(ABC):
         start = {"line": r["start"][0], "character": r["start"][1]}
         end = {"line": r["end"][0], "character": r["end"][1]}
         range_dict = {"start": start, "end": end}
-        
+
         abs_path = PathUtils.uri_to_path(uri)
         try:
             rel_path = PathUtils.get_relative_path(abs_path, self.repository_root_path)
         except Exception:
             rel_path = str(abs_path)
-            
-        return ls_types.Location(
-            uri=uri,
-            range=range_dict,  # type: ignore
-            absolutePath=abs_path,
-            relativePath=rel_path
-        )
+
+        return ls_types.Location(uri=uri, range=range_dict, absolutePath=abs_path, relativePath=rel_path)  # type: ignore
 
     def request_definition(self, relative_file_path: str, line: int, column: int) -> list[ls_types.Location]:
         """
@@ -1068,7 +1064,7 @@ class SolidLanguageServer(ABC):
 
             # no cached result, query language server
             log.debug(f"Requesting document symbols for {relative_file_path} from the Language Server")
-            
+
             if self.use_rust:
                 try:
                     rust_symbols = self.project_host.get_document_symbols(relative_file_path)
@@ -1546,10 +1542,10 @@ class SolidLanguageServer(ABC):
                     # THIS IS BOUND TO BREAK IN MANY CASES! IT IS ALSO SPECIFIC TO PYTHON!
                     # Background:
                     # When a variable is used to change something, like
-                    # 
+                    #
                     # instance = MyClass()
                     # instance.status = "new status"
-                    # 
+                    #
                     # we can't find the containing symbol for the reference to `status`
                     # since there is no container on the line of the reference
                     # The hack is to try to find a variable symbol in the containing module
@@ -1846,7 +1842,7 @@ class SolidLanguageServer(ABC):
         cache_file = self.cache_dir / self.RAW_DOCUMENT_SYMBOL_CACHE_FILENAME
 
         if not self._load_cache_enabled:
-             return
+            return
 
         if not cache_file.exists():
             # check for legacy cache to load to migrate
@@ -1910,9 +1906,9 @@ class SolidLanguageServer(ABC):
 
     def _load_document_symbols_cache(self) -> None:
         cache_file = self.cache_dir / self.DOCUMENT_SYMBOL_CACHE_FILENAME
-        
+
         if not self._load_cache_enabled:
-             return
+            return
 
         if cache_file.exists():
             log.info("Loading document symbols cache from %s", cache_file)
@@ -2053,5 +2049,5 @@ class SolidLanguageServer(ABC):
 
     def is_running(self) -> bool:
         if self.use_rust:
-            return self.server_started # Rust process is managed by ProjectHost, assume running if started
+            return self.server_started  # Rust process is managed by ProjectHost, assume running if started
         return self.server.is_running()

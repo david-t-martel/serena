@@ -37,7 +37,7 @@ serde_json = { workspace = true }
 
 # Async support
 gloo-net = "0.6"
-gloo-timers = "0.3"
+gloo-timers = { version = "0.3", features = ["futures"] }
 
 # Console logging
 console_error_panic_hook = "0.1"

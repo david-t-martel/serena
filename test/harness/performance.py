@@ -194,22 +194,13 @@ class PerformanceTracker:
             raise AssertionError(f"No metrics tracked for operation: {operation}")
 
         if max_mean_ms is not None and metrics.mean > max_mean_ms:
-            raise AssertionError(
-                f"Performance regression: {operation} mean={metrics.mean:.2f}ms "
-                f"exceeds max={max_mean_ms}ms"
-            )
+            raise AssertionError(f"Performance regression: {operation} mean={metrics.mean:.2f}ms " f"exceeds max={max_mean_ms}ms")
 
         if max_p95_ms is not None and metrics.p95 > max_p95_ms:
-            raise AssertionError(
-                f"Performance regression: {operation} p95={metrics.p95:.2f}ms "
-                f"exceeds max={max_p95_ms}ms"
-            )
+            raise AssertionError(f"Performance regression: {operation} p95={metrics.p95:.2f}ms " f"exceeds max={max_p95_ms}ms")
 
         if max_p99_ms is not None and metrics.p99 > max_p99_ms:
-            raise AssertionError(
-                f"Performance regression: {operation} p99={metrics.p99:.2f}ms "
-                f"exceeds max={max_p99_ms}ms"
-            )
+            raise AssertionError(f"Performance regression: {operation} p99={metrics.p99:.2f}ms " f"exceeds max={max_p99_ms}ms")
 
         # Check against baseline
         if operation in self._baseline:
@@ -226,10 +217,7 @@ class PerformanceTracker:
 
     def save_baseline(self, path: Path) -> None:
         """Save current metrics as baseline."""
-        baseline = {
-            name: metrics.to_dict()
-            for name, metrics in self._metrics.items()
-        }
+        baseline = {name: metrics.to_dict() for name, metrics in self._metrics.items()}
         with open(path, "w") as f:
             json.dump(baseline, f, indent=2)
 
@@ -322,6 +310,7 @@ def performance_test(
             find_symbol("MyClass")
 
     """
+
     def decorator(func: Callable[..., T]) -> Callable[..., T]:
         @functools.wraps(func)
         def wrapper(*args: Any, **kwargs: Any) -> T:
@@ -334,21 +323,16 @@ def performance_test(
             )
 
             if max_mean_ms is not None and metrics.mean > max_mean_ms:
-                raise AssertionError(
-                    f"Performance test failed: {func.__name__} "
-                    f"mean={metrics.mean:.2f}ms > max={max_mean_ms}ms"
-                )
+                raise AssertionError(f"Performance test failed: {func.__name__} " f"mean={metrics.mean:.2f}ms > max={max_mean_ms}ms")
 
             if max_p95_ms is not None and metrics.p95 > max_p95_ms:
-                raise AssertionError(
-                    f"Performance test failed: {func.__name__} "
-                    f"p95={metrics.p95:.2f}ms > max={max_p95_ms}ms"
-                )
+                raise AssertionError(f"Performance test failed: {func.__name__} " f"p95={metrics.p95:.2f}ms > max={max_p95_ms}ms")
 
             # Return result from last iteration
             return func(*args, **kwargs)
 
         return wrapper
+
     return decorator
 
 

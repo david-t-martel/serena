@@ -10,35 +10,14 @@ use axum::{
     response::{IntoResponse, Response},
     Json,
 };
+use serena_mcp::HttpTransport;
 use std::sync::Arc;
-use tracing::{debug, error, trace};
-
-/// HTTP transport for MCP using JSON-RPC over HTTP POST
-#[derive(Clone)]
-pub struct HttpTransport {
-    /// Callback for handling incoming requests
-    handler: Arc<dyn Fn(McpRequest) -> McpResponse + Send + Sync>,
-}
-
-impl HttpTransport {
-    /// Create a new HTTP transport with a request handler
-    pub fn new<F>(handler: F) -> Self
-    where
-        F: Fn(McpRequest) -> McpResponse + Send + Sync + 'static,
-    {
-        Self {
-            handler: Arc::new(handler),
-        }
-    }
-
-    /// Handle an incoming MCP request
-    pub fn handle_request(&self, request: McpRequest) -> McpResponse {
-        trace!("Handling HTTP request: method={}", request.method);
-        (self.handler)(request)
-    }
-}
+use tracing::{debug, error};
 
 /// Axum handler for HTTP JSON-RPC requests
+///
+/// Processes incoming MCP requests through the HTTP transport and returns
+/// the response as JSON.
 pub async fn http_handler(
     State(transport): State<Arc<HttpTransport>>,
     Json(request): Json<McpRequest>,
@@ -48,7 +27,7 @@ pub async fn http_handler(
         request.method, request.id
     );
 
-    let response = transport.handle_request(request);
+    let response = transport.handle_request(request).await;
 
     debug!(
         "Sending HTTP JSON-RPC response: id={:?}, error={:?}",
@@ -60,11 +39,17 @@ pub async fn http_handler(
 }
 
 /// Batch request handler for multiple JSON-RPC requests
+///
+/// Processes multiple MCP requests in a single HTTP request and returns
+/// all responses as a JSON array.
 pub async fn http_batch_handler(
     State(transport): State<Arc<HttpTransport>>,
     Json(requests): Json<Vec<McpRequest>>,
 ) -> Response {
-    debug!("Received HTTP JSON-RPC batch request: {} items", requests.len());
+    debug!(
+        "Received HTTP JSON-RPC batch request: {} items",
+        requests.len()
+    );
 
     if requests.is_empty() {
         return (
@@ -78,12 +63,21 @@ pub async fn http_batch_handler(
             .into_response();
     }
 
-    let responses: Vec<McpResponse> = requests
+    // Process all requests concurrently
+    let futures: Vec<_> = requests
         .into_iter()
-        .map(|req| transport.handle_request(req))
+        .map(|req| {
+            let transport = Arc::clone(&transport);
+            async move { transport.handle_request(req).await }
+        })
         .collect();
 
-    debug!("Sending HTTP JSON-RPC batch response: {} items", responses.len());
+    let responses = futures::future::join_all(futures).await;
+
+    debug!(
+        "Sending HTTP JSON-RPC batch response: {} items",
+        responses.len()
+    );
 
     Json(responses).into_response()
 }
@@ -112,52 +106,61 @@ pub fn internal_error(message: impl Into<String>) -> Response {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::McpRequest;
+    use serena_core::ToolRegistry;
+    use serena_mcp::{HttpTransport as McpHttpTransport, SerenaMcpServer};
 
-    #[test]
-    fn test_http_transport_handler() {
-        let transport = HttpTransport::new(|req| {
-            McpResponse::success(req.id, serde_json::json!({"method": req.method}))
-        });
+    #[tokio::test]
+    async fn test_http_handler_with_mcp_server() {
+        let registry = ToolRegistry::new();
+        let mcp_server = Arc::new(SerenaMcpServer::new(registry));
+        let transport = Arc::new(McpHttpTransport::new(mcp_server));
 
         let request = McpRequest {
             jsonrpc: "2.0".to_string(),
             id: Some(1),
-            method: "test_method".to_string(),
+            method: "ping".to_string(),
             params: None,
         };
 
-        let response = transport.handle_request(request);
+        let response = transport.handle_request(request).await;
 
         assert_eq!(response.id, Some(1));
         assert!(response.error.is_none());
-        assert!(response.result.is_some());
-
-        let result = response.result.unwrap();
-        assert_eq!(result["method"], "test_method");
     }
 
-    #[test]
-    fn test_http_transport_error_response() {
-        let transport = HttpTransport::new(|req| {
-            McpResponse::error(req.id, -32601, "Method not found")
-        });
+    #[tokio::test]
+    async fn test_batch_handler_concurrent_processing() {
+        let registry = ToolRegistry::new();
+        let mcp_server = Arc::new(SerenaMcpServer::new(registry));
+        let transport = Arc::new(McpHttpTransport::new(mcp_server));
 
-        let request = McpRequest {
-            jsonrpc: "2.0".to_string(),
-            id: Some(1),
-            method: "unknown_method".to_string(),
-            params: None,
-        };
+        let requests = vec![
+            McpRequest {
+                jsonrpc: "2.0".to_string(),
+                id: Some(1),
+                method: "ping".to_string(),
+                params: None,
+            },
+            McpRequest {
+                jsonrpc: "2.0".to_string(),
+                id: Some(2),
+                method: "initialize".to_string(),
+                params: None,
+            },
+        ];
 
-        let response = transport.handle_request(request);
+        let futures: Vec<_> = requests
+            .into_iter()
+            .map(|req| {
+                let transport = Arc::clone(&transport);
+                async move { transport.handle_request(req).await }
+            })
+            .collect();
 
-        assert_eq!(response.id, Some(1));
-        assert!(response.result.is_none());
-        assert!(response.error.is_some());
+        let responses = futures::future::join_all(futures).await;
 
-        let error = response.error.unwrap();
-        assert_eq!(error.code, -32601);
-        assert_eq!(error.message, "Method not found");
+        assert_eq!(responses.len(), 2);
+        assert_eq!(responses[0].id, Some(1));
+        assert_eq!(responses[1].id, Some(2));
     }
 }

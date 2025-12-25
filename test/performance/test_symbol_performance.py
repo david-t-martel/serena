@@ -6,7 +6,6 @@ to detect regressions and ensure acceptable latency.
 Run with: uv run poe test-bench
 """
 
-
 import pytest
 
 from test.harness.performance import PerformanceTracker
@@ -24,10 +23,7 @@ def performance_tracker():
 @pytest.fixture
 def mock_symbol_data():
     """Generate mock symbol data for testing."""
-    return [
-        {"name": f"Symbol_{i}", "kind": 5, "range": {"start": {"line": i * 10}, "end": {"line": i * 10 + 5}}}
-        for i in range(100)
-    ]
+    return [{"name": f"Symbol_{i}", "kind": 5, "range": {"start": {"line": i * 10}, "end": {"line": i * 10 + 5}}} for i in range(100)]
 
 
 @pytest.mark.benchmark
@@ -118,9 +114,7 @@ class TestFileOperationsPerformance:
         import re
 
         test_file = tmp_path / "code.py"
-        content = "\n".join([
-            f"def function_{i}(x: int) -> int:" for i in range(1000)
-        ])
+        content = "\n".join([f"def function_{i}(x: int) -> int:" for i in range(1000)])
         test_file.write_text(content)
 
         pattern = re.compile(r"def (\w+)\(")
