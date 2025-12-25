@@ -13,6 +13,9 @@ Icon
 .com.apple.timemachine.donotpresent
 
 # Windows specific files
+# NUL is a reserved device name on Windows - these files can't be tracked by git
+nul
+**/nul
 Thumbs.db
 Thumbs.db:encryptable
 ehthumbs.db
