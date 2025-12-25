@@ -360,6 +360,9 @@ class Dashboard {
         // Initialize theme
         this.initializeTheme();
 
+        // Initialize runtime badge (Rust/Python backend indicator)
+        this.initRuntimeBadge();
+
         // Initialize sponsor rotation
         //this.sponsorRotation = new SponsorRotation();
 
@@ -408,6 +411,60 @@ class Dashboard {
                 }
             },
         });
+    }
+
+    // =========================================================================
+    // Runtime Badge - Rust/Python Backend Indicator
+    // =========================================================================
+
+    initRuntimeBadge() {
+        this.$runtimeBadge = $('#runtime-badge');
+        if (this.$runtimeBadge.length > 0) {
+            this.detectRuntime();
+        }
+    }
+
+    detectRuntime() {
+        let self = this;
+        $.ajax({
+            url: '/heartbeat',
+            type: 'GET',
+            timeout: 5000,
+            headers: { 'Accept': 'application/json' },
+            success: function (response) {
+                if (response.agent === 'serena-rust') {
+                    // Rust backend detected
+                    const version = response.version || '0.1.0';
+                    self.setRuntimeState('rust', '⚙️', 'Rust v' + version);
+                } else if (response.agent === 'serena-python' || response.status === 'ok') {
+                    // Python backend detected (or generic response)
+                    self.setRuntimeState('python', '🐍', 'Python');
+                } else {
+                    self.setRuntimeState('error', '⚠️', 'Unknown');
+                }
+            },
+            error: function (xhr, status, error) {
+                console.warn('Runtime detection failed:', error);
+                self.setRuntimeState('error', '⚠️', 'Offline');
+            }
+        });
+    }
+
+    setRuntimeState(state, icon, text) {
+        let $badge = this.$runtimeBadge;
+        if (!$badge || $badge.length === 0) return;
+
+        // Remove all state classes
+        $badge.removeClass(
+            'runtime-badge--connecting runtime-badge--rust runtime-badge--python runtime-badge--error'
+        );
+
+        // Add new state class
+        $badge.addClass('runtime-badge--' + state);
+
+        // Update content
+        $badge.find('.runtime-badge__icon').text(icon);
+        $badge.find('.runtime-badge__text').text(text);
     }
 
     toggleMenu() {
