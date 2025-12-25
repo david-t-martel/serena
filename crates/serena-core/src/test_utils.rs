@@ -18,9 +18,11 @@
 
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
-use std::collections::HashMap;
-use std::path::{Path, PathBuf};
 use std::sync::{Arc, Mutex};
+
+// These imports are used by TestProject when test-fixtures feature is enabled
+#[cfg(feature = "test-fixtures")]
+use std::path::{Path, PathBuf};
 
 /// Mock MCP server for testing
 #[derive(Debug, Default)]

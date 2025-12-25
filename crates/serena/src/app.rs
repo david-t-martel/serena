@@ -42,6 +42,36 @@ pub struct App {
 }
 
 impl App {
+    // ==================== Accessors ====================
+    // These make the stored managers accessible for external use
+
+    /// Get a reference to the memory manager
+    pub fn memory_manager(&self) -> &Arc<MemoryManager> {
+        &self.memory_manager
+    }
+
+    /// Get a reference to the config service
+    pub fn config_service(&self) -> &Arc<ConfigService> {
+        &self.config_service
+    }
+
+    /// Get a reference to the config loader
+    pub fn config_loader(&self) -> &ConfigLoader {
+        &self.config_loader
+    }
+
+    /// Get a reference to the LSP manager
+    pub fn lsp_manager(&self) -> &Arc<LanguageServerManager> {
+        &self.lsp_manager
+    }
+
+    /// Get a reference to the tool registry
+    pub fn tool_registry(&self) -> &Arc<ToolRegistry> {
+        &self.tool_registry
+    }
+}
+
+impl App {
     /// Create a new App instance
     pub async fn new(config_path: Option<PathBuf>, project_path: Option<PathBuf>) -> Result<Self> {
         info!("Initializing Serena application");

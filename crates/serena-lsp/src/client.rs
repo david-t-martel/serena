@@ -8,7 +8,7 @@ use dashmap::DashMap;
 use lsp_types::{
     notification::Notification, request::Request, ClientCapabilities,
     DocumentSymbolClientCapabilities, InitializeParams, InitializeResult, InitializedParams,
-    TextDocumentClientCapabilities, TraceValue, Uri,
+    TextDocumentClientCapabilities, TraceValue, Uri, WorkspaceFolder,
 };
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
@@ -298,9 +298,24 @@ impl LspClient {
             ..Default::default()
         };
 
+        // Use workspace_folders (modern) while maintaining root_uri for backward compatibility
+        let workspace_folder = WorkspaceFolder {
+            uri: root_uri.clone(),
+            name: root_uri
+                .path()
+                .segments()
+                .last()
+                .map(|s| s.to_string())
+                .unwrap_or_else(|| "workspace".to_string()),
+        };
+
+        #[allow(deprecated)]
         let params = InitializeParams {
             process_id: Some(std::process::id()),
+            // root_uri is deprecated but kept for compatibility with older LSP servers
             root_uri: Some(root_uri.clone()),
+            // workspace_folders is the modern approach (LSP 3.6+)
+            workspace_folders: Some(vec![workspace_folder]),
             capabilities,
             trace: Some(TraceValue::Off),
             ..Default::default()
