@@ -1,0 +1,19 @@
+[package]
+name = "serena-lsp"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+serena-core = { path = "../serena-core" }
+serena-config = { path = "../serena-config" }
+tokio = { workspace = true }
+lsp-types = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+async-trait = { workspace = true }
+anyhow = { workspace = true }
+thiserror = { workspace = true }
+tracing = { workspace = true }
+dashmap = { workspace = true }
+futures = { workspace = true }
+url = "2.5"

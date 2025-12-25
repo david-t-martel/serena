@@ -259,6 +259,30 @@ class TopLevelCommands(AutoRegisteringGroup):
         server.run(transport=transport)
 
     @staticmethod
+    @click.command("tui", help="Launch the interactive terminal UI (requires serena-agent[tui]).")
+    @click.option(
+        "--project",
+        type=click.Path(exists=True, file_okay=False, dir_okay=True),
+        default=None,
+        help="Project root to use (directory containing .serena/project.yml or .git).",
+    )
+    @click.option(
+        "--start-dir",
+        type=click.Path(exists=True, file_okay=False, dir_okay=True),
+        default=None,
+        help="Directory to start project auto-detection from (defaults to CWD). Ignored if --project is provided.",
+    )
+    def tui(project: str | None, start_dir: str | None) -> None:
+        from serena.tui.app import run
+        from serena.tui.project import find_project_root as find_project_root_tui
+
+        project_root = Path(project).resolve() if project else find_project_root_tui(start_dir)
+        try:
+            run(project_root)
+        except Exception as e:
+            raise click.ClickException(str(e))
+
+    @staticmethod
     @click.command("print-system-prompt", help="Print the system prompt for a project.")
     @click.argument("project", type=click.Path(exists=True), default=os.getcwd(), required=False)
     @click.option(

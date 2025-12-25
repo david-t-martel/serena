@@ -276,6 +276,24 @@ class SolidLanguageServer(ABC):
         self.open_file_buffers: dict[str, LSPFileBuffer] = {}
         self.language = Language(language_id)
 
+        # Initialize Rust ProjectHost
+        self.use_rust = False
+        use_rust_env = os.getenv("SERENA_USE_RUST_CORE", "1") != "0"
+        if use_rust_env:
+            try:
+                import serena_core
+                self.project_host = serena_core.ProjectHost(self.repository_root_path)
+                self.use_rust = True
+                log.info("Successfully initialized Rust ProjectHost")
+            except ImportError as e:
+                log.warning(f"serena_core not found or failed to initialize, falling back to Python implementation: {e}")
+                self.use_rust = False
+            except Exception as e:
+                log.warning(f"Failed to initialize Rust ProjectHost: {e}")
+                self.use_rust = False
+        else:
+            log.info("Rust ProjectHost disabled via environment variable")
+
         # initialise symbol caches
         self.cache_dir = (
             Path(self.repository_root_path) / self._solidlsp_settings.project_data_relative_path / self.CACHE_FOLDER_NAME / self.language_id
@@ -398,6 +416,11 @@ class SolidLanguageServer(ABC):
         A robust shutdown process designed to terminate cleanly on all platforms, including Windows,
         by explicitly closing all I/O pipes.
         """
+        if self.use_rust:
+            log.info("Stopping Rust-backed Language Server")
+            # Rust ProjectHost handles shutdown when it is dropped or re-initialized
+            return
+
         if not self.server.is_running():
             log.debug("Server process not running, skipping shutdown.")
             return
@@ -459,6 +482,25 @@ class SolidLanguageServer(ABC):
         self.stop()
 
     def _start_server_process(self) -> None:
+        if self.use_rust:
+            # Extract cmd and args from self.server.process_launch_info
+            cmd_info = self.server.process_launch_info.cmd
+            if isinstance(cmd_info, str):
+                cmd_parts = cmd_info.split()
+            else:
+                cmd_parts = cmd_info
+            
+            if not cmd_parts:
+                raise ValueError("Command is empty")
+
+            executable = cmd_parts[0]
+            args = cmd_parts[1:]
+            
+            log.info(f"Starting Rust-backed LSP: {executable} {args}")
+            self.project_host.start_lsp(executable, args)
+            self.server_started = True
+            return
+
         self.server_started = True
         self._start_server()
 
@@ -502,27 +544,33 @@ class SolidLanguageServer(ABC):
             language_id = self._get_language_id_for_file(relative_file_path)
             self.open_file_buffers[uri] = LSPFileBuffer(uri, contents, version, language_id, 1)
 
-            self.server.notify.did_open_text_document(
-                {
-                    LSPConstants.TEXT_DOCUMENT: {  # type: ignore
-                        LSPConstants.URI: uri,
-                        LSPConstants.LANGUAGE_ID: language_id,
-                        LSPConstants.VERSION: 0,
-                        LSPConstants.TEXT: contents,
+            if self.use_rust:
+                self.project_host.did_open(relative_file_path, contents, language_id)
+            else:
+                self.server.notify.did_open_text_document(
+                    {
+                        LSPConstants.TEXT_DOCUMENT: {  # type: ignore
+                            LSPConstants.URI: uri,
+                            LSPConstants.LANGUAGE_ID: language_id,
+                            LSPConstants.VERSION: 0,
+                            LSPConstants.TEXT: contents,
+                        }
                     }
-                }
-            )
+                )
             yield self.open_file_buffers[uri]
             self.open_file_buffers[uri].ref_count -= 1
 
         if self.open_file_buffers[uri].ref_count == 0:
-            self.server.notify.did_close_text_document(
-                {
-                    LSPConstants.TEXT_DOCUMENT: {  # type: ignore
-                        LSPConstants.URI: uri,
+            if self.use_rust:
+                self.project_host.did_close(relative_file_path)
+            else:
+                self.server.notify.did_close_text_document(
+                    {
+                        LSPConstants.TEXT_DOCUMENT: {  # type: ignore
+                            LSPConstants.URI: uri,
+                        }
                     }
-                }
-            )
+                )
             del self.open_file_buffers[uri]
 
     @contextmanager
@@ -564,23 +612,27 @@ class SolidLanguageServer(ABC):
 
         new_contents, new_l, new_c = TextUtils.insert_text_at_position(file_buffer.contents, line, column, text_to_be_inserted)
         file_buffer.contents = new_contents
-        self.server.notify.did_change_text_document(
-            {
-                LSPConstants.TEXT_DOCUMENT: {  # type: ignore
-                    LSPConstants.VERSION: file_buffer.version,
-                    LSPConstants.URI: file_buffer.uri,
-                },
-                LSPConstants.CONTENT_CHANGES: [
-                    {
-                        LSPConstants.RANGE: {
-                            "start": {"line": line, "character": column},
-                            "end": {"line": line, "character": column},
-                        },
-                        "text": text_to_be_inserted,
-                    }
-                ],
-            }
-        )
+        
+        if self.use_rust:
+            self.project_host.did_change(relative_file_path, new_contents, file_buffer.version)
+        else:
+            self.server.notify.did_change_text_document(
+                {
+                    LSPConstants.TEXT_DOCUMENT: {  # type: ignore
+                        LSPConstants.VERSION: file_buffer.version,
+                        LSPConstants.URI: file_buffer.uri,
+                    },
+                    LSPConstants.CONTENT_CHANGES: [
+                        {
+                            LSPConstants.RANGE: {
+                                "start": {"line": line, "character": column},
+                                "end": {"line": line, "character": column},
+                            },
+                            "text": text_to_be_inserted,
+                        }
+                    ],
+                }
+            )
         return ls_types.Position(line=new_l, character=new_c)
 
     def delete_text_between_positions(
@@ -608,19 +660,44 @@ class SolidLanguageServer(ABC):
             file_buffer.contents, start_line=start["line"], start_col=start["character"], end_line=end["line"], end_col=end["character"]
         )
         file_buffer.contents = new_contents
-        self.server.notify.did_change_text_document(
-            {
-                LSPConstants.TEXT_DOCUMENT: {  # type: ignore
-                    LSPConstants.VERSION: file_buffer.version,
-                    LSPConstants.URI: file_buffer.uri,
-                },
-                LSPConstants.CONTENT_CHANGES: [{LSPConstants.RANGE: {"start": start, "end": end}, "text": ""}],
-            }
-        )
+        
+        if self.use_rust:
+            self.project_host.did_change(relative_file_path, new_contents, file_buffer.version)
+        else:
+            self.server.notify.did_change_text_document(
+                {
+                    LSPConstants.TEXT_DOCUMENT: {  # type: ignore
+                        LSPConstants.VERSION: file_buffer.version,
+                        LSPConstants.URI: file_buffer.uri,
+                    },
+                    LSPConstants.CONTENT_CHANGES: [{LSPConstants.RANGE: {"start": start, "end": end}, "text": ""}],
+                }
+            )
         return deleted_text
 
     def _send_definition_request(self, definition_params: DefinitionParams) -> Definition | list[LocationLink] | None:
         return self.server.send.definition(definition_params)
+
+    def _convert_rust_location(self, loc: dict) -> ls_types.Location:
+        uri = loc["uri"]
+        r = loc["range"]
+        # rust range: {start: (line, col), end: (line, col)}
+        start = {"line": r["start"][0], "character": r["start"][1]}
+        end = {"line": r["end"][0], "character": r["end"][1]}
+        range_dict = {"start": start, "end": end}
+        
+        abs_path = PathUtils.uri_to_path(uri)
+        try:
+            rel_path = PathUtils.get_relative_path(abs_path, self.repository_root_path)
+        except Exception:
+            rel_path = str(abs_path)
+            
+        return ls_types.Location(
+            uri=uri,
+            range=range_dict,  # type: ignore
+            absolutePath=abs_path,
+            relativePath=rel_path
+        )
 
     def request_definition(self, relative_file_path: str, line: int, column: int) -> list[ls_types.Location]:
         """
@@ -636,6 +713,11 @@ class SolidLanguageServer(ABC):
         if not self.server_started:
             log.error("request_definition called before language server started")
             raise SolidLSPException("Language Server not started")
+
+        if self.use_rust:
+            # Use Rust implementation
+            definitions = self.project_host.definition(relative_file_path, line, column)
+            return [self._convert_rust_location(d) for d in definitions]
 
         if not self._has_waited_for_cross_file_references:
             # Some LS require waiting for a while before they can return cross-file definitions.
@@ -724,6 +806,18 @@ class SolidLanguageServer(ABC):
             log.error("request_references called before Language Server started")
             raise SolidLSPException("Language Server not started")
 
+        if self.use_rust:
+            references = self.project_host.references(relative_file_path, line, column, False)
+            ret = []
+            for ref in references:
+                loc = self._convert_rust_location(ref)
+                if not Path(loc["absolutePath"]).is_relative_to(self.repository_root_path):
+                    continue
+                if self.is_ignored_path(loc["relativePath"]):
+                    continue
+                ret.append(loc)
+            return ret
+
         if not self._has_waited_for_cross_file_references:
             # Some LS require waiting for a while before they can return cross-file references.
             # This is a workaround for such LS that don't have a reliable "finished initializing" signal.
@@ -785,6 +879,13 @@ class SolidLanguageServer(ABC):
             log.error("request_text_document_diagnostics called before Language Server started")
             raise SolidLSPException("Language Server not started")
 
+        if self.use_rust:
+            # Diagnostics are usually notifications in standard LSP (textDocument/publishDiagnostics)
+            # Pull-based diagnostics (textDocument/diagnostic) are newer (LSP 3.17).
+            # Rust ProjectHost does not expose diagnostic request yet.
+            # Assuming not supported or unimplemented.
+            return []
+
         with self.open_file(relative_file_path):
             response = self.server.send.text_document_diagnostic(
                 {
@@ -799,7 +900,7 @@ class SolidLanguageServer(ABC):
 
         assert isinstance(response, dict), f"Unexpected response from Language Server (expected list, got {type(response)}): {response}"
         ret: list[ls_types.Diagnostic] = []
-        for item in response["items"]:  # type: ignore
+        for item in response["items"]:
             new_item: ls_types.Diagnostic = {
                 "uri": pathlib.Path(str(PurePath(self.repository_root_path, relative_file_path))).as_uri(),
                 "severity": item["severity"],
@@ -856,6 +957,10 @@ class SolidLanguageServer(ABC):
 
         :return: A list of completions
         """
+        if self.use_rust:
+            # Rust ProjectHost doesn't implement completion yet.
+            return []
+
         with self.open_file(relative_file_path):
             open_file_buffer = self.open_file_buffers[pathlib.Path(os.path.join(self.repository_root_path, relative_file_path)).as_uri()]
             completion_params: LSPTypes.CompletionParams = {
@@ -963,6 +1068,17 @@ class SolidLanguageServer(ABC):
 
             # no cached result, query language server
             log.debug(f"Requesting document symbols for {relative_file_path} from the Language Server")
+            
+            if self.use_rust:
+                try:
+                    rust_symbols = self.project_host.get_document_symbols(relative_file_path)
+                    # Rust returns UnifiedSymbolInformation-compatible structure (hierarchical)
+                    # We cast it to match the expected return type (which is flexible)
+                    return cast(list[DocumentSymbol], rust_symbols)
+                except Exception as e:
+                    log.error(f"Rust get_document_symbols failed: {e}")
+                    return None
+
             response = self.server.send.document_symbol(
                 {"textDocument": {"uri": pathlib.Path(os.path.join(self.repository_root_path, relative_file_path)).as_uri()}}
             )
@@ -1325,6 +1441,12 @@ class SolidLanguageServer(ABC):
 
         :return None
         """
+        if self.use_rust:
+            content = self.project_host.hover(relative_file_path, line, column)
+            if content is None:
+                return None
+            return ls_types.Hover(contents=content)
+
         with self.open_file(relative_file_path):
             response = self.server.send.hover(
                 {
@@ -1424,10 +1546,10 @@ class SolidLanguageServer(ABC):
                     # THIS IS BOUND TO BREAK IN MANY CASES! IT IS ALSO SPECIFIC TO PYTHON!
                     # Background:
                     # When a variable is used to change something, like
-                    #
+                    # 
                     # instance = MyClass()
                     # instance.status = "new status"
-                    #
+                    # 
                     # we can't find the containing symbol for the reference to `status`
                     # since there is no container on the line of the reference
                     # The hack is to try to find a variable symbol in the containing module
@@ -1723,6 +1845,9 @@ class SolidLanguageServer(ABC):
     def _load_raw_document_symbols_cache(self) -> None:
         cache_file = self.cache_dir / self.RAW_DOCUMENT_SYMBOL_CACHE_FILENAME
 
+        if not self._load_cache_enabled:
+             return
+
         if not cache_file.exists():
             # check for legacy cache to load to migrate
             legacy_cache_file = self.cache_dir / self.RAW_DOCUMENT_SYMBOL_CACHE_FILENAME_LEGACY_FALLBACK
@@ -1785,6 +1910,10 @@ class SolidLanguageServer(ABC):
 
     def _load_document_symbols_cache(self) -> None:
         cache_file = self.cache_dir / self.DOCUMENT_SYMBOL_CACHE_FILENAME
+        
+        if not self._load_cache_enabled:
+             return
+
         if cache_file.exists():
             log.info("Loading document symbols cache from %s", cache_file)
             try:
@@ -1803,6 +1932,13 @@ class SolidLanguageServer(ABC):
     def save_cache(self) -> None:
         self._save_raw_document_symbols_cache()
         self._save_document_symbols_cache()
+
+    @property
+    def _load_cache_enabled(self) -> bool:
+        # Disable loading cache if we are using Rust, because Python cache might be stale/incompatible
+        # or we want to force re-indexing (although Rust doesn't use this cache, document_symbols might still rely on it if we fall back)
+        # But generally safe to keep loading.
+        return True
 
     def request_workspace_symbol(self, query: str) -> list[ls_types.UnifiedSymbolInformation] | None:
         """
@@ -1848,6 +1984,9 @@ class SolidLanguageServer(ABC):
         :param new_name: The new name for the symbol
         :return: A WorkspaceEdit containing the changes needed to rename the symbol, or None if rename is not supported
         """
+        if self.use_rust:
+            return self.project_host.rename(relative_file_path, line, column, new_name)
+
         params = RenameParams(
             textDocument=ls_types.TextDocumentIdentifier(
                 uri=pathlib.Path(os.path.join(self.repository_root_path, relative_file_path)).as_uri()
@@ -1867,7 +2006,7 @@ class SolidLanguageServer(ABC):
         """
         with self.open_file(relative_path):
             # Sort edits by position (latest first) to avoid position shifts
-            sorted_edits = sorted(edits, key=lambda e: (e["range"]["start"]["line"], e["range"]["start"]["character"]), reverse=True)
+            sorted_edits = sorted(edits, key=lambda e: (e["range"]["start"]["line"], e["range"]["start"]["character"])[::-1])
 
             for edit in sorted_edits:
                 start_pos = ls_types.Position(line=edit["range"]["start"]["line"], character=edit["range"]["start"]["character"])
@@ -1913,4 +2052,6 @@ class SolidLanguageServer(ABC):
         return self.server
 
     def is_running(self) -> bool:
+        if self.use_rust:
+            return self.server_started # Rust process is managed by ProjectHost, assume running if started
         return self.server.is_running()
