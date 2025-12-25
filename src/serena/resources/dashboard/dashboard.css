@@ -741,6 +741,139 @@ body {
     line-height: 1;
 }
 
+/* =============================================================================
+   Runtime Badge - Rust/Python Backend Indicator
+   Industrial precision style with Rust-specific identity
+   ============================================================================= */
+
+.runtime-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', 'Consolas', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    border: 1.5px solid transparent;
+    background: var(--bg-secondary);
+    color: var(--text-secondary);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    user-select: none;
+    flex-shrink: 0;
+    margin: 0 auto;
+}
+
+.runtime-badge__icon {
+    font-size: 14px;
+    line-height: 1;
+}
+
+.runtime-badge__text {
+    white-space: nowrap;
+}
+
+/* Connecting State - Subtle pulse animation */
+.runtime-badge--connecting {
+    border-color: var(--border-color);
+    animation: badge-pulse 2s ease-in-out infinite;
+}
+
+@keyframes badge-pulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+}
+
+/* Rust Active State - Orange accent (Rust signature color) */
+.runtime-badge--rust {
+    border-color: #F74C00;
+    background: linear-gradient(135deg,
+        rgba(247, 76, 0, 0.08) 0%,
+        rgba(247, 76, 0, 0.03) 100%);
+    color: var(--text-primary);
+    animation: badge-connected 0.5s ease-out;
+}
+
+.runtime-badge--rust .runtime-badge__icon {
+    color: #F74C00;
+}
+
+@keyframes badge-connected {
+    0% {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+    60% {
+        transform: scale(1.03);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Python Fallback State - Python blue accent */
+.runtime-badge--python {
+    border-color: #3776AB;
+    background: linear-gradient(135deg,
+        rgba(55, 118, 171, 0.08) 0%,
+        rgba(55, 118, 171, 0.03) 100%);
+    color: var(--text-primary);
+}
+
+.runtime-badge--python .runtime-badge__icon {
+    color: #3776AB;
+}
+
+/* Error/Offline State - Red accent */
+.runtime-badge--error {
+    border-color: #DC3545;
+    background: linear-gradient(135deg,
+        rgba(220, 53, 69, 0.08) 0%,
+        rgba(220, 53, 69, 0.03) 100%);
+    color: var(--text-secondary);
+}
+
+.runtime-badge--error .runtime-badge__icon {
+    color: #DC3545;
+}
+
+/* Hover effect for interactive feedback */
+.runtime-badge:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Dark theme enhanced visibility */
+[data-theme="dark"] .runtime-badge--rust {
+    background: linear-gradient(135deg,
+        rgba(247, 76, 0, 0.15) 0%,
+        rgba(247, 76, 0, 0.06) 100%);
+    box-shadow: 0 0 12px rgba(247, 76, 0, 0.15);
+}
+
+[data-theme="dark"] .runtime-badge--python {
+    background: linear-gradient(135deg,
+        rgba(55, 118, 171, 0.15) 0%,
+        rgba(55, 118, 171, 0.06) 100%);
+    box-shadow: 0 0 12px rgba(55, 118, 171, 0.15);
+}
+
+[data-theme="dark"] .runtime-badge--error {
+    background: linear-gradient(135deg,
+        rgba(220, 53, 69, 0.15) 0%,
+        rgba(220, 53, 69, 0.06) 100%);
+}
+
+[data-theme="dark"] .runtime-badge:hover {
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* =============================================================================
+   End Runtime Badge
+   ============================================================================= */
+
 .log-debug {
     color: var(--log-debug);
 }
